@@ -95,12 +95,7 @@ class UsuarioController extends Controller
         try {
             $id = $request->numero_id;
             $usuario = Usuario::findOrFail($id);
-            $usuario->update([
-                'login' => $request->login2,
-                'password' => $request->password2,
-                'tipousuario_id' => $request->tipousuario_id2,
-                'personal_id' => $request->persona_id2
-            ]);
+            $usuario->update(array_filter($request->all()));
             return response()->json([
                 'message' => 'Se ha actualizado correctamente',
                 'type' => 'success'

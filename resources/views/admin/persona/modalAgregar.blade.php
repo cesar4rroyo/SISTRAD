@@ -79,7 +79,7 @@
                         </div>
                         <div class="form-group col-sm">
                             <label for="email" class="control-label">{{ 'Email' }}</label>
-                            <input class="form-control" name="email" type="text" id="email">
+                            <input class="form-control" name="email" type="email" id="email">
                         </div>
                     </div>                    
                     <div class="form-group">

@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //limpiar el formulario de agregar 
     $('#modalAgregar').on('hidden.bs.modal', function(e) {
         $(this)
-            .find("input,textarea,select")
+            .find("input[type=text],input[type=number],input[type=password], textarea,select")
             .val('')
             .end()
             .find("input[type=checkbox], input[type=radio]")
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //limpiar el formulario de agregar 
     $('#modalEditar').on('hidden.bs.modal', function(e) {
         $(this)
-            .find("input,textarea,select")
+            .find("input[type=text],input[type=number],input[type=password],textarea,select")
             .prop("readonly", false)
             .val('')
             .end()
@@ -237,12 +237,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
                                 var rol = r.data;
                                 //llenar formulario
                                 $.each(rol, function(nombre, data) {
-                                    var input = $(document).find('[name="' +
+                                    var input = $(document).find('[id="' +
                                         nombre +
                                         '2"]');
                                     input.val(data);
                                 });
                                 $('#numero_id').val(rol.id);
+                                $('#password2').val('');
                             },
                             error: function(e) {
                                 console.log(e);

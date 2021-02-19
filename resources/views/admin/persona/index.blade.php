@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //limpiar el formulario de agregar 
     $('#modalPersonaAgregar').on('hidden.bs.modal', function(e) {
         $(this)
-            .find("input,textarea,select")
+            .find("input[type=text],input[type=number],input[type=email],textarea,select")
             .val('')
             .end()
             .find("input[type=checkbox], input[type=radio]")
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //limpiar el formulario de agregar 
     $('#modalPersonaEditar').on('hidden.bs.modal', function(e) {
         $(this)
-            .find("input,textarea,select")
+            .find("input[type=text],input[type=number],input[type=email],textarea,select")
             .prop("readonly", false)
             .val('')
             .end()

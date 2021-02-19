@@ -15,17 +15,17 @@
                     <div class="row">
                         <div class="form-group col-sm">
                             <label for="login2" class="control-label">{{ 'Login' }}</label>
-                            <input class="form-control" required name="login2" type="text" id="login2">
+                            <input class="form-control" required name="login" type="text" id="login2">
                         </div>
                         <div class="form-group col-sm">
                             <label for="password2" class="control-label">{{ 'Password' }}</label>
-                            <input class="form-control" required name="password2" type="password" id="password2">
+                            <input class="form-control" name="password" type="password" id="password2">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm">
                             <label for="tipousuario_id2" class="control-label">{{ 'Tipo Usuario' }}</label>
-                            <select class="form-control" required name="tipousuario_id2" id="tipousuario_id2">
+                            <select class="form-control" required name="tipousuario_id" id="tipousuario_id2">
                                 <option value="">
                                     {{'Seleccione una opcion'}}
                                 </option>
@@ -37,8 +37,8 @@
                             </select>
                         </div>
                         <div class="form-group col-sm">
-                            <label for="persona_id2" class="control-label">{{ 'Persona' }}</label>
-                            <select class="form-control" name="persona_id2" id="persona_id2">
+                            <label for="personal_id2" class="control-label">{{ 'Persona' }}</label>
+                            <select class="form-control" name="personal_id" id="personal_id2">
                                 <option value="">
                                     {{'Seleccione una opcion'}}
                                 </option>

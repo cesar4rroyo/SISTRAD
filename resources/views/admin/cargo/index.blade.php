@@ -108,7 +108,7 @@
         //limpiar el formulario de agregar 
         $('#modalAgregar').on('hidden.bs.modal', function(e) {
             $(this)
-                .find("input,textarea,select")
+                .find("input[type=text],input[type=number],textarea,select")
                 .val('')
                 .end()
                 .find("input[type=checkbox], input[type=radio]")
@@ -119,7 +119,7 @@
         //limpiar el formulario de agregar 
         $('#modalEditar').on('hidden.bs.modal', function(e) {
             $(this)
-                .find("input,textarea,select")
+                .find("input[type=text],input[type=number],textarea,select")
                 .prop("readonly", false)
                 .val('')
                 .end()
