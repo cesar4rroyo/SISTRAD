@@ -42,7 +42,7 @@ class OpcionMenuController extends Controller
 
         try {
             $opcion = OpcionMenu::create([
-                'descripcion' => $request->nombre,
+                'descripcion' => $request->descripcion,
                 'link' => $request->link,
                 'orden' => $request->orden,
                 'icono' => $request->icono,
@@ -92,7 +92,7 @@ class OpcionMenuController extends Controller
             $id = $request->numero_id;
             $opcion = OpcionMenu::findOrFail($id);
             $opcion->update([
-                'descripcion' => $request->nombre2,
+                'descripcion' => $request->descripcion2,
                 'link' => $request->link2,
                 'orden' => $request->orden2,
                 'icono' => $request->icono2,
