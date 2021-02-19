@@ -35,11 +35,7 @@ class OpcionMenuController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'descripcion' => 'required',
-            'link' => 'required',
-        ]);
-
+        
         try {
             $opcion = OpcionMenu::create([
                 'descripcion' => $request->descripcion,

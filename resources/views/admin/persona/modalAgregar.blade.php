@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregar Nueva Persona</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Nuevo Personal</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,13 +17,48 @@
                             <input class="form-control" required name="nombres" type="text" id="nombres">
                         </div>
                         <div class="form-group col-sm">
-                            <label for="apellidos" class="control-label">{{ 'Apellidos' }}</label>
-                            <input class="form-control" required name="apellidos" type="text" id="apellidos">
+                            <label for="apellidopaterno" class="control-label">{{ 'Apellido Paterno' }}</label>
+                            <input class="form-control" required name="apellidopaterno" type="text" id="apellidopaterno">
                         </div>
                         <div class="form-group col-sm">
-                            <label for="rol_id[]" class="control-label">{{ 'Roles' }}</label>
-                            <select class="form-control select2 selectRol" required id="rol_id[]" name="rol_id[]"
-                                multiple="multiple" data-placeholder="Seleccionar rol" style="width: 100%;">
+                            <label for="apellidomaterno" class="control-label">{{ 'Apellido Materno' }}</label>
+                            <input class="form-control" required name="apellidomaterno" type="text" id="apellidomaterno">
+                        </div>                        
+                    </div>
+                    <div class="row">                      
+                        <div class="form-group col-sm">
+                            <label for="dni" class="control-label">{{ 'DNI' }}</label>
+                            <input class="form-control" required name="dni" type="text" id="dni">
+                        </div>
+                        <div class="form-group col-sm">
+                            <label for="cargo_id" class="control-label">{{ 'Cargo' }}</label>
+                            <select name="cargo_id" required class="form-control" id="cargo_id">
+                                <option value="">
+                                    Seleccione una opcion
+                                </option>
+                                @foreach ($cargos as $item)
+                                    <option value="{{$item['id']}}">{{$item['descripcion']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-sm">
+                            <label for="area_id" class="control-label">{{ 'Área' }}</label>
+                            <select name="area_id" required class="form-control" id="area_id">
+                                <option value="">
+                                    Seleccione una opcion
+                                </option>
+                                @foreach ($areas as $item)
+                                    <option value="{{$item['id']}}">{{$item['descripcion']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm">
+                            <label for="rol_id" class="control-label">{{ 'Roles' }}</label>
+                            <select class="form-control select2 selectRol selectRolEditar" required id="rol_id"
+                                name="rol_id[]" multiple="multiple" data-placeholder="Seleccionar rol"
+                                style="width: 100%;">
                                 @foreach ($roles as $id => $nombre)
                                 <option value="{{$id}}"
                                     {{is_array(old('rol_id')) ? (in_array($id, old('rol_id')) ? 'selected' : '')  : (isset($persona) ? ($persona->roles->firstWhere('id', $id) ? 'selected' : '') : '')}}>
@@ -32,44 +67,9 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="form-group col-sm">
-                            <label for="razonsocial"
-                                class="control-label">{{ 'Razón Social (Solo Clientes RUC)' }}</label>
-                            <input class="form-control" name="razonsocial" type="text" id="razonsocial">
-                        </div>
-                        <div class="form-group col-sm">
-                            <label for="ruc" class="control-label">{{ 'RUC' }}</label>
-                            <span class="badge badge-primary" id="btnBuscarRuc">
-                                <i class="fas fa-search"></i>
-                                {{'Buscar'}}</span>
-                            <input class="form-control" name="ruc" type="number" id="ruc">
-
-                        </div>
-                        <div class="form-group col-sm">
-                            <label for="dni" class="control-label">{{ 'DNI' }}</label>
-                            <input class="form-control" name="dni" type="text" id="dni">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm">
-                            <label for="sexo" class="control-label">{{ 'Sexo' }}</label>
-                            <select name="sexo" class="form-control" id="sexo">
-                                <option value="">
-                                    Seleccione una opcion
-                                </option>
-                                <option value="femenino">Femenino</option>
-                                <option value="masculino">Masculino</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm">
-                            <label for="fechanacimiento" class="control-label">{{ 'Fecha de nacimiento' }}</label>
-                            <input class="form-control" name="fechanacimiento" type="date" id="fechanacimiento">
-                        </div>
-                        <div class="form-group col-sm">
-                            <label for="edad" class="control-label">{{ 'Edad' }}</label>
-                            <input class="form-control" name="edad" type="number" id="edad">
+                            <label for="telefono" class="control-label">{{ 'Teléfono' }}</label>
+                            <input class="form-control" name="telefono" type="text" id="telefono">
                         </div>
                     </div>
                     <div class="row">                        
@@ -77,26 +77,11 @@
                             <label for="direccion" class="control-label">{{ 'Dirección' }}</label>
                             <input class="form-control" name="direccion" type="text" id="direccion">
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-sm">
-                            <label for="ciudad" class="control-label">{{ 'Ciudad' }}</label>
-                            <input class="form-control" name="ciudad" type="text" id="ciudad">
-                        </div>
-                        <div class="form-group col-sm">
-                            <label for="telefono" class="control-label">{{ 'Teléfono' }}</label>
-                            <input class="form-control" name="telefono" type="text" id="telefono">
-                        </div>
                         <div class="form-group col-sm">
                             <label for="email" class="control-label">{{ 'Email' }}</label>
                             <input class="form-control" name="email" type="text" id="email">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="observacion" class="control-label">{{ 'Observacion' }}</label>
-                        <input class="form-control" name="observacion" type="text" id="observacion">
-                    </div>
+                    </div>                    
                     <div class="form-group">
                         <button class="btn btn-outline-success" type="submit">Agregar</button>
                     </div>

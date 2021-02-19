@@ -14,8 +14,8 @@ class PersonalController extends Controller
     public function index()
     {
         $roles = Rol::orderBy('id')->pluck('descripcion', 'id')->toArray();
-        $cargos = Cargo::with('personal')->get();
-        $areas = Area::with('personal')->get();
+        $cargos = Cargo::with('personal')->get()->toArray();
+        $areas = Area::with('personal')->get()->toArray();
         return view('admin.persona.index', compact('roles', 'cargos', 'areas'));
     }
 
@@ -44,10 +44,14 @@ class PersonalController extends Controller
     public function store(Request $request)
     {
 
-        /* $this->validate($request, [
-            'dni' => 'nullable|numeric|unique:persona,dni,' . 'id',
-            'ruc' => 'nullable|numeric|unique:persona,ruc,' . 'id',
-        ]); */
+        $this->validate($request, [
+            'dni' => 'required|numeric|min:10000000|max:99999999|unique:personal,dni,' . 'id',
+        ],[
+            'dni.unique'=>'La persona con el DNI ingresado ya se encuentra registrado',
+            'dni.required'=>'El campo DNI es obligatorio',
+            'dni.min'=>'El DNI es incorrecto',
+            'dni.max'=>'El DNI es incorrecto',
+        ]);
 
         try {
             $persona = Personal::create([
@@ -109,20 +113,20 @@ class PersonalController extends Controller
 
     public function update(Request $request)
     {
-
+        
         try {
             $id = $request->numeroPersona;
             $persona = Personal::findOrFail($id);
             $persona->update([
-                'nombres' => strtoupper($request->nombres),
-                'apellidopaterno' => strtoupper($request->apellidopaterno),
-                'apellidomaterno' => strtoupper($request->apellidomaterno),
-                'direccion' => strtoupper($request->direccion),
-                'dni' => $request->dni,
-                'telefono' => $request->telefono,
-                'cargo_id' => $request->cargo_id,
-                'area_id' => $request->area_id,
-                'email' => $request->email,
+                'nombres' => strtoupper($request->nombres2),
+                'apellidopaterno' => strtoupper($request->apellidopaterno2),
+                'apellidomaterno' => strtoupper($request->apellidomaterno2),
+                'direccion' => strtoupper($request->direccion2),
+                'dni' => $request->dni2,
+                'telefono' => $request->telefono2,
+                'cargo_id' => $request->cargo_id2,
+                'area_id' => $request->area_id2,
+                'email' => $request->email2,
             ]);
             $persona->roles()->sync($request->rol_id2);
             return response()->json([

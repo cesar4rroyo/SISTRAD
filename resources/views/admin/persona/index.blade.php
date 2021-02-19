@@ -11,7 +11,7 @@
         @include ('admin.persona.modalEditar')
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Personas</div>
+                <div class="card-header">Personal</div>
                 <div class="card-body">
                     <button class="btn btn-outline-success" id="btnAddNew" title="Agregar nueva persona">
                         <i class="fa fa-plus" aria-hidden="true"></i> Agregar Nuevo
@@ -24,21 +24,29 @@
                                 style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Nombres</th>
                                         <th>DNI</th>
-                                        <th>RUC</th>
-                                        <th>Nacionalidad</th>
+                                        <th>Apellido Paterno</th>
+                                        <th>Apellido Materno</th>
+                                        <th>Nombres</th>
+                                        <th>Direccion</th>
                                         <th>Telefono</th>
+                                        <th>Email</th>
+                                        <th>Cargo</th>
+                                        <th>Area</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>Nombres</th>
                                         <th>DNI</th>
-                                        <th>RUC</th>
-                                        <th>Nacionalidad</th>
+                                        <th>Apellido Paterno</th>
+                                        <th>Apellido Materno</th>
+                                        <th>Nombres</th>
+                                        <th>Direccion</th>
                                         <th>Telefono</th>
+                                        <th>Email</th>
+                                        <th>Cargo</th>
+                                        <th>Area</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </tfoot>
@@ -113,8 +121,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 $('#modalPersonaEditar').modal('toggle');
             },
             error: function(e) {
-                Hotel.notificaciones(e.message, 'Error!', data.type);
+                if (e.status == 422) {
+                    console.log(e.responseJSON.errors);
+                    $.each(e.responseJSON.errors, function(i, error) {
+                        var el = $(document).find('[name="' + i + '"]');
+                        //funcion que muestra el error en un toast
+                        Hotel.notificaciones(error[0], 'Error!', 'error');
+                    });
+                } else {
+                    Hotel.notificaciones(e.message, 'Error!', 'error');
 
+                }
             }
         })
     });
@@ -206,20 +223,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     },
                     "processing": true,
                     'data': data.data,
-                    "columns": [{
-                            "data": "nombres"
-                        },
+                    "columns": [
                         {
                             "data": "dni"
                         },
                         {
-                            "data": "ruc"
+                            "data": "apellidopaterno"
                         },
                         {
-                            "data": "nacionalidad"
+                            "data": "apellidomaterno"
                         },
+                        {
+                            "data": "nombres"
+                        },
+                        {
+                            "data": "direccion"
+                        },                        
                         {
                             "data": "telefono"
+                        },
+                        {
+                            "data": "email"
+                        },
+                        {
+                            "data": "cargo"
+                        },
+                        {
+                            "data": "area"
                         },
                         {
                             "data": "acciones"
@@ -227,7 +257,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     ],
                     dom: 'lBfrtip',
                     buttons: [
-                        'excel', 'pdf', 'print'
+                            {
+                                extend: 'print',
+                                exportOptions: {
+                                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+                                }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                exportOptions: {
+                                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+                                }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                exportOptions: {
+                                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+                                }
+                            },
                     ],
                     "lengthMenu": [10, 25, 50, 100],
                     "bDestroy": true,
@@ -243,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     var id_data = data.id;
                     //opciones ver
                     if (action.includes('ver')) {
-                        var urlLocal = "http://localhost/sistema/public/admin/persona/show" + '/' +
+                        var urlLocal = "http://localhost/tramite/public/admin/persona/show" + '/' +
                             id_data;
                         location.href = urlLocal;
                         //opcion editar

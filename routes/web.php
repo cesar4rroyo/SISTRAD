@@ -35,6 +35,17 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::post('opcionmenu/edit', 'OpcionMenuController@edit')->name('edit_opcionmenu');
     Route::post('opcionmenu/update', 'OpcionMenuController@update')->name('update_opcionmenu');
     Route::post('opcionmenu/destroy', 'OpcionMenuController@destroy')->name('destroy_opcionmenu');
+
+    /* Rutas de Cargo */
+    /* Rutas de OPCIONMENU */
+    Route::get('cargo/create', 'CargoController@create')->name('create_cargo');
+    Route::get('cargos', 'CargoController@index')->name('cargo');
+    Route::get('cargo/get', 'CargoController@getCargos')->name('get_cargos');
+    Route::get('cargo/show/{id}', 'CargoController@show')->name('show_cargo');
+    Route::post('cargo', 'CargoController@store')->name('store_cargo');
+    Route::post('cargo/edit', 'CargoController@edit')->name('edit_cargo');
+    Route::post('cargo/update', 'CargoController@update')->name('update_cargo');
+    Route::post('cargo/destroy', 'CargoController@destroy')->name('destroy_cargo');
     /* Rutas de ROL */
     Route::get('rol/create', 'RolController@create')->name('create_rol');
     Route::get('rol', 'RolController@index')->name('rol');

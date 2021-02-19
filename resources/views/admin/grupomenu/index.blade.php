@@ -188,7 +188,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     ],
                     dom: 'lBfrtip',
                     buttons: [
-                        'excel', 'pdf', 'print'
+                            {
+                                extend: 'print',
+                                exportOptions: {
+                                    columns: [ 0, 1, 2]
+                                }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                exportOptions: {
+                                    columns: [ 0, 1, 2]
+                                }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                exportOptions: {
+                                    columns: [ 0, 1, 2]
+                                }
+                            },
                     ],
                     "lengthMenu": [10, 25, 50, 100],
                     "bDestroy": true,

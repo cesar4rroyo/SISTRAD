@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             url: "{{route('store_opcionmenu')}}",
             data: data,
             success: function(data) {
-                Hotel.notificaciones(data.message, 'SISTEMA', 'success');
+                Hotel.notificaciones(data.message, 'SISTEMA', data.type);
                 setTimeout(function() {
                     location.reload();
                 }, 1000);
@@ -196,7 +196,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     ],
                     dom: 'lBfrtip',
                     buttons: [
-                        'excel', 'pdf', 'print'
+                            {
+                                extend: 'print',
+                                exportOptions: {
+                                    columns: [ 0, 1, 2, 3, 4]
+                                }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                exportOptions: {
+                                    columns: [ 0, 1, 2, 3, 4]
+                                }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                exportOptions: {
+                                    columns: [ 0, 1, 2, 3, 4]
+                                }
+                            },
                     ],
                     "lengthMenu": [10, 25, 50, 100],
                     "bDestroy": true,
