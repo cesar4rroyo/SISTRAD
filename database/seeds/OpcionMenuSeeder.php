@@ -12,15 +12,8 @@ class OpcionMenuSeeder extends Seeder
         DB::table('opcionmenu')->insert([
             'descripcion' => 'Personal',
             'icono' => 'fas fa-user-alt',
-            'link' => 'admin/personal',
+            'link' => 'admin/persona',
             'orden' => 1,
-            'grupomenu_id' => 2
-        ]);
-        DB::table('opcionmenu')->insert([
-            'descripcion' => 'Areas',
-            'icono' => 'fas fa-warehouse',
-            'link' => 'admin/areas',
-            'orden' => 2,
             'grupomenu_id' => 2
         ]);
         DB::table('opcionmenu')->insert([
@@ -82,5 +75,41 @@ class OpcionMenuSeeder extends Seeder
             'grupomenu_id' => 3
         ]);
         //end Grupo Usuarios
+
+        //start Control
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Area',
+            'icono' => 'fas fa-warehouse',
+            'link' => 'area',
+            'orden' => 1,
+            'grupomenu_id' => 1
+        ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Trámite',
+            'icono' => 'far fa-file-alt',
+            'link' => 'tramite',
+            'orden' => 2,
+            'grupomenu_id' => 1
+        ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Motivo Rechazo',
+            'icono' => 'fas fa-book-open',
+            'link' => 'motivorechazo',
+            'orden' => 3,
+            'grupomenu_id' => 1
+        ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Motivo Courier',
+            'icono' => 'fas fa-book-open',
+            'link' => 'motivocourier',
+            'orden' => 4,
+            'grupomenu_id' => 1
+        ]);     
+        
+        //end Control
+
+
+
+
     }
 }
