@@ -35,7 +35,6 @@ class GrupoMenuController extends Controller
         $this->validate($request, [
             'descripcion' => 'required',
         ]);
-
         try {
             $tipousuario = GrupoMenu::create([
                 'descripcion' => $request->descripcion,

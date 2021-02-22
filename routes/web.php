@@ -96,3 +96,29 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::post('persona/store/checkout', 'PersonalController@storeClienteRuc')->name('storeClienteRuc');
 
 });
+
+
+Route::group(['middleware' => 'auth'], function () {
+
+    /* MOTIVOS RECHAZO*/
+    Route::post('motivorechazo/buscar', 'Control\MotivorechazoController@buscar')->name('motivorechazo.buscar');
+    Route::get('motivorechazo/eliminar/{id}/{listarluego}', 'Control\MotivorechazoController@eliminar')->name('motivorechazo.eliminar');
+    Route::resource('motivorechazo', 'Control\MotivorechazoController', array('except' => array('show')));
+   
+    /* MOTIVOS COURIER*/
+    Route::post('motivocourier/buscar', 'Control\MotivocourierController@buscar')->name('motivocourier.buscar');
+    Route::get('motivocourier/eliminar/{id}/{listarluego}', 'Control\MotivocourierController@eliminar')->name('motivocourier.eliminar');
+    Route::resource('motivocourier', 'Control\MotivocourierController', array('except' => array('show')));
+
+    /* AREAS*/
+    Route::post('area/buscar', 'Control\AreaController@buscar')->name('area.buscar');
+    Route::get('area/eliminar/{id}/{listarluego}', 'Control\AreaController@eliminar')->name('area.eliminar');
+    Route::resource('area', 'Control\AreaController', array('except' => array('show')));
+
+    /* TRAMITES*/
+    Route::post('tramite/buscar', 'Control\TramiteController@buscar')->name('tramite.buscar');
+    Route::get('tramite/eliminar/{id}/{listarluego}', 'Control\TramiteController@eliminar')->name('tramite.eliminar');
+    Route::resource('tramite', 'Control\TramiteController', array('except' => array('show')));
+
+   
+});
