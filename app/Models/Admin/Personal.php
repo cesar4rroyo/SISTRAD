@@ -42,4 +42,8 @@ class Personal extends Model
     {
         return $this->hasMany(Usuario::class);
     }
+
+    public function getFullNameAttribute(){
+        return $this->apellidopaterno . ' ' . $this->apellidomaterno . ' ' . $this->nombres;
+    }
 }

@@ -18,7 +18,19 @@
 		@foreach ($lista as $key => $value)
         <tr>
 			<td>{{ $contador }}</td>
-			<td>{{ $value->descripcion }}</td>
+			<td>{{ $value->login }}</td>			
+			<td>{{ $value->tipousuario->descripcion }}</td>
+			<td>{{ ($value->apellidopaterno.' '.$value->apellidomaterno.' '.$value->nombres)  }}</td>
+			@if ($value->cargo != null)
+				<td>{{ $value->cargo->descripcion }}</td>
+			@else
+				<td> - </td>
+			@endif
+			@if ($value->area != null)
+				<td>{{ $value->area->descripcion }}</td>
+			@else
+				<td> - </td>
+			@endif
             <td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}</td>
             <td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}</td>
 		</tr>

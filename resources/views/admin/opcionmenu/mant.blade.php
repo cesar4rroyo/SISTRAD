@@ -1,5 +1,5 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($grupomenu, $formData) !!}	
+{!! Form::model($opcionmenu, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="form-group">
 		{!! Form::label('nombre', 'Descripción:', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
@@ -10,15 +10,27 @@
 	<div class="form-group">
 		{!! Form::label('icono', 'Icono', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
-			{!! Form::text('icono', $grupomenu?$grupomenu->icono : null, array('class' => 'form-control input-xs', 'id' => 'icono', 'placeholder' => 'Ingrese el ícono')) !!}
+			{!! Form::text('icono', $opcionmenu?$opcionmenu->icono : null, array('class' => 'form-control input-xs', 'id' => 'icono', 'placeholder' => 'Ingrese el ícono')) !!}
 		</div>
 	</div>
 	<div class="form-group">
 		{!! Form::label('orden', 'Orden', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
-			{!! Form::number('orden', $grupomenu?$grupomenu->orden : null, array('class' => 'form-control input-xs', 'id' => 'orden', 'placeholder' => 'Ingrese el nro de orden')) !!}
+			{!! Form::number('orden', $opcionmenu?$opcionmenu->orden : null, array('class' => 'form-control input-xs', 'id' => 'orden', 'placeholder' => 'Ingrese el nro de orden')) !!}
 		</div>
-	</div>			
+	</div>	
+	<div class="form-group">
+		{!! Form::label('link', 'Link', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::text('link', $opcionmenu?$opcionmenu->link : null, array('class' => 'form-control input-xs', 'id' => 'link', 'placeholder' => 'Ingrese el nro de link')) !!}
+		</div>
+	</div>
+	<div class="form-group">
+		{!! Form::label('grupomenu_id', 'Grupo de Menú:', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::select('grupomenu_id', $cboGrupos, null, array('class' => 'form-control input-xs', 'id' => 'grupomenu_id')) !!}
+		</div>
+	</div>		
 	
 	</div>
     <div class="form-group">

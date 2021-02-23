@@ -59,6 +59,6 @@ class OpcionMenu extends Model
                 }
             })
             ->orderBy('grupomenu_id', 'ASC')
-            ->orderBy('order', 'ASC');
+            ->orderBy('orden', 'ASC');
     }
 }

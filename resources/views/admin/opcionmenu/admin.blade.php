@@ -21,6 +21,10 @@
                             {!! Form::label('descripcion', 'Descripcion') !!}
                             {!! Form::text('descripcion', '', array('class' => 'form-control ', 'id' => 'descripcion')) !!}
                         </div>
+						<div class="col-lg-4 col-md-4  form-group">
+							{!! Form::label('grupomenu_id', 'Grupo de Menús:') !!}
+							{!! Form::select('grupomenu_id', $cboGrupos, null, array('class' => 'form-control input-xs', 'id' => 'grupomenu_id')) !!}
+						</div>
                         <div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
                             {!! Form::label('nombre', 'Filas a mostrar') !!}
                             {!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-xs', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
@@ -62,6 +66,9 @@
 			if (key == '13') {
 				buscar('{{ $entidad }}');
 			}
+		});
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="grupomenu_id"]').change(function (e) {
+			buscar('{{ $entidad }}');
 		});
 	});
 </script>
