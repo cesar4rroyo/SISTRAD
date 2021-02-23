@@ -19,6 +19,8 @@ class CreateGrupomenuTable extends Migration
             $table->string('icono', 200)->nullable();
             $table->integer('orden')->default(0);
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

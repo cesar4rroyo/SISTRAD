@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Area;
 use App\Models\Admin\Cargo;
 use App\Models\Admin\Personal;
 use App\Models\Admin\Rol;
+use App\Models\Control\Area;
 
 class PersonalController extends Controller
 {

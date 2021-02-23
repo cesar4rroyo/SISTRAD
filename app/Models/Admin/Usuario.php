@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Usuario extends Authenticatable
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $remember_token = 'false';
     protected $table = 'usuario';
     protected $fillable = [

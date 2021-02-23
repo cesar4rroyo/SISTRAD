@@ -17,14 +17,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::get('acceso', 'AccesoController@index')->name('acceso');
     Route::post('acceso', 'AccesoController@store')->name('store_acceso');
     /* Rutas de GRUPOMENU */
-    Route::get('grupomenu/create', 'GrupoMenuController@create')->name('create_grupomenu');
-    Route::get('grupomenu', 'GrupoMenuController@index')->name('grupomenu');
-    Route::get('grupomenu/get', 'GrupoMenuController@getGrupos')->name('get_grupo');
-    Route::get('grupomenu/show/{id}', 'GrupoMenuController@show')->name('show_grupomenu');
-    Route::post('grupomenu', 'GrupoMenuController@store')->name('store_grupomenu');
-    Route::post('grupomenu/edit', 'GrupoMenuController@edit')->name('edit_grupomenu');
-    Route::post('grupomenu/update', 'GrupoMenuController@update')->name('update_grupomenu');
-    Route::post('grupomenu/destroy', 'GrupoMenuController@destroy')->name('destroy_grupomenu');
+    Route::post('grupomenu/buscar', 'GrupoMenuController@buscar')->name('grupomenu.buscar');
+    Route::get('grupomenu/eliminar/{id}/{listarluego}', 'GrupoMenuController@eliminar')->name('grupomenu.eliminar');
+    Route::resource('grupomenu', 'GrupoMenuController', array('except' => array('show')));
 
     /* Rutas de OPCIONMENU */
     Route::get('opcionmenu/create', 'OpcionMenuController@create')->name('create_opcionmenu');
@@ -37,15 +32,11 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::post('opcionmenu/destroy', 'OpcionMenuController@destroy')->name('destroy_opcionmenu');
 
     /* Rutas de Cargo */
-    /* Rutas de OPCIONMENU */
-    Route::get('cargo/create', 'CargoController@create')->name('create_cargo');
-    Route::get('cargos', 'CargoController@index')->name('cargo');
-    Route::get('cargo/get', 'CargoController@getCargos')->name('get_cargos');
-    Route::get('cargo/show/{id}', 'CargoController@show')->name('show_cargo');
-    Route::post('cargo', 'CargoController@store')->name('store_cargo');
-    Route::post('cargo/edit', 'CargoController@edit')->name('edit_cargo');
-    Route::post('cargo/update', 'CargoController@update')->name('update_cargo');
-    Route::post('cargo/destroy', 'CargoController@destroy')->name('destroy_cargo');
+    Route::post('cargo/buscar', 'CargoController@buscar')->name('cargo.buscar');
+    Route::get('cargo/eliminar/{id}/{listarluego}', 'CargoController@eliminar')->name('cargo.eliminar');
+    Route::resource('cargo', 'CargoController', array('except' => array('show')));
+
+
     /* Rutas de ROL */
     Route::get('rol/create', 'RolController@create')->name('create_rol');
     Route::get('rol', 'RolController@index')->name('rol');

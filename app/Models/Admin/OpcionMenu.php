@@ -3,9 +3,13 @@
 namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class OpcionMenu extends Model
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $table = 'opcionmenu';
     protected $primaryKey = 'id';
     protected $fillable = ['descripcion', 'icono', 'orden', 'link', 'grupomenu_id'];

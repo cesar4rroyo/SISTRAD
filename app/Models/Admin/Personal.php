@@ -2,10 +2,15 @@
 
 namespace App\Models\Admin;
 
+use App\Models\Control\Area;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Personal extends Model
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $table = 'personal';
     protected $fillable = [
         'dni',
