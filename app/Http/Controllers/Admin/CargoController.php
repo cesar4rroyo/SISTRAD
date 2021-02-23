@@ -20,7 +20,7 @@ class CargoController extends Controller
             'edit'   => 'cargo.edit', 
             'delete' => 'cargo.eliminar',
             'search' => 'cargo.buscar',
-            'index'  => 'anio.index',
+            'index'  => 'cargo.index',
         );
 
      /**

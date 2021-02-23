@@ -20,45 +20,25 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::post('grupomenu/buscar', 'GrupoMenuController@buscar')->name('grupomenu.buscar');
     Route::get('grupomenu/eliminar/{id}/{listarluego}', 'GrupoMenuController@eliminar')->name('grupomenu.eliminar');
     Route::resource('grupomenu', 'GrupoMenuController', array('except' => array('show')));
-
     /* Rutas de OPCIONMENU */
-    Route::get('opcionmenu/create', 'OpcionMenuController@create')->name('create_opcionmenu');
-    Route::get('opcionmenu', 'OpcionMenuController@index')->name('opcionmenu');
-    Route::get('opcionmenu/get', 'OpcionMenuController@getOpciones')->name('get_opcion');
-    Route::get('opcionmenu/show/{id}', 'OpcionMenuController@show')->name('show_opcionmenu');
-    Route::post('opcionmenu', 'OpcionMenuController@store')->name('store_opcionmenu');
-    Route::post('opcionmenu/edit', 'OpcionMenuController@edit')->name('edit_opcionmenu');
-    Route::post('opcionmenu/update', 'OpcionMenuController@update')->name('update_opcionmenu');
-    Route::post('opcionmenu/destroy', 'OpcionMenuController@destroy')->name('destroy_opcionmenu');
-
+    Route::post('opcionmenu/buscar', 'OpcionMenuController@buscar')->name('opcionmenu.buscar');
+    Route::get('opcionmenu/eliminar/{id}/{listarluego}', 'OpcionMenuController@eliminar')->name('opcionmenu.eliminar');
+    Route::resource('opcionmenu', 'OpcionMenuController', array('except' => array('show')));
     /* Rutas de Cargo */
     Route::post('cargo/buscar', 'CargoController@buscar')->name('cargo.buscar');
     Route::get('cargo/eliminar/{id}/{listarluego}', 'CargoController@eliminar')->name('cargo.eliminar');
     Route::resource('cargo', 'CargoController', array('except' => array('show')));
-
-
     /* Rutas de ROL */
-    Route::get('rol/create', 'RolController@create')->name('create_rol');
-    Route::get('rol', 'RolController@index')->name('rol');
-    Route::get('rol/get', 'RolController@getRoles')->name('get_rol');
-    Route::get('rol/show/{id}', 'RolController@show')->name('show_rol');
-    Route::post('rol', 'RolController@store')->name('store_rol');
-    Route::post('rol/edit', 'RolController@edit')->name('edit_rol');
-    Route::post('rol/update', 'RolController@update')->name('update_rol');
-    Route::post('rol/destroy', 'RolController@destroy')->name('destroy_rol');
-
+    Route::post('rol/buscar', 'RolController@buscar')->name('rol.buscar');
+    Route::get('rol/eliminar/{id}/{listarluego}', 'RolController@eliminar')->name('rol.eliminar');
+    Route::resource('rol', 'RolController', array('except' => array('show')));
     /* Rutas de ROLPERSONA */
     Route::get('rolpersona', 'RolPersonalController@index')->name('rolpersona');
     Route::post('rolpersona', 'RolPersonalController@store')->name('store_rolpersona');
     /* Rutas de TIPOUSUARIO */
-    Route::get('tipousuario/create', 'TipoUsuarioController@create')->name('create_tipousuario');
-    Route::get('tipousuario', 'TipoUsuarioController@index')->name('tipousuario');
-    Route::get('tipousuario/get', 'TipoUsuarioController@getTipos')->name('get_tipo');
-    Route::get('tipousuario/show/{id}', 'TipoUsuarioController@show')->name('show_tipousuario');
-    Route::post('tipousuario', 'TipoUsuarioController@store')->name('store_tipousuario');
-    Route::post('tipousuario/edit', 'TipoUsuarioController@edit')->name('edit_tipousuario');
-    Route::post('tipousuario/update', 'TipoUsuarioController@update')->name('update_tipousuario');
-    Route::post('tipousuario/destroy', 'TipoUsuarioController@destroy')->name('destroy_tipousuario');
+    Route::post('tipousuario/buscar', 'TipoUsuarioController@buscar')->name('tipousuario.buscar');
+    Route::get('tipousuario/eliminar/{id}/{listarluego}', 'TipoUsuarioController@eliminar')->name('tipousuario.eliminar');
+    Route::resource('tipousuario', 'TipoUsuarioController', array('except' => array('show')));
     /* Rutas de USUARIO */
     Route::get('usuario/create', 'UsuarioController@create')->name('create_usuario');
     Route::get('usuario', 'UsuarioController@index')->name('usuario');

@@ -45,4 +45,20 @@ class OpcionMenu extends Model
         $grupo = GrupoMenu::orderBy('orden')->get()->toArray();
         return $grupo;
     }
+
+    public function scopelistar($query, $name, $grupomenu_id)
+    {
+        return $query->where(function ($subquery) use ($name) {
+            if (!is_null($name)) {
+                $subquery->where('descripcion', 'LIKE', '%' . $name . '%');
+            }
+        })
+            ->where(function ($subquery) use ($grupomenu_id) {
+                if (!is_null($grupomenu_id)) {
+                    $subquery->where('grupomenu_id', '=', $grupomenu_id);
+                }
+            })
+            ->orderBy('grupomenu_id', 'ASC')
+            ->orderBy('order', 'ASC');
+    }
 }
