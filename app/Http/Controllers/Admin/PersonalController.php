@@ -43,7 +43,7 @@ class PersonalController extends Controller
     {
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
-        $entidad          = 'Persona';
+        $entidad          = 'personal';
         $nombres          = Libreria::getParam($request->input('nombres'));
         $dni              = Libreria::getParam($request->input('dni'));
         $area_id          = Libreria::getParam($request->input('area'));
@@ -106,7 +106,7 @@ class PersonalController extends Controller
     public function create(Request $request)
     {
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad  = 'Persona';
+        $entidad  = 'personal';
         $persona = null;
         $formData = array('persona.store');
         $cboAreas = ['' => 'Seleccione un área'] + Area::pluck('descripcion', 'id')->all();
@@ -131,7 +131,6 @@ class PersonalController extends Controller
             'dni' => 'required|numeric|min:10000000|max:99999999|unique:personal,dni,' . 'id',
             'apellidopaterno' => 'required|max:50',
             'apellidomaterno' => 'required|max:50',
-            'dni' => 'required|max:50',
             'rol_id' => 'required',
             'area_id'=>'required',
             'cargo_id'=>'required',
@@ -188,11 +187,104 @@ class PersonalController extends Controller
         $roles = Rol::orderBy('id')->pluck('descripcion', 'id')->toArray();        
         $cboAreas = ['' => 'Seleccione un área'] + Area::pluck('descripcion', 'id')->all();
         $cboCargos = ['' => 'Seleccione un cargo'] + Cargo::pluck('descripcion', 'id')->all();
-        $entidad  = 'Persona';
+        $entidad  = 'personal';
         $formData = array('persona.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
         return view($this->folderview . '.mant')->with(compact('persona', 'formData', 'entidad', 'boton', 'listar', 'roles', 'cboAreas', 'cboCargos'));
+    }
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $existe = Libreria::verificarExistencia($id, 'personal');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $reglas     = array(
+            'nombres' => 'required|max:50',
+            'apellidopaterno' => 'required|max:50',
+            'apellidomaterno' => 'required|max:50',
+            'rol_id' => 'required',
+            'area_id'=>'required',
+            'cargo_id'=>'required',
+        );
+        $mensajes = array(
+            'nombre.required'         => 'Debe ingresar un nombre',
+            'apellidopaterno.required'         => 'Debe ingresar el apellido paterno',
+            'apellidomaterno.required'         => 'Debe ingresar el apellido materno',
+            'rol_id.required'         => 'Debe seleccionar al menos un Rol',
+            'dni.unique'=>'La persona con el DNI ingresado ya se encuentra registrado',
+            'dni.required'=>'El campo DNI es obligatorio',
+            'dni.min'=>'El DNI es incorrecto',
+            'dni.max'=>'El DNI es incorrecto',
+            'cargo_id.required'=>'El campo Cargo es obligatorio',
+            'area_id.required'=>'El campo Área es obligatorio',
+        );
+        $validacion = Validator::make($request->all(), $reglas, $mensajes);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        }
+        $error = DB::transaction(function () use ($request, $id) {
+            $persona = Personal::find($id);
+            $persona->update([
+                'apellidopaterno' => strtoupper($request->input('apellidopaterno')),
+                'apellidomaterno' => strtoupper($request->input('apellidomaterno')),
+                'nombres' => strtoupper($request->input('nombres')),
+                'dni' => strtoupper($request->input('dni')),           
+                'ruc' => strtoupper($request->input('ruc')),           
+                'direccion' => strtoupper($request->input('direccion')),
+                'email' => $request->input('email'),       
+                'telefono' => strtoupper($request->input('telefono')),
+                'cargo_id' => $request->input('cargo_id'),       
+                'area_id' => $request->input('area_id'), 
+            ]);
+            $persona->roles()->sync($request->rol_id);
+            
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $existe = Libreria::verificarExistencia($id, 'personal');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $error = DB::transaction(function () use ($id) {
+            $personal = Personal::find($id);
+            $personal->delete();
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
+    public function eliminar($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'personal');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Personal::find($id);
+        $entidad  = 'personal';
+        $formData = array('route' => array('persona.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Eliminar';
+        return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
 
 

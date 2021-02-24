@@ -52,8 +52,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::post('persona/buscar', 'PersonalController@buscar')->name('persona.buscar');
     Route::get('persona/eliminar/{id}/{listarluego}', 'PersonalController@eliminar')->name('persona.eliminar');
     Route::resource('persona', 'PersonalController', array('except' => array('show')));
-    Route::post('persona/buscarDNI', 'PersonalController@buscarDNI')->name('persona.buscarDNI');
-    Route::post('persona/buscarRUC', 'PersonalController@buscarRUC')->name('persona.buscarRUC');
     
     //obetener solo los clientes con RUC para combobox
     Route::get('persona/clientes/ruc', 'PersonalController@getClientesRuc')->name('getClientesRuc');
