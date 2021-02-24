@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tramite extends Model
 {
-	 use SoftDeletes;
+	use SoftDeletes;
     protected $table = 'tramite';
     protected $dates = ['deleted_at'];
 

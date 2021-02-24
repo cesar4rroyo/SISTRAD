@@ -19,8 +19,15 @@ class OpcionMenuSeeder extends Seeder
         DB::table('opcionmenu')->insert([
             'descripcion' => 'Cargos',
             'icono' => 'fas fa-address-card',
-            'link' => 'admin/cargos',
+            'link' => 'admin/cargo',
             'orden' => 3,
+            'grupomenu_id' => 2
+        ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Area',
+            'icono' => 'fas fa-warehouse',
+            'link' => 'area',
+            'orden' => 2,
             'grupomenu_id' => 2
         ]);
         //end Grupo Persona
@@ -76,14 +83,7 @@ class OpcionMenuSeeder extends Seeder
         ]);
         //end Grupo Usuarios
 
-        //start Control
-        DB::table('opcionmenu')->insert([
-            'descripcion' => 'Area',
-            'icono' => 'fas fa-warehouse',
-            'link' => 'area',
-            'orden' => 1,
-            'grupomenu_id' => 1
-        ]);
+        //start Control        
         DB::table('opcionmenu')->insert([
             'descripcion' => 'Trámite',
             'icono' => 'far fa-file-alt',

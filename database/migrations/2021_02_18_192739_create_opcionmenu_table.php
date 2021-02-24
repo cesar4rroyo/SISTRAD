@@ -26,6 +26,8 @@ class CreateOpcionmenuTable extends Migration
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

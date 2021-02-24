@@ -3,9 +3,13 @@
 namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class OpcionMenu extends Model
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $table = 'opcionmenu';
     protected $primaryKey = 'id';
     protected $fillable = ['descripcion', 'icono', 'orden', 'link', 'grupomenu_id'];
@@ -40,5 +44,21 @@ class OpcionMenu extends Model
     {
         $grupo = GrupoMenu::orderBy('orden')->get()->toArray();
         return $grupo;
+    }
+
+    public function scopelistar($query, $name, $grupomenu_id)
+    {
+        return $query->where(function ($subquery) use ($name) {
+            if (!is_null($name)) {
+                $subquery->where('descripcion', 'LIKE', '%' . $name . '%');
+            }
+        })
+            ->where(function ($subquery) use ($grupomenu_id) {
+                if (!is_null($grupomenu_id)) {
+                    $subquery->where('grupomenu_id', '=', $grupomenu_id);
+                }
+            })
+            ->orderBy('grupomenu_id', 'ASC')
+            ->orderBy('orden', 'ASC');
     }
 }
