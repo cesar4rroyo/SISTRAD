@@ -81,7 +81,7 @@ class Usuario extends Authenticatable
             })
             ->where(function ($subquery) use ($nombre) {
                 if (!is_null($nombre)) {
-                    $subquery->where(DB::raw('concat(person.apellidopaterno,\' \',person.apellidomaterno,\' \',person.nombres)'), 'LIKE', '%' . $nombre . '%');
+                    $subquery->where(DB::raw('concat(personal.apellidopaterno,\' \',personal.apellidomaterno,\' \',personal.nombres)'), 'LIKE', '%' . $nombre . '%');
                 }
             })
             ->where(function ($subquery) use ($tipousuario_id) {

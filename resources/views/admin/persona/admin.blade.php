@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Usuarios</div>
+                <div class="card-header">Persoal</div>
                 
                 <div class="card-body">
                     <div class="row">
@@ -18,24 +18,20 @@
                         {!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 						<div class="row w-100 d-flex">
                         <div class="col-lg-4 col-md-4  form-group">
-                            {!! Form::label('usuario', 'Nombre del Usuario:') !!}
-                            {!! Form::text('usuario', '', array('class' => 'form-control ', 'id' => 'usuario')) !!}
+                            {!! Form::label('nombres', 'Nombres:') !!}
+                            {!! Form::text('nombres', '', array('class' => 'form-control ', 'id' => 'nombres')) !!}
                         </div>
 						<div class="col-lg-4 col-md-4  form-group">
-							{!! Form::label('nombre', 'Nombre:') !!}
-							{!! Form::text('nombre', '', array('class' => 'form-control input-xs', 'id' => 'nombre')) !!}
+							{!! Form::label('dni', 'DNI:') !!}
+							{!! Form::text('dni', '', array('class' => 'form-control input-xs', 'id' => 'dni')) !!}
+						</div>												
+						<div class="col-lg-4 col-md-4  form-group">
+							{!! Form::label('area', 'Area:') !!}
+							{!! Form::select('area', $cboAreas, null, array('class' => 'form-control input-xs', 'id' => 'area')) !!}
 						</div>
 						<div class="col-lg-4 col-md-4  form-group">
-							{!! Form::label('tipousuario', 'Tipos de Usuarios:') !!}
-							{!! Form::select('tipousuario', $cboTiposUsuario, null, array('class' => 'form-control input-xs', 'id' => 'tipousuario')) !!}
-						</div>
-						<div class="col-lg-4 col-md-4  form-group">
-							{!! Form::label('area_id', 'Area:') !!}
-							{!! Form::select('area_id', $cboAreas, null, array('class' => 'form-control input-xs', 'id' => 'area_id')) !!}
-						</div>
-						<div class="col-lg-4 col-md-4  form-group">
-							{!! Form::label('cargo_id', 'Cargo:') !!}
-							{!! Form::select('cargo_id', $cboCargos, null, array('class' => 'form-control input-xs', 'id' => 'cargo_id')) !!}
+							{!! Form::label('cargo', 'Cargo:') !!}
+							{!! Form::select('cargo', $cboCargos, null, array('class' => 'form-control input-xs', 'id' => 'cargo')) !!}
 						</div>
                         <div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
                             {!! Form::label('nombre', 'Filas a mostrar') !!}
@@ -74,25 +70,25 @@
     document.addEventListener("DOMContentLoaded", function(event) {
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="usuario"]').keyup(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="nombres"]').keyup(function (e) {
 			var key = window.event ? e.keyCode : e.which;
 			if (key == '13') {
 				buscar('{{ $entidad }}');
 			}
 		});
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="nombre"]').keyup(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="dni"]').keyup(function (e) {
 			var key = window.event ? e.keyCode : e.which;
 			if (key == '13') {
 				buscar('{{ $entidad }}');
 			}
-		});
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="tipousuario"]').change(function (e) {
+		});			
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="roles"]').change(function (e) {
 			buscar('{{ $entidad }}');
 		});
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="cargo_id"]').change(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="cargo"]').change(function (e) {
 			buscar('{{ $entidad }}');
 		});
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="area_id"]').change(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="area"]').change(function (e) {
 			buscar('{{ $entidad }}');
 		});
 	});

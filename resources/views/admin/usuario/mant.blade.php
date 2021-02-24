@@ -37,13 +37,13 @@
 			  border: 1px solid #ced4da;
 			  padding: .46875rem .75rem;
 			  height: calc(2.25rem + 2px);
-			  width: 78%;
 	  }
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
-	$('#personal_id').select2();
 	configurarAnchoModal('400');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+	$('#personal_id').select2();
+
 }); 
 </script>

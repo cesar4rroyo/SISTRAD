@@ -5,7 +5,7 @@ namespace App\Models\Admin;
 use App\Models\Control\Area;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Facades\DB;
 
 class Personal extends Model
 {
@@ -45,5 +45,30 @@ class Personal extends Model
 
     public function getFullNameAttribute(){
         return $this->apellidopaterno . ' ' . $this->apellidomaterno . ' ' . $this->nombres;
+    }
+
+    public function scopelistar($query, $nombre, $dni = null, $area_id = null, $cargo_id = null)
+    {
+        return $query->where(function ($subquery) use ($nombre) {
+            if (!is_null($nombre)) {
+                    $subquery->where(DB::raw('concat(personal.apellidopaterno,\' \',personal.apellidomaterno,\' \',personal.nombres)'), 'LIKE', '%' . $nombre . '%');
+                }
+            })
+            ->where(function ($subquery) use ($dni) {
+                if (!is_null($dni)) {
+                    $subquery->where('dni', '=', $dni);
+                }
+            })
+            ->where(function ($subquery) use ($area_id) {
+                if (!is_null($area_id)) {
+                    $subquery->where('area_id', '=', $area_id);
+                }
+            })
+            ->where(function ($subquery) use ($cargo_id) {
+                if (!is_null($cargo_id)) {
+                    $subquery->where('cargo_id', '=', $cargo_id);
+                }
+            })
+            ->orderBy('apellidopaterno', 'ASC');        
     }
 }

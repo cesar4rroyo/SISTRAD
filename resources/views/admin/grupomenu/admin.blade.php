@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Grupo Menú</div>
+                <div class="card-header">Grupos de Menú</div>
                 
                 <div class="card-body">
                     <div class="row">
