@@ -17,6 +17,9 @@ class TipoUsuarioSeeder extends Seeder
         ]);
         DB::table('tipousuario')->insert([
             'descripcion' => 'Administrador',
+        ]);
+        DB::table('tipousuario')->insert([
+            'descripcion'=>'Personal'
         ]);  
     }
 }

@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Este Es una prueba</div>                
+                <div class="card-header">INVITADO</div>                
             </div>
         </div>
     </div>

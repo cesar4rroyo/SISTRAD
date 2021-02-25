@@ -21,13 +21,13 @@
 			<td>{{ $value->login }}</td>			
 			<td>{{ $value->tipousuario->descripcion }}</td>
 			<td>{{ ($value->apellidopaterno.' '.$value->apellidomaterno.' '.$value->nombres)  }}</td>
-			@if ($value->cargo != null)
-				<td>{{ $value->cargo->descripcion }}</td>
+			@if ($value->personal->cargo != null)
+				<td>{{ $value->personal->cargo->descripcion }}</td>
 			@else
 				<td> - </td>
 			@endif
-			@if ($value->area != null)
-				<td>{{ $value->area->descripcion }}</td>
+			@if ($value->personal->area != null)
+				<td>{{ $value->personal->area->descripcion }}</td>
 			@else
 				<td> - </td>
 			@endif

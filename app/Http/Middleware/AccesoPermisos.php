@@ -11,25 +11,28 @@ class AccesoPermisos
     public function handle($request, Closure $next)
     {
         $ruta = $request->path();
-        $ruta_corta = explode('/', $ruta);
-        // if (count($ruta_corta) == 3) {
-        //     $ruta_final = $ruta_corta[0] . "/" . $ruta_corta[1] . "/" . $ruta_corta[2];
-        // } else {
-        $ruta_final = $ruta_corta[0] . "/" . $ruta_corta[1];
+        if(str_contains($ruta, '/')){
+            $ruta = explode('/', $ruta);
+            $ruta = $ruta[0];
+        }
 
-        if ($this->permiso($ruta_final)) {
+
+        if ($this->permiso($ruta)) {
             return $next($request);
         } else {
-            return redirect('/')->with('warning', 'No cuentas con permisos para ingresar a esta seccion');
+            return redirect('/dashboard')->with('warning', 'No cuentas con permisos para ingresar a esta seccion');
         }
     }
 
     private function permiso($ruta)
     {
+        if($ruta=='dashboard'){
+            return true;
+        }
 
         $opcion = OpcionMenu::where('link', '=', $ruta)->get()->toArray();
         $tipousuario_id = session()->get('tipousuario_id');
-        $final = DB::table('acceso')
+        $final = DB::table('acceso')    
             ->where('opcionmenu_id', '=', $opcion[0]['id'])
             ->where('tipousuario_id', '=', $tipousuario_id)
             ->get()
