@@ -110,7 +110,7 @@ class UsuarioController extends Controller
         $usuario   = null;
         $formData     = array('usuario.store');
         $personal = Personal::all()->toArray();
-        $cboPersonal =  array('' => 'Seleccione una Persona') + Personal::get()->pluck('full_name', 'id')->all();;
+        $cboPersonal =  array('' => 'Seleccione una Persona') + Personal::getUsuarios()->pluck('full_name', 'id')->all();;
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar'; 
         return view($this->folderview.'.mant')->with(compact('usuario', 'formData', 'entidad', 'boton', 'cboTiposUsuario', 'listar', 'cboPersonal'));

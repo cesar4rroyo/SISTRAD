@@ -12,14 +12,14 @@ class OpcionMenuSeeder extends Seeder
         DB::table('opcionmenu')->insert([
             'descripcion' => 'Personal',
             'icono' => 'fas fa-user-alt',
-            'link' => 'admin/persona',
+            'link' => 'persona',
             'orden' => 1,
             'grupomenu_id' => 2
         ]);
         DB::table('opcionmenu')->insert([
             'descripcion' => 'Cargos',
             'icono' => 'fas fa-address-card',
-            'link' => 'admin/cargo',
+            'link' => 'cargo',
             'orden' => 3,
             'grupomenu_id' => 2
         ]);
