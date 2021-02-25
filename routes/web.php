@@ -41,7 +41,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware'=>['auth'
 
 
 //aca las demas rutas
-Route::group(['middleware' => ['auth', 'acceso']], function () {
+Route::group(['middleware' => ['auth', 'acceso']], function () {    
+    /* DASHBOARD */
+    Route::get('dashboard', 'Admin\AdminController@index')->name('dashboard');
     /* Rutas de PERSONA */
     Route::post('persona/buscar', 'Admin\PersonalController@buscar')->name('persona.buscar');
     Route::get('persona/eliminar/{id}/{listarluego}', 'Admin\PersonalController@eliminar')->name('persona.eliminar');
@@ -50,7 +52,6 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('cargo/buscar', 'Admin\CargoController@buscar')->name('cargo.buscar');
     Route::get('cargo/eliminar/{id}/{listarluego}', 'Admin\CargoController@eliminar')->name('cargo.eliminar');
     Route::resource('cargo', 'Admin\CargoController', array('except' => array('show')));
-    Route::get('dashboard', 'Admin\AdminController@index')->name('dashboard');
     /* MOTIVOS RECHAZO*/
     Route::post('motivorechazo/buscar', 'Control\MotivorechazoController@buscar')->name('motivorechazo.buscar');
     Route::get('motivorechazo/eliminar/{id}/{listarluego}', 'Control\MotivorechazoController@eliminar')->name('motivorechazo.eliminar');
