@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTramiteTable extends Migration
+class CreateProcedimientoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTramiteTable extends Migration
      */
     public function up()
     {
-        Schema::create('tramite', function (Blueprint $table) {
+        Schema::create('procedimiento', function (Blueprint $table) {
             $table->increments('id');
             $table->text('descripcion')->nullable();
             $table->text('observacion')->nullable();
@@ -34,6 +34,6 @@ class CreateTramiteTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tramite');
+        Schema::dropIfExists('procedimiento');
     }
 }

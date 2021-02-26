@@ -81,9 +81,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('area', 'Control\AreaController', array('except' => array('show')));
 
     /* TRAMITES*/
-    Route::post('tramite/buscar', 'Control\TramiteController@buscar')->name('tramite.buscar');
-    Route::get('tramite/eliminar/{id}/{listarluego}', 'Control\TramiteController@eliminar')->name('tramite.eliminar');
-    Route::resource('tramite', 'Control\TramiteController', array('except' => array('show')));
+    Route::post('procedimiento/buscar', 'Control\ProcedimientoController@buscar')->name('procedimiento.buscar');
+    Route::get('procedimiento/eliminar/{id}/{listarluego}', 'Control\ProcedimientoController@eliminar')->name('procedimiento.eliminar');
+    Route::resource('procedimiento', 'Control\ProcedimientoController', array('except' => array('show')));
 
    
 });

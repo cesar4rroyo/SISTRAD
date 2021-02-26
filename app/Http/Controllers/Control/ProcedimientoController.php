@@ -6,24 +6,24 @@ use Illuminate\Http\Request;
 
 use Validator;
 use App\Http\Requests;
-use App\Models\Control\Tramite;
-use App\Models\Control\Rutatramite;
+use App\Models\Control\Procedimiento;
+use App\Models\Control\Rutaprocedimiento;
 use App\Models\Control\Area;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-class TramiteController extends Controller
+class ProcedimientoController extends Controller
 {
-    protected $folderview      = 'control.tramite';
-    protected $tituloAdmin     = 'Tramite';
-    protected $tituloRegistrar = 'Registrar Tramite';
-    protected $tituloModificar = 'Modificar Tramite';
-    protected $tituloEliminar  = 'Eliminar Tramite';
-    protected $rutas           = array('create' => 'tramite.create', 
-            'edit'   => 'tramite.edit', 
-            'delete' => 'tramite.eliminar',
-            'search' => 'tramite.buscar',
+    protected $folderview      = 'control.procedimiento';
+    protected $tituloAdmin     = 'Procedimiento';
+    protected $tituloRegistrar = 'Registrar Procedimiento';
+    protected $tituloModificar = 'Modificar Procedimiento';
+    protected $tituloEliminar  = 'Eliminar Procedimiento';
+    protected $rutas           = array('create' => 'procedimiento.create', 
+            'edit'   => 'procedimiento.edit', 
+            'delete' => 'procedimiento.eliminar',
+            'search' => 'procedimiento.buscar',
             'index'  => 'anio.index',
         );
 
@@ -48,9 +48,9 @@ class TramiteController extends Controller
     {
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
-        $entidad          = 'tramite';
+        $entidad          = 'procedimiento';
         $nombre             = Libreria::getParam($request->input('descripcion'));
-        $resultado        = Tramite::where('descripcion', 'LIKE', '%'.strtoupper($nombre).'%')->orderBy('descripcion', 'ASC');
+        $resultado        = Procedimiento::where('descripcion', 'LIKE', '%'.strtoupper($nombre).'%')->orderBy('descripcion', 'ASC');
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -83,7 +83,7 @@ class TramiteController extends Controller
      */
     public function index()
     {
-        $entidad          = 'tramite';
+        $entidad          = 'procedimiento';
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
@@ -98,16 +98,16 @@ class TramiteController extends Controller
     public function create(Request $request)
     {
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad  = 'tramite';
-        $tramite = null;
+        $entidad  = 'procedimiento';
+        $procedimiento = null;
         
         $areas = ["" => "Seleccione un area"];
         $areas += Area::pluck('descripcion', 'id')->all();
 
-        $formData = array('tramite.store');
+        $formData = array('procedimiento.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('tramite', 'formData', 'entidad', 'boton', 'listar', 'areas'));
+        return view($this->folderview.'.mant')->with(compact('procedimiento', 'formData', 'entidad', 'boton', 'listar', 'areas'));
     }
 
     /**
@@ -138,28 +138,28 @@ class TramiteController extends Controller
         $error = DB::transaction(function() use($request){
             $array_areas = \json_decode($request->input('listAreas') , true);
 
-            $tramite = new Tramite();
-            $tramite->descripcion   = strtoupper($request->input('descripcion'));
-            $tramite->observacion   = Libreria::getParam($request->input('observacion'));
-            $tramite->areainicio_id = $array_areas[0]["idarea"];
-            $tramite->areafin_id    = $array_areas[count($array_areas)-1]["idarea"];
-            $tramite->plazo         = Libreria::getParam($request->input('plazo'));
-            $tramite->save();
+            $procedimiento = new Procedimiento();
+            $procedimiento->descripcion   = strtoupper($request->input('descripcion'));
+            $procedimiento->observacion   = Libreria::getParam($request->input('observacion'));
+            $procedimiento->areainicio_id = $array_areas[0]["idarea"];
+            $procedimiento->areafin_id    = $array_areas[count($array_areas)-1]["idarea"];
+            $procedimiento->plazo         = Libreria::getParam($request->input('plazo'));
+            $procedimiento->save();
             
                 for ($i=0; $i < count($array_areas) ; $i++) { 
-                    $rutatramite                    = new Rutatramite();
-                    $rutatramite->areainicial_id    = $array_areas[$i]["idarea"];
-                    // $rutatramite->plazo             = $array_areas[$i]["plazo"];
-                    $rutatramite->plazo             = $request->input("plazo".$array_areas[$i]["idarea"]);
-                    $rutatramite->tramite_id        = $tramite->id;
+                    $rutaprocedimiento                    = new Rutaprocedimiento();
+                    $rutaprocedimiento->areainicial_id    = $array_areas[$i]["idarea"];
+                    // $rutaprocedimiento->plazo             = $array_areas[$i]["plazo"];
+                    $rutaprocedimiento->plazo             = $request->input("plazo".$array_areas[$i]["idarea"]);
+                    $rutaprocedimiento->procedimiento_id        = $procedimiento->id;
 
                     if(count($array_areas) ==  $i +1 ){
-                        $rutatramite->areafinal_id      = $array_areas[$i]["idarea"];
+                        $rutaprocedimiento->areafinal_id      = $array_areas[$i]["idarea"];
                     }else{
-                        $rutatramite->areafinal_id    = $array_areas[$i+1]["idarea"];
+                        $rutaprocedimiento->areafinal_id    = $array_areas[$i+1]["idarea"];
                     }
                     
-                    $rutatramite->save();
+                    $rutaprocedimiento->save();
                 }
                 
         });
@@ -186,7 +186,7 @@ class TramiteController extends Controller
      */
     public function edit($id, Request $request)
     {
-        $existe = Libreria::verificarExistencia($id, 'tramite');
+        $existe = Libreria::verificarExistencia($id, 'procedimiento');
         if ($existe !== true) {
             return $existe;
         }
@@ -195,12 +195,12 @@ class TramiteController extends Controller
         $areas += Area::pluck('descripcion', 'id')->all();
 
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
-        $tramite = Tramite::find($id);
-        $entidad  = 'tramite';
-        $formData = array('tramite.update', $id);
+        $procedimiento = Procedimiento::find($id);
+        $entidad  = 'procedimiento';
+        $formData = array('procedimiento.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('tramite', 'formData', 'entidad', 'boton', 'listar' ,'areas'));
+        return view($this->folderview.'.mant')->with(compact('procedimiento', 'formData', 'entidad', 'boton', 'listar' ,'areas'));
     }
 
     /**
@@ -212,7 +212,7 @@ class TramiteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $existe = Libreria::verificarExistencia($id, 'tramite');
+        $existe = Libreria::verificarExistencia($id, 'procedimiento');
 
         if ($existe !== true) {
             return $existe;
@@ -234,32 +234,32 @@ class TramiteController extends Controller
 
             $array_areas = \json_decode($request->input('listAreas') , true);
 
-            $tramite = Tramite::find($id);
-            $tramite->descripcion = strtoupper($request->input('descripcion'));
-            $tramite->observacion   = Libreria::getParam($request->input('observacion'));
-            $tramite->areainicio_id = $array_areas[0]["idarea"];
-            $tramite->areafin_id    = $array_areas[count($array_areas)-1]["idarea"];
-            $tramite->plazo         = Libreria::getParam($request->input('plazo'));
-            $tramite->save();
+            $procedimiento = Procedimiento::find($id);
+            $procedimiento->descripcion = strtoupper($request->input('descripcion'));
+            $procedimiento->observacion   = Libreria::getParam($request->input('observacion'));
+            $procedimiento->areainicio_id = $array_areas[0]["idarea"];
+            $procedimiento->areafin_id    = $array_areas[count($array_areas)-1]["idarea"];
+            $procedimiento->plazo         = Libreria::getParam($request->input('plazo'));
+            $procedimiento->save();
 
-            foreach ($tramite->rutas as $ruta) {
+            foreach ($procedimiento->rutas as $ruta) {
                $ruta->delete();
             }
 
             for ($i=0; $i < count($array_areas) ; $i++) { 
                 
-                $rutatramite                    = new Rutatramite();
-                $rutatramite->areainicial_id    = $array_areas[$i]["idarea"];
-                $rutatramite->plazo             = $request->input("plazo".$array_areas[$i]["idarea"]);
-                $rutatramite->tramite_id        = $tramite->id;
+                $rutaprocedimiento                    = new Rutaprocedimiento();
+                $rutaprocedimiento->areainicial_id    = $array_areas[$i]["idarea"];
+                $rutaprocedimiento->plazo             = $request->input("plazo".$array_areas[$i]["idarea"]);
+                $rutaprocedimiento->procedimiento_id        = $procedimiento->id;
 
                 if(count($array_areas) ==  $i +1 ){
-                    $rutatramite->areafinal_id      = $array_areas[$i]["idarea"];
+                    $rutaprocedimiento->areafinal_id      = $array_areas[$i]["idarea"];
                 }else{
-                    $rutatramite->areafinal_id    = $array_areas[$i+1]["idarea"];
+                    $rutaprocedimiento->areafinal_id    = $array_areas[$i+1]["idarea"];
                 }
 
-                $rutatramite->save();
+                $rutaprocedimiento->save();
             }
 
         });
@@ -274,20 +274,20 @@ class TramiteController extends Controller
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'tramite');
+        $existe = Libreria::verificarExistencia($id, 'procedimiento');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $tramite = Tramite::find($id);
-            $tramite->delete();
+            $procedimiento = Procedimiento::find($id);
+            $procedimiento->delete();
         });
         return is_null($error) ? "OK" : $error;
     }
 
     public function eliminar($id, $listarLuego)
     {
-        $existe = Libreria::verificarExistencia($id, 'tramite');
+        $existe = Libreria::verificarExistencia($id, 'procedimiento');
         if ($existe !== true) {
             return $existe;
         }
@@ -295,9 +295,9 @@ class TramiteController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = Tramite::find($id);
-        $entidad  = 'tramite';
-        $formData = array('route' => array('tramite.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $modelo   = Procedimiento::find($id);
+        $entidad  = 'procedimiento';
+        $formData = array('route' => array('procedimiento.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }

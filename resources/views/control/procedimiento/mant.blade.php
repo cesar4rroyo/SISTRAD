@@ -1,5 +1,5 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($tramite, $formData) !!}	
+{!! Form::model($procedimiento, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	{!! Form::hidden('listAreas', null, array('id' => 'listAreas')) !!}
 
@@ -14,7 +14,7 @@
 			<div class="form-group">
 				{!! Form::label('plazo', 'Plazo (dias)', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
-					{!! Form::number('plazo', $tramite?$tramite->plazo : 1, array('class' => 'form-control input-xs', 'id' => 'plazo', 'placeholder' => 'Ingrese la descripción' , "min" => 1)) !!}
+					{!! Form::number('plazo', $procedimiento?$procedimiento->plazo : 1, array('class' => 'form-control input-xs', 'id' => 'plazo', 'placeholder' => 'Ingrese la descripción' , "min" => 1)) !!}
 				</div>
 			</div>
 			<div class="form-group">
@@ -30,7 +30,7 @@
 					<legend>Recorrido areas</legend>
 					<div class="form-group">
 						<div class="col-lg-12 col-md-12 col-sm-12">
-							{!! Form::select('areainicio_id', $areas , $tramite?$tramite->areainicio_id: "", array('class' => 'form-control input-xs', 'id' => 'areainicio_id')) !!}
+							{!! Form::select('areainicio_id', $areas , $procedimiento?$procedimiento->areainicio_id: "", array('class' => 'form-control input-xs', 'id' => 'areainicio_id')) !!}
 						</div>
 					</div>
 					<thead>
@@ -125,8 +125,8 @@ $(document).ready(function() {
 
 </script>
 
-@if(!is_null($tramite))
-	@foreach ($tramite->rutas as $ruta)
+@if(!is_null($procedimiento))
+	@foreach ($procedimiento->rutas as $ruta)
 		<script>
 			seleccionarArea('{{$ruta->areainicial_id}}' , '{{$ruta->areainicio->descripcion}}' , '{{$ruta->plazo}}');
 		</script>		

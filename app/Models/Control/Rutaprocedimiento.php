@@ -5,10 +5,10 @@ namespace App\Models\Control;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Rutatramite extends Model
+class Rutaprocedimiento extends Model
 {
 	 use SoftDeletes;
-    protected $table = 'rutatramite';
+    protected $table = 'rutaprocedimiento';
     protected $dates = ['deleted_at'];
 
 
@@ -20,8 +20,8 @@ class Rutatramite extends Model
     {
         return $this->belongsTo('App\Models\Control\Area', 'areafinal_id');
     }
-    public function tramite()
+    public function procedimiento()
     {
-        return $this->belongsTo('App\Models\Control\Tramite', 'tramite_id');
+        return $this->belongsTo('App\Models\Control\Procedimiento', 'procedimiento_id');
     }
 }

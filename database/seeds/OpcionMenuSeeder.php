@@ -85,9 +85,9 @@ class OpcionMenuSeeder extends Seeder
 
         //start Control        
         DB::table('opcionmenu')->insert([
-            'descripcion' => 'Trámite',
+            'descripcion' => 'Procedimiento',
             'icono' => 'far fa-file-alt',
-            'link' => 'tramite',
+            'link' => 'procedimiento',
             'orden' => 2,
             'grupomenu_id' => 1
         ]);
