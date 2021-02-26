@@ -10,6 +10,7 @@ use App\Models\Admin\TipoUsuario;
 
 class AccesoController extends Controller
 {
+        
     public function index()
     {
         $tipousuarios = TipoUsuario::orderBy('id')

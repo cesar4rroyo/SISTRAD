@@ -43,6 +43,14 @@ class Personal extends Model
         return $this->hasMany(Usuario::class);
     }
 
+    public static function getUsuarios(){
+        $id_rolUsuario = '1';
+         $personas = Personal::whereHas('roles', function ($query) use ($id_rolUsuario) {
+             $query->where('rol.id', '=', $id_rolUsuario);
+         })->get();
+         return $personas;
+    }
+
     public function getFullNameAttribute(){
         return $this->apellidopaterno . ' ' . $this->apellidomaterno . ' ' . $this->nombres;
     }
