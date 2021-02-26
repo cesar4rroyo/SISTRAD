@@ -92,19 +92,26 @@ class OpcionMenuSeeder extends Seeder
             'grupomenu_id' => 1
         ]);
         DB::table('opcionmenu')->insert([
-            'descripcion' => 'Motivo Rechazo',
+            'descripcion' => 'Motivo rechazo',
             'icono' => 'fas fa-book-open',
             'link' => 'motivorechazo',
             'orden' => 3,
             'grupomenu_id' => 1
         ]);
         DB::table('opcionmenu')->insert([
-            'descripcion' => 'Motivo Courier',
+            'descripcion' => 'Motivo courier',
             'icono' => 'fas fa-book-open',
             'link' => 'motivocourier',
             'orden' => 4,
             'grupomenu_id' => 1
-        ]);     
+        ]); 
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Empresa courier',
+            'icono' => 'fas fa-book-open',
+            'link' => 'empresacourier',
+            'orden' =>5,
+            'grupomenu_id' => 1
+        ]);      
         
         //end Control
 

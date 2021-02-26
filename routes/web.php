@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-//Route::get('/', 'Admin\InicioController@index');
+// Route::get('/', 'Admin\InicioController@index');
+Route::get('/', 'Seguridad\LoginController@index');
 
 //auth
 Route::get('auth/login', 'Seguridad\LoginController@index')->name('login');
@@ -63,10 +64,14 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('area/buscar', 'Control\AreaController@buscar')->name('area.buscar');
     Route::get('area/eliminar/{id}/{listarluego}', 'Control\AreaController@eliminar')->name('area.eliminar');
     Route::resource('area', 'Control\AreaController', array('except' => array('show')));
-    /* TRAMITES*/
+    /* PROCEDIMIENTOS*/
     Route::post('procedimiento/buscar', 'Control\ProcedimientoController@buscar')->name('procedimiento.buscar');
     Route::get('procedimiento/eliminar/{id}/{listarluego}', 'Control\ProcedimientoController@eliminar')->name('procedimiento.eliminar');
     Route::resource('procedimiento', 'Control\ProcedimientoController', array('except' => array('show')));
-
+    /* EMPRESA COURIER*/
+    Route::post('empresacourier/buscar', 'Control\EmpresacourierController@buscar')->name('empresacourier.buscar');
+    Route::get('empresacourier/eliminar/{id}/{listarluego}', 'Control\EmpresacourierController@eliminar')->name('empresacourier.eliminar');
+    Route::resource('empresacourier', 'Control\EmpresacourierController', array('except' => array('show')));
+    
    
 });

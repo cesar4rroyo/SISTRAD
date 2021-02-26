@@ -91,6 +91,15 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="{{asset("select2/js/select2.min.js")}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script src={{asset("js/input-mask/jquery.inputmask.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask.extensions.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask.date.extensions.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask.numeric.extensions.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask.phone.extensions.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask.regex.extensions.js")}}></script>
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
         integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
         crossorigin="anonymous" />
