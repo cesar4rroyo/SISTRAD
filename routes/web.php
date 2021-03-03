@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', 'Admin\InicioController@index');
-Route::get('/', 'Seguridad\LoginController@index');
+Route::get('/', 'Admin\InicioController@index');
+// Route::get('/', 'Seguridad\LoginController@index');
 
 //auth
 Route::get('auth/login', 'Seguridad\LoginController@index')->name('login');
@@ -68,10 +68,23 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('procedimiento/buscar', 'Control\ProcedimientoController@buscar')->name('procedimiento.buscar');
     Route::get('procedimiento/eliminar/{id}/{listarluego}', 'Control\ProcedimientoController@eliminar')->name('procedimiento.eliminar');
     Route::resource('procedimiento', 'Control\ProcedimientoController', array('except' => array('show')));
+    
     /* EMPRESA COURIER*/
     Route::post('empresacourier/buscar', 'Control\EmpresacourierController@buscar')->name('empresacourier.buscar');
     Route::get('empresacourier/eliminar/{id}/{listarluego}', 'Control\EmpresacourierController@eliminar')->name('empresacourier.eliminar');
     Route::resource('empresacourier', 'Control\EmpresacourierController', array('except' => array('show')));
     
+    /* TRAMITES*/
+    Route::post('tramite/buscar', 'Gestion\TramiteController@buscar')->name('tramite.buscar');
+    Route::get('tramite/eliminar/{id}/{listarluego}', 'Gestion\TramiteController@eliminar')->name('tramite.eliminar');
+    Route::resource('tramite', 'Gestion\TramiteController', array('except' => array('show')));
+    
+    Route::get('tramite/listarprocedimientos', 'Gestion\TramiteController@listarProcedimientos')->name('tramite.listarprocedimientos');
+    Route::get('tramite/listarempresascourier', 'Gestion\TramiteController@listarEmpresascourier')->name('tramite.listarempresascourier');
+    Route::get('tramite/listarareas', 'Gestion\TramiteController@listarAreas')->name('tramite.listarareas');
+    Route::get('tramite/listararchivadores', 'Gestion\TramiteController@listarArchivadores')->name('tramite.listararchivadores');
+    Route::get('tramite/listartramites', 'Gestion\TramiteController@listarTramites')->name('tramite.listartramites');
    
 });
+
+    

@@ -16,9 +16,9 @@ class CreateRutaprocedimientoTable extends Migration
         Schema::create('rutaprocedimiento', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('plazo')->nullable();
-            $table->integer('procedimiento_id')->unsigned();
-            $table->integer('areainicial_id')->unsigned();
-            $table->integer('areafinal_id')->unsigned();
+            $table->integer('procedimiento_id')->unsigned()->nullable();
+            $table->integer('areainicial_id')->unsigned()->nullable();
+            $table->integer('areafinal_id')->unsigned()->nullable();
             $table->foreign('procedimiento_id')->references('id')->on('procedimiento')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('areainicial_id')->references('id')->on('area')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('areafinal_id')->references('id')->on('area')->onDelete('restrict')->onUpdate('restrict');
