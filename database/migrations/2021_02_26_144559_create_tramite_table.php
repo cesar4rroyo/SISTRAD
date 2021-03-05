@@ -25,7 +25,6 @@ class CreateTramiteTable extends Migration
             $table->text('observacion')->nullable();
             $table->string('prioridad')->nullable();
             $table->string('situacion')->nullable();
-
             $table->integer('tipodocumento_id')->unsigned()->nullable();
             $table->integer('procedimiento_id')->unsigned()->nullable();
             $table->integer('personal_id')->unsigned()->nullable();

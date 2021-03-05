@@ -301,7 +301,13 @@ class TramiteController extends Controller
 
     public function listarProcedimientos(Request $request){
         $q = $request->input('term');
-        $resultados = Procedimiento::where('descripcion' , 'LIKE' , '%'.$q.'%')->get();
+        $user = Auth::user();
+        $area_inicio = $user->personal?$user->personal->area_id : "";
+        $resultados = Procedimiento::where('descripcion' , 'LIKE' , '%'.$q.'%');
+        if($area_inicio && $area_inicio!= ""){
+            $resultados->where('areainicio_id',$area_inicio);
+        }
+        $resultados = $resultados->get();
         $data = array();
         foreach ($resultados as $r) {
             $data["results"][] = [ "text" => $r->descripcion ,"id" => $r->id];
