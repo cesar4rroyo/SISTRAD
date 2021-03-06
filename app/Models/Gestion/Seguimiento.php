@@ -30,7 +30,8 @@ class Seguimiento extends Model
         'personal_id',
         'area_id',
         'motivocourier_id',
-        'motivorechazo_id',        
+        'motivorechazo_id',
+        'cargo_id'        
     ];
 
     public function tramite()
