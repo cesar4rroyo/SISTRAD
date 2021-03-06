@@ -32,12 +32,14 @@ class CreateSeguimientoTable extends Migration
             $table->integer('tramite_id')->unsigned()->nullable();
             $table->integer('personal_id')->unsigned()->nullable();
             $table->integer('area_id')->unsigned()->nullable();
+            $table->integer('cargo_id')->unsigned()->nullable();
             $table->integer('motivocourier_id')->unsigned()->nullable();
             $table->integer('motivorechazo_id')->unsigned()->nullable();
 
             $table->foreign('tramite_id')->references('id')->on('tramite')->onUpdate('restrict')->onDelete('restrict')->nullable();
             $table->foreign('personal_id')->references('id')->on('personal')->onUpdate('restrict')->onDelete('restrict')->nullable();
             $table->foreign('area_id')->references('id')->on('area')->onUpdate('restrict')->onDelete('restrict')->nullable();
+            $table->foreign('cargo_id')->references('id')->on('cargo')->onUpdate('restrict')->onDelete('restrict')->nullable();
             $table->foreign('motivocourier_id')->references('id')->on('motivocourier')->onUpdate('restrict')->onDelete('restrict')->nullable();
             $table->foreign('motivorechazo_id')->references('id')->on('motivorechazo')->onUpdate('restrict')->onDelete('restrict')->nullable();
             $table->timestamps();

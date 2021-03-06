@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header text-uppercase">Bienvenido, {{session()->get('usuario') ?? 'Invitado'}}</div>
+                <div class="card-header text-uppercase">Bienvenido, {{session()->get('nombres') ?? 'Invitado'}} ({{session()->get('area')['descripcion'] ?? 'Admin'}})</div>
                 <div class="card-body">
                     <div class="row">
                         

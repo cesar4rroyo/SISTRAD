@@ -16,7 +16,7 @@ class ProcedimientoSeeder extends Seeder
             DB::table('procedimiento')->insert([
                 'descripcion' => 'Procedimiento '.($i+1),            
                 'areainicio_id' => 1,            
-                'areafin_id' => 2,            
+                'areafin_id' => 5,            
             ]);
         }
         
