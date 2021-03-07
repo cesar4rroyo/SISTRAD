@@ -67,7 +67,7 @@ class TramiteController extends Controller
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $nombre           = Libreria::getParam($request->input('numero'));
-        $resultado        = Tramite::with('seguimientos', 'procedimiento')->listar($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id);
+        $resultado        = Tramite::with('seguimientos', 'procedimiento', 'ultimoseguimiento')->listar($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -273,7 +273,7 @@ class TramiteController extends Controller
                         'correlativo_anterior' => $correlativo_anterior,
                         'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
                         'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
-                        'persona' => '',                
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
                         'tramite_id' => $id,
                         'fecharecibe'=> date("Y-m-d H:i:s"),
                         'recibido'=>'SI',

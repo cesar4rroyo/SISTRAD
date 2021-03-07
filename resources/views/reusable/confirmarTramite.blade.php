@@ -99,7 +99,7 @@
 			</div>
 		</div>	
 		<div class="form-group">
-			{!! Form::label('envio', '¿Desea enviar el trámite al área anterior o finalizarlo?', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			{!! Form::label('envio', '¿Desea enviar el trámite al área anterior o desea finalizarlo?', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('envio', $cboOpcion, null, array('class' => 'form-control input-xs', 'id' => 'envio', 'required'=>'true')) !!}
 			</div>
