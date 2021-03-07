@@ -1,10 +1,16 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($motivorechazo, $formData) !!}	
+{!! Form::model($archivador, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="form-group">
 		{!! Form::label('nombre', 'Descripción:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
 			{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion', 'placeholder' => 'Ingrese la descripción')) !!}
+		</div>
+	</div>
+	<div class="form-group">
+		{!! Form::label('codigo', 'Código:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::text('codigo', null, array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese el código')) !!}
 		</div>
 	</div>
     <div class="form-group">

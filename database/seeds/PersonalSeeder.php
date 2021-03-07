@@ -18,6 +18,8 @@ class PersonalSeeder extends Seeder
             'apellidomaterno' => 'Ipanaque',
             'dni' => '45841576',
             'telefono' => '974866028',
+            'area_id'=>4,
+            'cargo_id'=>1
         ]);
         DB::table('personal')->insert([
             'nombres' => 'Richard',
@@ -25,6 +27,9 @@ class PersonalSeeder extends Seeder
             'apellidomaterno' => 'Bautista',
             'dni' => '75020436',
             'telefono' => '986783159',
+            'area_id'=>3,
+            'cargo_id'=>1
+
         ]);
         DB::table('personal')->insert([
             'nombres' => 'Juan Eduardo',
@@ -32,6 +37,17 @@ class PersonalSeeder extends Seeder
             'apellidomaterno' => 'Guerrero',
             'dni' => '45841576',
             'telefono' => '932827302',
+            'area_id'=>2,
+            'cargo_id'=>1
+        ]);
+        DB::table('personal')->insert([
+            'nombres' => 'César',
+            'apellidopaterno' => 'Arroyo',
+            'apellidomaterno' => 'Torres',
+            'dni' => '71482136',
+            'telefono' => '924734626',
+            'area_id'=>1,
+            'cargo_id'=>1
         ]);
     }
 }

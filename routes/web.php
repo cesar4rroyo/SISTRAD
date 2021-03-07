@@ -43,6 +43,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware'=>['auth'
 
 //aca las demas rutas
 Route::group(['middleware' => ['auth', 'acceso']], function () {
+    /*Dashboard Principal*/
+    Route::get('dashboard', 'Gestion\TramiteController@index')->name('dashboard');
+
     /* Rutas de PERSONA */
     Route::post('persona/buscar', 'Admin\PersonalController@buscar')->name('persona.buscar');
     Route::get('persona/eliminar/{id}/{listarluego}', 'Admin\PersonalController@eliminar')->name('persona.eliminar');
@@ -51,7 +54,6 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('cargo/buscar', 'Admin\CargoController@buscar')->name('cargo.buscar');
     Route::get('cargo/eliminar/{id}/{listarluego}', 'Admin\CargoController@eliminar')->name('cargo.eliminar');
     Route::resource('cargo', 'Admin\CargoController', array('except' => array('show')));
-    Route::get('dashboard', 'Admin\AdminController@index')->name('dashboard');
     /* MOTIVOS RECHAZO*/
     Route::post('motivorechazo/buscar', 'Control\MotivorechazoController@buscar')->name('motivorechazo.buscar');
     Route::get('motivorechazo/eliminar/{id}/{listarluego}', 'Control\MotivorechazoController@eliminar')->name('motivorechazo.eliminar');
@@ -64,6 +66,10 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('area/buscar', 'Control\AreaController@buscar')->name('area.buscar');
     Route::get('area/eliminar/{id}/{listarluego}', 'Control\AreaController@eliminar')->name('area.eliminar');
     Route::resource('area', 'Control\AreaController', array('except' => array('show')));
+    /* ARCHIVADOR*/
+    Route::post('archivador/buscar', 'Control\ArchivadorController@buscar')->name('archivador.buscar');
+    Route::get('archivador/eliminar/{id}/{listarluego}', 'Control\ArchivadorController@eliminar')->name('archivador.eliminar');
+    Route::resource('archivador', 'Control\ArchivadorController', array('except' => array('show')));
     /* PROCEDIMIENTOS*/
     Route::post('procedimiento/buscar', 'Control\ProcedimientoController@buscar')->name('procedimiento.buscar');
     Route::get('procedimiento/eliminar/{id}/{listarluego}', 'Control\ProcedimientoController@eliminar')->name('procedimiento.eliminar');
@@ -84,6 +90,9 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('tramite/listarareas', 'Gestion\TramiteController@listarAreas')->name('tramite.listarareas');
     Route::get('tramite/listararchivadores', 'Gestion\TramiteController@listarArchivadores')->name('tramite.listararchivadores');
     Route::get('tramite/listartramites', 'Gestion\TramiteController@listarTramites')->name('tramite.listartramites');
+
+    Route::get('tramite/confirmacion/{id}/{listarluego}/{accion}', 'Gestion\TramiteController@confirmacion')->name('tramite.confirmacion');
+    Route::post('tramite/accion/{id}/{accion}', 'Gestion\TramiteController@accion')->name('tramite.accion');
    
 });
 

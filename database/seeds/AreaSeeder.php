@@ -18,5 +18,14 @@ class AreaSeeder extends Seeder
         DB::table('area')->insert([
             'descripcion' => 'Area 2',
         ]);
+        DB::table('area')->insert([
+            'descripcion' => 'Area 3',
+        ]);
+        DB::table('area')->insert([
+            'descripcion' => 'Area 4',
+        ]);
+        DB::table('area')->insert([
+            'descripcion' => 'Area 5',
+        ]);
     }
 }

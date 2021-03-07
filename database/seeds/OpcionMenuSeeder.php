@@ -31,6 +31,56 @@ class OpcionMenuSeeder extends Seeder
             'grupomenu_id' => 3
         ]);
         //end Grupo Persona
+        
+        //start Control        
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Procedimiento',
+            'icono' => 'far fa-file-alt',
+            'link' => 'procedimiento',
+            'orden' => 2,
+            'grupomenu_id' => 2
+        ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Motivo rechazo',
+            'icono' => 'fas fa-book-open',
+            'link' => 'motivorechazo',
+            'orden' => 3,
+            'grupomenu_id' => 2
+        ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Motivo courier',
+            'icono' => 'fas fa-book-open',
+            'link' => 'motivocourier',
+            'orden' => 4,
+            'grupomenu_id' => 2
+        ]); 
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Empresa courier',
+            'icono' => 'fas fa-book-open',
+            'link' => 'empresacourier',
+            'orden' =>5,
+            'grupomenu_id' => 2
+        ]); 
+
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Archivador',
+            'icono' => 'far fa-file-alt',
+            'link' => 'archivador',
+            'orden' =>6,
+            'grupomenu_id' => 2
+        ]); 
+        //end Control
+        //start Gestion documentos        
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Trámites',
+            'icono' => 'far fa-file-alt',
+            'link' => 'tramite',
+            'orden' => 2,
+            'grupomenu_id' => 1
+        ]);
+                  
+        //end Gestion documentos
+
         //start Grupo Usuarios
         DB::table('opcionmenu')->insert([
             'descripcion' => 'Usuario',
@@ -82,49 +132,6 @@ class OpcionMenuSeeder extends Seeder
             'grupomenu_id' => 4
         ]);
         //end Grupo Usuarios
-
-        //start Control        
-        DB::table('opcionmenu')->insert([
-            'descripcion' => 'Procedimiento',
-            'icono' => 'far fa-file-alt',
-            'link' => 'procedimiento',
-            'orden' => 2,
-            'grupomenu_id' => 2
-        ]);
-        DB::table('opcionmenu')->insert([
-            'descripcion' => 'Motivo rechazo',
-            'icono' => 'fas fa-book-open',
-            'link' => 'motivorechazo',
-            'orden' => 3,
-            'grupomenu_id' => 2
-        ]);
-        DB::table('opcionmenu')->insert([
-            'descripcion' => 'Motivo courier',
-            'icono' => 'fas fa-book-open',
-            'link' => 'motivocourier',
-            'orden' => 4,
-            'grupomenu_id' => 2
-        ]); 
-        DB::table('opcionmenu')->insert([
-            'descripcion' => 'Empresa courier',
-            'icono' => 'fas fa-book-open',
-            'link' => 'empresacourier',
-            'orden' =>5,
-            'grupomenu_id' => 2
-        ]);      
-        
-        //end Control
-        //start Gestion documentos        
-        DB::table('opcionmenu')->insert([
-            'descripcion' => 'Trámites',
-            'icono' => 'far fa-file-alt',
-            'link' => 'tramite',
-            'orden' => 2,
-            'grupomenu_id' => 1
-        ]);
-          
-        
-        //end Gestion documentos
 
 
 
