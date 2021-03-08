@@ -112,19 +112,19 @@ class Tramite extends Model
                                 ->orderBy('correlativo', 'desc')->first();
                         break;
                     case 'bandeja':
-                        return $q->join('seguimiento as s', 's.tramite_id', '=', 'tramite.id')
-                                ->select('tramite.*')
-                                ->where('s.area_id', $area_id)
-                                ->where('s.accion', 'ACEPTAR')
-                                ->whereIn('situacion', ['EN PROCESO'])
+                        return $q->join('seguimiento', 'tramite.id', '=', 'seguimiento.tramite_id')
+                                ->select('tramite.*', 'seguimiento.*')
+                                ->where('area_id', $area_id)
+                                ->where('accion', 'ACEPTAR')
+                                ->where('situacion', 'EN PROCESO')
                                 ->orderBy('correlativo', 'DESC')
                                 ->first();
                         break;
                     case 'salida':
-                        return $q->join('seguimiento as s', 's.tramite_id', '=', 'tramite.id')
-                                ->select('tramite.*')
-                                ->where('s.area_id', $area_id)
-                                ->whereIn('s.accion', ['DERIVAR', 'FINALIZAR', 'ACEPTAR'])
+                        return $q->join('seguimiento', 'tramite.id', '=', 'seguimiento.tramite_id')
+                                ->select('tramite.*', 'seguimiento.*')
+                                ->where('area_id', $area_id)
+                                ->whereIn('accion', ['DERIVAR', 'FINALIZAR', 'ACEPTAR'])
                                 ->whereIn('situacion', ['DERIVADO, FINALIZADO, RECHAZADO'])
                                 ->orderBy('correlativo', 'DESC')
                                 ->first();
