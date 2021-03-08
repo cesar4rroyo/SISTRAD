@@ -69,9 +69,17 @@ class Tramite extends Model
             return "";
         }
     }
-    public function ultimoseguimiento()
+    public function ultimo()
     {
-        return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'asc')->latest();
+        return $this->join('seguimiento as s','s.tramite_id', 'tramite.id')
+        ->where('tramite.id',$this->id)
+        ->whereNull('s.deleted_at')
+        ->orderBy('s.correlativo', 'ASC')
+        ->first();   
+    }
+    public function latestSeguimiento()
+    {
+        return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'desc')->latest();
     }
 
     public function scopelistar($query, $numero, $fecinicio, $fecfin, $modo=null, $area_actual=null, $personal_id)
@@ -83,39 +91,43 @@ class Tramite extends Model
 			})
 			->where(function ($subquery) use ($fecinicio) {
 				if (!is_null($fecinicio) && strlen($fecinicio) > 0) {
-					$subquery->where('fecha', '>=', date_format(date_create($fecinicio), 'Y-m-d H:i:s'));
+					$subquery->where('tramite.fecha', '>=', date_format(date_create($fecinicio), 'Y-m-d H:i:s'));
 				}
 			})
 			->where(function ($subquery) use ($fecfin) {
 				if (!is_null($fecfin) && strlen($fecfin) > 0) {
-					$subquery->where('fecha', '<=', date_format(date_create($fecfin), 'Y-m-d H:i:s'));
+					$subquery->where('tramite.fecha', '<=', date_format(date_create($fecfin), 'Y-m-d H:i:s'));
 				}
 			})
-            ->where(function ($q) use ($modo, $query){
+            ->when($modo, function($q) use ($modo){
                 $usuario = session()->get('personal');
                 $area_id = $usuario['area_id'];
-                $areaNombre = (session()->get('area')['area']['descripcion']) ?? null;
                 switch ($modo) {
                     case 'entrada':  
-                        return $q->whereHas('seguimientos', function($q2){
-                            $q2->latest();
-                        })->whereHas('seguimientos', function($q2) use ($area_id){
-                            $q2->where('area_id', $area_id)
-                            ->whereNull('recibido')->whereIn('accion', ['DERIVAR', 'REGISTRAR']);
-                        })->whereIn('situacion', ['REGISTRADO', 'DERIVADO']);
+                        return $q->join('seguimiento', 'tramite.id', '=', 'seguimiento.tramite_id')
+                                ->select('tramite.*', 'seguimiento.*')
+                                ->where('area_id', $area_id)
+                                ->whereIn('accion', ['DERIVAR', 'REGISTRAR'])
+                                ->whereIn('situacion', ['REGISTRADO', 'DERIVADO'])
+                                ->orderBy('correlativo', 'desc')->first();
+                        break;
                     case 'bandeja':
-                        return $q->whereHas('seguimientos', function($q2){
-                            $q2->orderBy('correlativo', 'asc')->latest()->first();
-                        })->whereHas('seguimientos', function($q2) use ($area_id){
-                            $q2->where('area_id', $area_id)
-                            ->where('accion', 'ACEPTAR');
-                        })
-                        ->whereNotIn('situacion', ['FINALIZADO', 'RECHAZADO', 'REGISTRADO', 'DERIVADO']);
+                        return $q->join('seguimiento as s', 's.tramite_id', '=', 'tramite.id')
+                                ->select('tramite.*')
+                                ->where('s.area_id', $area_id)
+                                ->where('s.accion', 'ACEPTAR')
+                                ->whereIn('situacion', ['EN PROCESO'])
+                                ->orderBy('correlativo', 'DESC')
+                                ->first();
                         break;
                     case 'salida':
-                        $q->whereHas('seguimientos', function($q2) use ($area_id, $areaNombre) {
-                            return $q2->where('area_id', $area_id)->where('area', $areaNombre)->whereIn('accion', ['DERIVAR', 'RECHAZAR', 'FINALIZAR']);
-                        })->whereIn('situacion', ['DERIVADO', 'FINALIZADO', 'RECHAZADO']);
+                        return $q->join('seguimiento as s', 's.tramite_id', '=', 'tramite.id')
+                                ->select('tramite.*')
+                                ->where('s.area_id', $area_id)
+                                ->whereIn('s.accion', ['DERIVAR', 'FINALIZAR', 'ACEPTAR'])
+                                ->whereIn('situacion', ['DERIVADO, FINALIZADO, RECHAZADO'])
+                                ->orderBy('correlativo', 'DESC')
+                                ->first();
                         break;
                     case 'general':
                         $q->whereHas('seguimientos', function($q2) use ($area_id){
@@ -134,45 +146,6 @@ class Tramite extends Model
 
                 }
             })
-            /* ->when($modo, function($q) use ($modo){
-                $usuario = session()->get('personal');
-                $area_id = $usuario['area_id'];
-                switch ($modo) {
-                    case 'entrada':  
-                        return $this->join('seguimiento as s','s.tramite_id', 'tramite.id')
-                                ->where('tramite.id',$this->id)
-                                ->where('s.area_id', $area_id)
-                                ->orderBy('s.correlativo', 'ASC')
-                                ->first();
-                    case 'bandeja':
-                        $q->whereHas('seguimientos', function($q2) use($area_id){
-                            return $q2->latest()->where('area_id', $area_id)
-                                    ->where('accion', 'ACEPTAR');
-                        })->whereNotIn('situacion', ['FINALIZADO', 'RECHAZADO', 'REGISTRADO', 'DERIVADO']);
-                        break;
-                    case 'salida':
-                        $q->whereHas('seguimientos', function($q2) use($area_id){
-                            return $q2->where('area_id', $area_id)
-                                    ->whereIn('accion', ['FINALIZAR', 'DERIVAR', 'RECHAZAR']);
-                        })->whereIn('situacion', ['DERIVADO', 'FINALIZADO', 'RECHAZADO']);
-                        break;
-                    case 'general':
-                        $q->whereHas('seguimientos', function($q2) use ($area_id){
-                            return $q2->where('area_id', $area_id);
-                        });
-                        break;
-                    case 'archivos':
-                        $q->wherehas('seguimientos', function($q2) use ($area_id){
-                            return $q2->where('area_id', $area_id)
-                                    ->whereNotNull('ruta');
-                        });
-                        break;
-                    case 'courier':
-                        $q->whereNotNull('empresacourier_id');
-                        break;
-
-                }
-            }) */
 			->orderBy('numero', 'ASC');
 	}
 }

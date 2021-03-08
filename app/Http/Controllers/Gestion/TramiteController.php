@@ -67,7 +67,7 @@ class TramiteController extends Controller
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $nombre           = Libreria::getParam($request->input('numero'));
-        $resultado        = Tramite::with('seguimientos', 'procedimiento', 'ultimoseguimiento')->listar($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id);
+        $resultado        = Tramite::with('seguimientos', 'procedimiento', 'latestSeguimiento')->listar($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -194,7 +194,7 @@ class TramiteController extends Controller
 
             $seguimiento = new Seguimiento();
             $seguimiento->fecha = date("Y-m-d H:i:s");
-            $seguimiento->accion = 'REGISTRAR';  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR, FINALIZAR
+            $seguimiento->accion = 'REGISTRAR';  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR, FINALIZAR, ADJUNTAR
             $seguimiento->correlativo = '1';
             $seguimiento->correlativo_anterior = '1';
             // $seguimiento->observacion;
