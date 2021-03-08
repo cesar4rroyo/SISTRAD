@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Trámites</div>
+                <div class="card-header">Bienvenido, {{session()->get('nombres') ?? 'Invitado'}} ({{session()->get('area')['area']['descripcion'] ?? 'Admin'}})</div>
                 
                 <div class="card-body">
                     <div class="row">
@@ -17,7 +17,7 @@
                         {!! Form::hidden('page', 1, array('id' => 'page')) !!}
                         {!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
                         
-                        
+                        <input type="hidden" name="modo" id="modo" value="general">
                         
 						<div class="row w-100">
 							<div class="col-lg-4 col-md-4  form-group">
@@ -50,6 +50,7 @@
 							</div>
 							<!-- /.card-header -->
 							<div class="card-body table-responsive px-3">
+								@include('gestion.tramite.tabla')
 								<div id="listado{{ $entidad }}">
 								</div>
 							</div>
