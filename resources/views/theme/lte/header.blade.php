@@ -17,12 +17,15 @@
                 Logout
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <span class="dropdown-item dropdown-header">{{session()->get('usuario') ?? 'Invitado'}}</span>
+                <span class="dropdown-item dropdown-header disabled">Usuario: {{session()->get('usuario') ?? 'Invitado'}}</span>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-divider"></div>
-                <a href="{{route('logout')}}" class="dropdown-item dropdown-footer">Salir</a>
+                <a href="#" class="dropdown-item dropdown-footer">Perfil</a>
+                <a href="#" class="dropdown-item dropdown-footer">Cambiar Contraseña</a>
+                <a href="{{route('logout')}}" class="dropdown-item dropdown-footer bg-danger">Salir</a>
             </div>
         </li>
+        
         <li class="nav-item">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>

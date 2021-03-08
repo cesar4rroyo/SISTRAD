@@ -12,11 +12,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Control\Archivador;
 use App\Models\Control\Area;
 use App\Models\Control\Empresacourier;
+use App\Models\Control\Motivorechazo;
 use App\Models\Control\Procedimiento;
 use App\Models\Control\Tipodocumento;
 use App\Models\Gestion\Seguimiento;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TramiteController extends Controller
 {
@@ -30,6 +32,8 @@ class TramiteController extends Controller
             'delete' => 'tramite.eliminar',
             'search' => 'tramite.buscar',
             'index'  => 'anio.index',
+            'accion'=>'tramite.accion',
+            'confirmacion'=>'tramite.confirmacion',
         );
 
 
@@ -51,29 +55,39 @@ class TramiteController extends Controller
      */
     public function buscar(Request $request)
     {
+        // dd($request->all());
+        $usuario = session()->get('personal');
+        $personal_id = $usuario['id'];
+        $area_actual = (session()->get('area')['area']['descripcion']) ?? 'MESA DE PARTES';
+        $area_id = $usuario['area_id'];
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
         $entidad          = 'tramite';
-        $fecinicio          =  Libreria::getParam($request->input('fechainicio'));
-        $fecfin          =  Libreria::getParam($request->input('fechafin'));
+        $modo             = Libreria::getParam($request->input('modo'));
+        $fecinicio        = Libreria::getParam($request->input('fechainicio'));
+        $fecfin           = Libreria::getParam($request->input('fechafin'));
         $nombre           = Libreria::getParam($request->input('numero'));
-        $resultado        = Tramite::listar($nombre , $fecinicio, $fecfin);
+        $resultado        = Tramite::with('seguimientos', 'procedimiento', 'latestSeguimiento')->listar($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Prioridad', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Numero', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Documento', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Asunto', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Origen', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Localización', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Situacion', 'numero' => '1');
+        // $cabecera[]       = array('valor' => 'Localización', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Remitente', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
         $ruta             = $this->rutas;
+
+      
+
         if (count($lista) > 0) {
             $clsLibreria     = new Libreria();
             $paramPaginacion = $clsLibreria->generarPaginacion($lista, $pagina, $filas, $entidad);
@@ -83,7 +97,7 @@ class TramiteController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta'));
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta', 'modo'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -94,6 +108,8 @@ class TramiteController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        // dd($user->toArray);
         $entidad          = 'tramite';
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
@@ -160,7 +176,7 @@ class TramiteController extends Controller
             $tramite->folios                = Libreria::getParam($request->input('folios'));
             $tramite->observacion           = Libreria::getParam($request->input('observacion'));
             $tramite->prioridad             = strtoupper(Libreria::getParam($request->input('prioridad')));
-            $tramite->situacion             = "REGISTRADO"; //REGISTRADO , POR ACEPTAR , ACEPTADO , FINALIZADO , RECHAZADO
+            $tramite->situacion             = "REGISTRADO"; //REGISTRADO , EN PROCESO, FINALIZADO , RECHAZADO, DERIVADO
             $tramite->tipodocumento_id      = Libreria::getParam($request->input('tipodocumento'));
             if($tramite->tipo == 'TUPA'){
                 $tramite->procedimiento_id  = Libreria::getParam($request->input('procedimiento'));
@@ -178,7 +194,7 @@ class TramiteController extends Controller
 
             $seguimiento = new Seguimiento();
             $seguimiento->fecha = date("Y-m-d H:i:s");
-            $seguimiento->accion = 'REGISTRAR';  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+            $seguimiento->accion = 'REGISTRAR';  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR, FINALIZAR, ADJUNTAR
             $seguimiento->correlativo = '1';
             $seguimiento->correlativo_anterior = '1';
             // $seguimiento->observacion;
@@ -210,6 +226,199 @@ class TramiteController extends Controller
     public function show($id)
     {
         //
+    }
+
+    
+    public function confirmacion($id, $listarLuego, $accion)
+    {
+        $existe = Libreria::verificarExistencia($id, 'tramite');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Tramite::with('seguimientos.personal', 'procedimiento', 'seguimientos.areas')->find($id);
+        $entidad  = 'tramite';
+        $formData = array('route' => array('tramite.accion', $id, $accion), 'method' => 'POST', 'enctype'=>'multipart/form-data','class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Aceptar';
+        $cboMotivos = ['' => 'Seleccione uno'] + Motivorechazo::pluck('descripcion', 'id')->all();
+        $cboAreas = ['' => 'Seleccione una área'] + Area::pluck('descripcion', 'id')->all();
+        $cboArchivadores = ['' => 'Seleccione una opción'] + Archivador::pluck('descripcion', 'id')->all();
+        $cboOpcion = [''=>'Seleccione uno', 'anterior'=>'Sí, enviar al área anterior', 'fin'=>'No, finalizar y empezar de nuevo'];
+        return view('reusable.confirmarTramite')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar', 'accion', 'cboMotivos', 'cboAreas', 'cboOpcion', 'cboArchivadores'));
+    }
+
+    /**
+     * Aceptacion del tramite.    
+     */
+    public function accion(Request $request, $id, $accion)
+    {
+        $existe = Libreria::verificarExistencia($id, 'tramite');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $error = DB::transaction(function() use($id, $accion, $request){
+            $usuario = session()->get('personal');
+            $tramite = Tramite::find($id);
+            switch ($accion) {
+                case 'aceptar':                    
+                    $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'ACEPTAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'tramite_id' => $id,
+                        'fecharecibe'=> date("Y-m-d H:i:s"),
+                        'recibido'=>'SI',
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                    ]);
+                    $tramite->update([
+                        'situacion'=>'EN PROCESO',
+                    ]);
+                    break;
+                case 'rechazar':
+                    $reglas     = array('motivorechazo_id' => 'required');
+                    $mensajes = array(
+                        'motivorechazo_id.required' => 'Debe ingresar un motivo de rechazo'
+                    );
+                    $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                    if ($validacion->fails()) {
+                        return $validacion->messages()->toJson();
+                    }
+                    
+                    $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'RECHAZAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'tramite_id' => $id,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                        'motivorechazo_id'=>$request->motivorechazo_id,
+                        'observacion'=> Libreria::getParam($request->input('observacion')),
+                    ]);
+                    $tramite->update([
+                        'situacion'=>'RECHAZADO',
+                    ]);
+                    break;
+                case 'finalizar':                    
+                    $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'FINALIZAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'tramite_id' => $id,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                        'motivorechazo_id'=>$request->motivorechazo_id,
+                        'observacion'=> Libreria::getParam($request->input('observacion')),
+                        'ultimo'=>'S',
+                    ]);
+                    $tramite->update([
+                        'situacion'=>'FINALIZADO',
+                    ]);
+                    break;
+                case 'derivar':
+                    $reglas     = array('area_id' => 'required');
+                    $mensajes = array(
+                        'area_id.required' => 'Debe ingresar el área de destino'
+                    );
+                    $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                    if ($validacion->fails()) {
+                        return $validacion->messages()->toJson();
+                    }
+                    $area = Area::find($request->area_id)->toArray();
+                    $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'DERIVAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>   $usuario['area'] ? $usuario['area']['descripcion'] : null, //el última área que hizo la accion de derivar
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'tramite_id' => $id,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $area['id'], //id_area a dónde se derivo el trámite
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                        'observacion'=> Libreria::getParam($request->input('observacion')),
+                    ]);
+                    $tramite->update([
+                        'situacion'=>'DERIVADO',
+                    ]);
+                    break;
+                case 'adjuntar':
+                    $reglas     = array('archivo' => 'required', 'observacion'=>'required');
+                    $mensajes = array(
+                        'archivo.required' => 'Debe ingresar un archivo',
+                        'observacion.required' => 'Debe ingresar un observacion sobre el archivo',
+                    );
+                    $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                    if ($validacion->fails()) {
+                        return $validacion->messages()->toJson();
+                    }
+                    $archivo = $request->file('archivo')->store('public/archivos');
+                    $ruta = Storage::url($archivo);
+                    $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'ADJUNTAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'tramite_id' => $id,
+                        'ruta'=>$ruta,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                        'observacion'=> Libreria::getParam($request->input('observacion')),
+                    ]);
+                    break;
+                case 'seguimiento':
+                    break;
+                case 'archivar':
+                    $reglas     = array('archivador_id' => 'required');
+                    $mensajes = array(
+                        'archivador_id.required' => 'Debe ingresar el archivador',
+                    );
+                    $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                    if ($validacion->fails()) {
+                        return $validacion->messages()->toJson();
+                    }
+                    $tramite->update([
+                        'archivador_id'=>$request->archivador_id,
+                    ]);
+                    break;
+
+            }
+            
+        });
+        return is_null($error) ? "OK" : $error;
     }
 
     /**

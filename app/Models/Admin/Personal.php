@@ -3,6 +3,7 @@
 namespace App\Models\Admin;
 
 use App\Models\Control\Area;
+use App\Models\Gestion\Seguimiento;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,10 @@ class Personal extends Model
     public function usuario()
     {
         return $this->hasMany(Usuario::class);
+    }
+    public function seguimiento()
+    {
+        return $this->hasMany(Seguimiento::class);
     }
 
     public static function getUsuarios(){

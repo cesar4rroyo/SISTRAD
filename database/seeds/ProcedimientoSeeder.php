@@ -12,11 +12,18 @@ class ProcedimientoSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=0; $i < 20; $i++) { 
+        for ($i=0; $i < 10; $i++) { 
             DB::table('procedimiento')->insert([
                 'descripcion' => 'Procedimiento '.($i+1),            
                 'areainicio_id' => 1,            
-                'areafin_id' => 2,            
+                'areafin_id' => 5,            
+            ]);
+        }
+        for ($i=10; $i < 20; $i++) { 
+            DB::table('procedimiento')->insert([
+                'descripcion' => 'Procedimiento '.($i+1),            
+                'areainicio_id' => 2,            
+                'areafin_id' => 5,            
             ]);
         }
         

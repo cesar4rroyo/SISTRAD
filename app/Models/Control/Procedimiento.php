@@ -2,6 +2,7 @@
 
 namespace App\Models\Control;
 
+use App\Models\Gestion\Tramite;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -24,5 +25,10 @@ class Procedimiento extends Model
     public function rutas()
     {
         return $this->hasMany('App\Models\Control\Rutaprocedimiento', 'procedimiento_id');
+    }
+
+    public function tramite()
+    {
+        return $this->hasMany(Tramite::class, 'procedimiento_id');
     }
 }

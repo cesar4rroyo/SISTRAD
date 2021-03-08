@@ -34,14 +34,22 @@ class Usuario extends Authenticatable
      public function setSession($tipousuario)
      {
          if (count($tipousuario) == 1) {
+             if($tipousuario[0]['id']==1){
+                 $nombres = 'ADMIN PRINCIPAL';
+             }else{
+                $nombres= $this->personal()->get()->toArray()[0]['nombres'] . ' '  . $this->personal()->get()->toArray()[0]['apellidopaterno'] . ' ' . $this->personal()->get()->toArray()[0]['apellidomaterno'];
+                $area = $this->personal()->with('area')->get()->toArray()[0];
+            }
              Session::put([
                  'tipousuario_id' => $tipousuario[0]['id'],
                  'tipousuario_nombre' => $tipousuario[0]['descripcion'],
                  'usuario' => $this->login,
                  'accesos' => $this->tipousuario()->with('opcionmenu')->get()->toArray()[0]['opcionmenu'] ?? null,
                  'usuario_id' => $this->id,
-                 'personal' => $this->personal()->get()->toArray()[0] ?? null,
+                 'personal' => $this->personal()->with('cargo', 'area')->get()->toArray()[0] ?? null,
+                 'nombres'=> $nombres ?? null,
                  'roles' => $this->personal()->with('roles')->get()->toArray()[0]['roles'] ?? null,
+                 'area'=> $area ?? null,
              ]);
          }
      }
