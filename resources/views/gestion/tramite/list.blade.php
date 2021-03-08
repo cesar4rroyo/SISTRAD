@@ -1,4 +1,45 @@
-@if(count($lista) == 0)
+@php $x = 0 ; @endphp
+@foreach ($lista as $value)
+	@php
+	$ultimo_seguimiento = $value->latestSeguimiento;
+	$accion             = strtoupper($ultimo_seguimiento->accion);
+	$area               = $ultimo_seguimiento->area_id;
+	if( $area_id && $area_id != ""){
+		if( $modo == 'entrada'){
+			if(($accion == 'DERIVAR' && $area == $area_id )){
+				$value->cumple = 'S';
+			}else if (($accion == 'REGISTRAR' && $area == $area_id)) {
+				$value->cumple = 'S';
+			}else{
+				$value->cumple = 'N';
+				$x++;
+			}
+
+		}else if($modo == 'salida'){ 
+			if(($accion != 'REGISTRAR')){ // EN EL METODO LISTAR DEL MODELO YA SE HA VERIFICADO QUE TENGA TENGO AL MENOS UN SEGUIMIENTO CON EL AREA_ID DEL USUARIO
+				$value->cumple = 'S';
+			}else {
+				$value->cumple = 'N';
+				$x++;
+			}
+		}else if($modo == 'bandeja'){
+			if (($accion == 'ACEPTAR') && $area == $area_id) {
+				$value->cumple = 'S';
+			}else {
+				$value->cumple = 'N';
+				$x++;
+			}
+		}else if($modo == 'general'){
+			$value->cumple = 'S';
+		}else {
+			$value->cumple = 'N';
+			$x++;
+		}
+	}	
+	@endphp
+@endforeach
+
+@if(count($lista) - $x == 0)
 <h3 class="text-warning">No se encontraron resultados.</h3>
 @else
 {!! $paginacion !!}
@@ -15,6 +56,9 @@
 		$contador = $inicio + 1;
 		?>
 		@foreach ($lista as $key => $value)
+			
+			
+		@if($value->cumple == 'S')
         <tr>
 			<td>{{ $contador }}</td>
 			<td>{{ $value->prioridad }}</td>
@@ -71,6 +115,7 @@
 		<?php
 		$contador = $contador + 1;
 		?>
+		@endif
 		@endforeach
 	</tbody>
 	<tfoot>
@@ -83,3 +128,6 @@
 </table>
 {!! $paginacion!!}
 @endif
+<script >
+	$('a#divtotalregistros').text('TOTAL DE REGISTROS  '+{{count($lista)- $x}});
+</script>

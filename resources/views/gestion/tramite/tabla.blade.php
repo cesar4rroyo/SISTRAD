@@ -23,11 +23,11 @@
     $('#acciones_entrada').hide();
 		$('#myTab a').on('click', function(e){
             e.preventDefault();  
-            console.log(e.target.id);
+            // console.log(e.target.id);
             switch (e.target.id) {
                 case 'entrada-tab':
                     $('#modo').val('entrada');
-                	buscar('{{ $entidad }}');
+                	  buscar('{{ $entidad }}');
                     break;
                 case 'bandeja-tab':
                     $('#modo').val('bandeja');

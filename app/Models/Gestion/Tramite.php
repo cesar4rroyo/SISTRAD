@@ -74,7 +74,7 @@ class Tramite extends Model
         return $this->join('seguimiento as s','s.tramite_id', 'tramite.id')
         ->where('tramite.id',$this->id)
         ->whereNull('s.deleted_at')
-        ->orderBy('s.correlativo', 'ASC')
+        ->orderBy('s.correlativo', 'DESC')
         ->first();   
     }
     public function latestSeguimiento()
@@ -146,6 +146,32 @@ class Tramite extends Model
 
                 }
             })
+			->orderBy('numero', 'ASC');
+	}
+
+    public function scopelistar2($query, $numero, $fecinicio, $fecfin, $modo=null, $area_actual=null, $personal_id)
+	{
+		return $query
+            ->where(function ($subquery) use ($numero) {
+				if (!is_null($numero) && strlen($numero) > 0) {
+					$subquery->where('numero', 'LIKE', '%'.$numero.'%');
+				}
+			})
+			->where(function ($subquery) use ($fecinicio) {
+				if (!is_null($fecinicio) && strlen($fecinicio) > 0) {
+					$subquery->where('tramite.fecha', '>=', date_format(date_create($fecinicio), 'Y-m-d H:i:s'));
+				}
+			})
+			->where(function ($subquery) use ($fecfin) {
+				if (!is_null($fecfin) && strlen($fecfin) > 0) {
+					$subquery->where('tramite.fecha', '<=', date_format(date_create($fecfin), 'Y-m-d H:i:s'));
+				}
+			})
+			->whereHas('seguimientos',function ($subquery) use ($area_actual) {
+				if (!is_null($area_actual) && strlen($area_actual) > 0) {
+					$subquery->where('area_id' , $area_actual);
+				}
+			})
 			->orderBy('numero', 'ASC');
 	}
 }

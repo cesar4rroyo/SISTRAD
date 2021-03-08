@@ -67,7 +67,7 @@ class TramiteController extends Controller
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $nombre           = Libreria::getParam($request->input('numero'));
-        $resultado        = Tramite::with('seguimientos', 'procedimiento', 'latestSeguimiento')->listar($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id);
+        $resultado        = Tramite::with('seguimientos', 'procedimiento', 'latestSeguimiento')->listar2($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -97,7 +97,7 @@ class TramiteController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta', 'modo'));
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta', 'modo' ,'area_id'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -199,9 +199,9 @@ class TramiteController extends Controller
             $seguimiento->correlativo_anterior = '1';
             // $seguimiento->observacion;
             // $seguimiento->ultimo;
-            $seguimiento->area = $user->personal?$user->personal->area->descripcion : 'MESA DE PARTES';
-            $seguimiento->cargo = '';
-            $seguimiento->persona = '';
+            $seguimiento->area = $user->personal?($user->personal->area? $user->personal->area->descripcion : null ): null;
+            $seguimiento->cargo = $user->personal?($user->personal->cargo? $user->personal->cargo->descripcion : null ): null;
+            $seguimiento->persona = $user->personal?($user->personal->nombres.' '.$user->personal->apellidopaterno.' '.$user->personal->apellidomaterno ): null;
             // $seguimiento->recibido ;
             // $seguimiento->fecharecibe;
             // $seguimiento->tiposeguimiento ;
@@ -209,6 +209,7 @@ class TramiteController extends Controller
             $seguimiento->tramite_id = $tramite->id;
             $seguimiento->personal_id = $user->personal_id;
             $seguimiento->area_id  = $user->personal?$user->personal->area_id : null;
+            $seguimiento->cargo_id  = $user->personal?$user->personal->cargo_id : null;
             // $seguimiento->motivocourier_id; 
             // $seguimiento->motivorechazo_id;
             $seguimiento->save(); 
