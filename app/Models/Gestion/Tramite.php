@@ -77,6 +77,7 @@ class Tramite extends Model
         ->orderBy('s.correlativo', 'DESC')
         ->first();   
     }
+    
     public function latestSeguimiento()
     {
         return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'desc')->latest();

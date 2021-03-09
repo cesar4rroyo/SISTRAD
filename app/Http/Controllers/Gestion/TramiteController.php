@@ -97,7 +97,7 @@ class TramiteController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta', 'modo' ,'area_id'));
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta', 'modo' ,'area_id', 'area_actual'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -287,35 +287,98 @@ class TramiteController extends Controller
                     ]);
                     break;
                 case 'rechazar':
-                    $reglas     = array('motivorechazo_id' => 'required');
+                    $reglas     = array('motivorechazo_id' => 'required', 'observacion'=>'required', 'envio'=>'required');
                     $mensajes = array(
-                        'motivorechazo_id.required' => 'Debe ingresar un motivo de rechazo'
+                        'motivorechazo_id.required' => 'Debe ingresar un motivo de rechazo',
+                        'observacion.required' => 'Debe ingresar una observación',
+                        'envio.required' => 'Debe elegir que es lo que quiere hacer con el trámite',
                     );
                     $validacion = Validator::make($request->all(), $reglas, $mensajes);
                     if ($validacion->fails()) {
                         return $validacion->messages()->toJson();
                     }
                     
+                    
                     $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();
                     $correlativo_anterior = $ultimo_seguimiento->correlativo;
-                    $seguimiento=Seguimiento::create([
-                        'fecha'=> date("Y-m-d H:i:s"),
-                        'accion' => 'RECHAZAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
-                        'correlativo' => $correlativo_anterior+1,
-                        'correlativo_anterior' => $correlativo_anterior,
-                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
-                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
-                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
-                        'tramite_id' => $id,
-                        'personal_id' => $usuario['id'],
-                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
-                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
-                        'motivorechazo_id'=>$request->motivorechazo_id,
-                        'observacion'=> Libreria::getParam($request->input('observacion')),
-                    ]);
-                    $tramite->update([
-                        'situacion'=>'RECHAZADO',
-                    ]);
+                    if($request->envio=='anterior'){
+                        $penultimo_Seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->take(2)->get()[1];
+                        $seguimiento=Seguimiento::create([
+                            'fecha'=> date("Y-m-d H:i:s"),
+                            'accion' => 'RECHAZAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                            'correlativo' => $correlativo_anterior+1,
+                            'correlativo_anterior' => $correlativo_anterior,
+                            'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                            'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                            'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                            'tramite_id' => $id,
+                            'personal_id' => $usuario['id'],
+                            'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                            'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                            'motivorechazo_id'=>$request->motivorechazo_id,
+                            'observacion'=> Libreria::getParam($request->input('observacion')),
+                        ]);
+                        
+                        //otro seguimiento para derivar al anterior
+                        $area_id=$ultimo_seguimiento->area_id; 
+                        if($area_id==$usuario['area']['id']){
+                            $area_id=$penultimo_Seguimiento->area_id;
+                        }
+                        $seguimiento=Seguimiento::create([
+                            'fecha'=> date("Y-m-d H:i:s"),
+                            'accion' => 'DERIVAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                            'correlativo' => $correlativo_anterior+2,
+                            'correlativo_anterior' => $correlativo_anterior+1,
+                            'area' =>   $usuario['area'] ? $usuario['area']['descripcion'] : null, //el última área que hizo la accion de derivar
+                            'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                            'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                            'tramite_id' => $id,
+                            'personal_id' => $usuario['id'],
+                            'area_id'  => $area_id, //id_area a dónde se derivo el trámite
+                            'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                            'observacion'=> Libreria::getParam($request->input('observacion')),
+                        ]);
+
+                        $tramite->update([
+                            'situacion'=>'RECHAZADO AREA ANTERIOR',
+                        ]);
+                    }else{
+                        $seguimiento=Seguimiento::create([
+                            'fecha'=> date("Y-m-d H:i:s"),
+                            'accion' => 'RECHAZAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                            'correlativo' => $correlativo_anterior+1,
+                            'correlativo_anterior' => $correlativo_anterior,
+                            'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                            'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                            'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                            'tramite_id' => $id,
+                            'personal_id' => $usuario['id'],
+                            'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                            'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                            'motivorechazo_id'=>$request->motivorechazo_id,
+                            'observacion'=> Libreria::getParam($request->input('observacion')),
+                        ]);
+                        //luego se finaliza
+                        $seguimiento=Seguimiento::create([
+                            'fecha'=> date("Y-m-d H:i:s"),
+                            'accion' => 'FINALIZAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                            'correlativo' => $correlativo_anterior+2,
+                            'correlativo_anterior' => $correlativo_anterior+1,
+                            'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                            'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                            'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                            'tramite_id' => $id,
+                            'personal_id' => $usuario['id'],
+                            'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                            'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                            'motivorechazo_id'=>$request->motivorechazo_id,
+                            'observacion'=> Libreria::getParam($request->input('observacion')),
+                            'ultimo'=>'S',
+                        ]);
+                        $tramite->update([
+                            'situacion'=>'FINALIZADO CON OBSERVACION',
+                        ]);
+                    }
                     break;
                 case 'finalizar':                    
                     $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();

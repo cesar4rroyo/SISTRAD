@@ -46,13 +46,18 @@
 							<div class="card-header">
 							  <div class="card-tools">
 								{!! Form::button(' <i class="fa fa-plus fa-fw"></i> Agregar', array('class' => 'btn  btn-outline-primary', 'id' => 'btnNuevo', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
-							</div>
+								</div>
+								<span class="badge badge-success">FINALIZADO</span>
+								<span class="badge badge-danger">RECHAZADO</span>
+								<span class="badge badge-primary">FINALIZADO CON OBSERVACION</span>
+								<span class="badge badge-warning">RECHAZADO AREA ANTERIOR</span>
+
 							</div>
 							<!-- /.card-header -->
 							<div class="card-body table-responsive px-3">
 								@include('gestion.tramite.tabla')
 								<div id="listado{{ $entidad }}">
-								</div>
+								</div>								
 							</div>
 							<!-- /.card-body -->
 						  </div>

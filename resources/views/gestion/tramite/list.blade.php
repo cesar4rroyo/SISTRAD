@@ -4,6 +4,8 @@
 	$ultimo_seguimiento = $value->latestSeguimiento;
 	$accion             = strtoupper($ultimo_seguimiento->accion);
 	$area               = $ultimo_seguimiento->area_id;
+	$penultimo_seguimiento = $value->seguimientos;
+	$penultimo_seguimiento = $value->seguimientos[count($penultimo_seguimiento)-1];
 	if( $area_id && $area_id != ""){
 		if( $modo == 'entrada'){
 			if(($accion == 'DERIVAR' && $area == $area_id )){
@@ -16,14 +18,23 @@
 			}
 
 		}else if($modo == 'salida'){ 
-			if(($accion != 'REGISTRAR')){ // EN EL METODO LISTAR DEL MODELO YA SE HA VERIFICADO QUE TENGA TENGO AL MENOS UN SEGUIMIENTO CON EL AREA_ID DEL USUARIO
-				$value->cumple = 'S';
+			if(($accion != 'REGISTRAR' && $accion != 'ACEPTAR' && $accion != 'ADJUNTAR')){ // EN EL METODO LISTAR DEL MODELO YA SE HA VERIFICADO QUE TENGA TENGO AL MENOS UN SEGUIMIENTO CON EL AREA_ID DEL USUARIO
+				if($accion=='DERIVAR'){
+					if($ultimo_seguimiento->area == $area_actual){
+						$value->cumple = 'S';
+					}else{
+						$value->cumple = 'N';
+						$x++;
+					}
+				}else{
+					$value->cumple = 'S';
+				}	
 			}else {
 				$value->cumple = 'N';
 				$x++;
 			}
 		}else if($modo == 'bandeja'){
-			if (($accion == 'ACEPTAR') && $area == $area_id) {
+			if (($accion == 'ACEPTAR' || $accion=='ADJUNTAR') && $area == $area_id) {
 				$value->cumple = 'S';
 			}else {
 				$value->cumple = 'N';
@@ -31,6 +42,22 @@
 			}
 		}else if($modo == 'general'){
 			$value->cumple = 'S';
+		}else if($modo == 'archivos'){
+			if($area == $area_id){
+				$existe=false;
+				foreach ($value->seguimientos as $item) {
+					if(!is_null($item->ruta)){
+						$existe=true;
+						break;
+					}
+				}
+				if($existe){
+					$value->cumple = 'S';
+				}else{
+					$value->cumple = 'N';
+					$x++;
+				}
+			}
 		}else {
 			$value->cumple = 'N';
 			$x++;
@@ -59,7 +86,34 @@
 			
 			
 		@if($value->cumple == 'S')
-        <tr>
+		@switch($value->situacion)
+			@case('FINALIZADO')
+				<?php
+				$color = "bg-success";	
+				?>
+				@break
+			@case('RECHAZADO')
+				<?php
+				$color = "bg-danger";	
+				?>
+				@break
+			@case('RECHAZADO AREA ANTERIOR')
+				<?php
+				$color = "bg-warning";	
+				?>
+				@break
+			@case('FINALIZADO CON OBSERVACION')
+				<?php
+				$color = "bg-primary";	
+				?>
+				@break
+			@default
+				<?php
+				$color = "";	
+				?>
+				@break;
+		@endswitch
+        <tr class="{{($color) ? $color : ''}}">
 			<td>{{ $contador }}</td>
 			<td>{{ $value->prioridad }}</td>
 			<td>{{ date_format(date_create($value->fecha),  'd/m/Y') }}</td>
@@ -74,7 +128,7 @@
 				<div class="btn-group">
 					@switch($modo)
 						@case('entrada')
-							@if($value->situacion == 'DERIVADO' || $value->situacion == 'REGISTRADO')
+							@if($value->situacion == 'DERIVADO' || $value->situacion == 'REGISTRADO' || $value->situacion=='RECHAZADO AREA ANTERIOR')
 							{!! Form::button('<div class="fas fa-thumbs-up"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'aceptar')).'\', \''."Aceptar trámite".'\', this);', 'class' => 'btn btn-sm btn-primary', 'title' => 'Aceptar')) !!}
 							{!! Form::button('<div class="fas fa-times"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'rechazar')).'\', \''."Rechazar trámite".'\', this);', 'class' => 'btn btn-sm btn-danger', 'title' => 'rechazar')) !!}
 							@endif
