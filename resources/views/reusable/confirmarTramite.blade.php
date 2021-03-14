@@ -13,18 +13,30 @@
 		@break
 @endswitch
 @if($accion=='seguimiento')
-
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card">				
                 <div class="card-body">
+					<div class="float-right">
+						<a href="{{route('tramite.printseguimiento', $modelo->id)}}" target="_blank">
+							<button type="button" class="btn btn-warning btn-sm">
+								<i class="fas fa-print"></i> Imprimir
+							</button>
+						</a>
+					</div>
                     <div id="content">
                         <ul class="timeline">
 							@foreach ($modelo->seguimientos as $item)
                             <li class="event">
 								<h3> <i class="fas fa-calendar-times"></i> {{$item->fecha}}</h3>
-                                <h3> <i class="fas fa-map-pin"></i> {{($item->areas) ? $item->areas->descripcion : $item->area }}</h3>
+								@if ($item->accion == 'DERIVAR')
+                                	<h3> <i class="fas fa-map-marker-alt"></i> Área de origen:  {{ $item->area }}</h3>
+									<h3><i class="fas fa-arrow-down"></i></h3>
+                                	<h3> <i class="fas fa-map-marker-alt"></i> Área de destino: {{$item->areas->descripcion }}</h3>
+								@else
+                                	<h3> <i class="fas fa-map-marker-alt"></i> {{($item->areas) ? $item->areas->descripcion : $item->area }}</h3>
+								@endif
                                 <h3>  ESTADO: 
 									<span class="badge {{($item->accion=='RECHAZAR')?'badge-danger':(($item->accion=='FINALIZAR')?'badge-success':(($item->accion=='ADJUNTAR')?'badge-warning':'badge-info'))}}">
 										{{$item->accion}}
@@ -113,8 +125,10 @@
 		</div>	
 @endif
 <div class="form-group">
-	<div class="col-lg-12 col-md-12 col-sm-12 text-right">		
+	<div class="col-lg-12 col-md-12 col-sm-12 text-right">	
+		@if ($accion != 'seguimiento')
 		{!! Form::button('<i class="fa fa-check "></i> '.$boton, array('class' => 'btn btn-warning btn-sm', 'id' => 'btnGuardar', 'type' => 'submit')) !!}
+		@endif	
 		{!! Form::button('<i class="fa fa-undo "></i> Cancelar', array('class' => 'btn btn-default btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal((contadorModal - 1));')) !!}
 	</div>
 </div>

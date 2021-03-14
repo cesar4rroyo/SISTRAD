@@ -70,6 +70,10 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('archivador/buscar', 'Control\ArchivadorController@buscar')->name('archivador.buscar');
     Route::get('archivador/eliminar/{id}/{listarluego}', 'Control\ArchivadorController@eliminar')->name('archivador.eliminar');
     Route::resource('archivador', 'Control\ArchivadorController', array('except' => array('show')));
+    /* TIPODOCUMENTO*/
+    Route::post('tipodocumento/buscar', 'Control\TipoDocumentoController@buscar')->name('tipodocumento.buscar');
+    Route::get('tipodocumento/eliminar/{id}/{listarluego}', 'Control\TipoDocumentoController@eliminar')->name('tipodocumento.eliminar');
+    Route::resource('tipodocumento', 'Control\TipoDocumentoController', array('except' => array('show')));
     /* PROCEDIMIENTOS*/
     Route::post('procedimiento/buscar', 'Control\ProcedimientoController@buscar')->name('procedimiento.buscar');
     Route::get('procedimiento/eliminar/{id}/{listarluego}', 'Control\ProcedimientoController@eliminar')->name('procedimiento.eliminar');
@@ -93,6 +97,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
 
     Route::get('tramite/confirmacion/{id}/{listarluego}/{accion}', 'Gestion\TramiteController@confirmacion')->name('tramite.confirmacion');
     Route::post('tramite/accion/{id}/{accion}', 'Gestion\TramiteController@accion')->name('tramite.accion');
+    Route::get('tramite/seguimiento/pdf/{id}', 'Gestion\TramiteController@printseguimiento')->name('tramite.printseguimiento');
    
 });
 

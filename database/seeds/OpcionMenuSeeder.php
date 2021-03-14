@@ -69,6 +69,13 @@ class OpcionMenuSeeder extends Seeder
             'orden' =>6,
             'grupomenu_id' => 2
         ]); 
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Tipo de Documento',
+            'icono' => 'far fa-file-alt',
+            'link' => 'tipodocumento',
+            'orden' =>7,
+            'grupomenu_id' => 2
+        ]); 
         //end Control
         //start Gestion documentos        
         DB::table('opcionmenu')->insert([

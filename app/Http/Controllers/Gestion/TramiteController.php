@@ -19,6 +19,7 @@ use App\Models\Gestion\Seguimiento;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class TramiteController extends Controller
 {
@@ -34,6 +35,7 @@ class TramiteController extends Controller
             'index'  => 'anio.index',
             'accion'=>'tramite.accion',
             'confirmacion'=>'tramite.confirmacion',
+            'printseguimiento'=>'tramite.printseguimiento'
         );
 
 
@@ -58,6 +60,7 @@ class TramiteController extends Controller
         // dd($request->all());
         $usuario = session()->get('personal');
         $personal_id = $usuario['id'];
+        $tipo = $request->input('tipos');
         $area_actual = (session()->get('area')['area']['descripcion']) ?? 'MESA DE PARTES';
         $area_id = $usuario['area_id'];
         $pagina           = $request->input('page');
@@ -67,7 +70,7 @@ class TramiteController extends Controller
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $nombre           = Libreria::getParam($request->input('numero'));
-        $resultado        = Tramite::with('seguimientos', 'procedimiento', 'latestSeguimiento')->listar2($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id);
+        $resultado        = Tramite::with('seguimientos', 'procedimiento', 'latestSeguimiento')->listar2($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id, $tipo);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -96,8 +99,9 @@ class TramiteController extends Controller
             $fin             = $paramPaginacion['fin'];
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
+            $cboTipoTramite  = [""=>'Todos', 'TUPA'=>'Tupa', 'INTERNO'=>'Interno']; 
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta', 'modo' ,'area_id', 'area_actual'));
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta', 'modo' ,'area_id', 'area_actual', 'cboTipoTramite'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -111,10 +115,11 @@ class TramiteController extends Controller
         $user = Auth::user();
         // dd($user->toArray);
         $entidad          = 'tramite';
+        $cboTipoTramite  = [""=>'Todos', 'TUPA'=>'Tupa', 'INTERNO'=>'Interno']; 
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta'));
+        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta', 'cboTipoTramite'));
     }
 
     /**
@@ -127,6 +132,7 @@ class TramiteController extends Controller
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $entidad  = 'tramite';
         $tramite = null;
+        
        
         $tipodocumentos = [""=>'Seleccione'] + Tipodocumento::pluck('descripcion', 'id')->all();
         $procedimientos = [""=>'Seleccione'] + Procedimiento::pluck('id','descripcion')->all();
@@ -227,6 +233,13 @@ class TramiteController extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function printseguimiento($id){
+        $tramite = Tramite::with('seguimientos.areas')->find($id);
+        $data = $tramite;
+        $pdf = PDF::loadView('gestion.pdf.seguimiento', compact('data'))->setPaper('a4', 'landscape');
+        return $pdf->stream('seguimiento.pdf');
     }
 
     
@@ -443,7 +456,8 @@ class TramiteController extends Controller
                     if ($validacion->fails()) {
                         return $validacion->messages()->toJson();
                     }
-                    $archivo = $request->file('archivo')->store('public/archivos');
+                    $extension = $request->file('archivo')->getClientOriginalExtension();
+                    $archivo = $request->file('archivo')->storeAs('public/archivos', time() .  '.' .$extension);
                     $ruta = Storage::url($archivo);
                     $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();
                     $correlativo_anterior = $ultimo_seguimiento->correlativo;

@@ -20,7 +20,7 @@ class AccesoSeeder extends Seeder
                 'opcionmenu_id' => $i,
             ]);
         }
-        for ($i = 1; $i <= 9; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             DB::table('acceso')->insert([
                 'tipousuario_id' => 3,
                 'opcionmenu_id' => $i,
