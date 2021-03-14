@@ -113,9 +113,30 @@
 				?>
 				@break;
 		@endswitch
+		@switch($value->prioridad)
+			@case('ALTA')
+				<?php
+				$prioridad = "badge-danger";	
+				?>
+				@break
+			@case('NORMAL')
+				<?php
+				$prioridad = "badge-primary";	
+				?>
+				@break
+			@case('BAJA')
+				<?php
+				$prioridad = "badge-warning";	
+				?>
+				@break				
+		@endswitch
         <tr class="{{($color) ? $color : ''}}">
 			<td>{{ $contador }}</td>
-			<td>{{ $value->prioridad }}</td>
+			<td>
+				<span class="badge {{$prioridad}}">
+					{{ $value->prioridad }}
+				</span>
+			</td>
 			<td>{{ date_format(date_create($value->fecha),  'd/m/Y') }}</td>
 			<td>{{ $value->numero }}</td>
 			<td>{{ $value->tipodocumento->descripcion }}</td>
@@ -135,7 +156,7 @@
 							@break
 						@case('bandeja')
 							@if($value->situacion == 'EN PROCESO')
-								{!! Form::button('<div class="fas fa-pencil-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-info', 'title' => 'Editar')) !!}
+								{{-- {!! Form::button('<div class="fas fa-pencil-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-info', 'title' => 'Editar')) !!} --}}
 								{!! Form::button('<div class="fas fa-times"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'rechazar')).'\', \''."Rechazar Trámite".'\', this);', 'class' => 'btn btn-sm btn-danger', 'title' => 'Rechazar')) !!}
 								{!! Form::button('<div class="fas fa-file-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'adjuntar')).'\', \''."Adjuntar Archivo".'\', this);', 'class' => 'btn btn-sm btn-warning', 'title' => 'Adjuntar')) !!}
 								{!! Form::button('<div class="fas fa-check"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'finalizar')).'\', \''."Finalizar Tramite".'\', this);', 'class' => 'btn btn-sm btn-success', 'title' => 'Finalizar')) !!}

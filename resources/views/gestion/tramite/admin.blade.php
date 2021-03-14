@@ -24,21 +24,29 @@
 								{!! Form::label('numero', 'Numero') !!}
 								{!! Form::text('numero', '', array('class' => 'form-control ', 'id' => 'numero')) !!}
 							</div>
-							<div class="col-lg-3 col-md-3  form-group">
+							<div class="col-lg-4 col-md-4  form-group">
 								{!! Form::label('fechainicio', 'Fecha inicio') !!}
 								{!! Form::date('fechainicio', date('Y-m-d'), array('class' => 'form-control input-xs', 'id' => 'fechainicio' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
-							<div class="col-lg-3 col-md-3  form-group">
+							<div class="col-lg-4 col-md-4  form-group">
 								{!! Form::label('fechafin', 'Fecha fin') !!}
 								{!! Form::date('fechafin', '', array('class' => 'form-control input-xs', 'id' => 'fechafin' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+							</div>							
+						</div>						
+                      </div>
+					  <div class="row">
+						<div class="row w-100">
+							<div class="col-lg-4 col-md-4  form-group">
+								{!! Form::label('tipos', 'Tipo de Trámite') !!}
+								{!! Form::select('tipos', $cboTipoTramite, "",array('class' => 'form-control form-control input-xs', 'id' => 'tipos', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
 							<div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
 								{!! Form::label('nombre', 'Filas a mostrar') !!}
 								{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-xs', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
 						</div>
-                        {!! Form::close() !!}
-                      </div>
+						{!! Form::close() !!}
+					  </div>
                    
                       <div class="row mt-2" >
 						<div class="col-md-12">
@@ -80,6 +88,9 @@
 			if (key == '13') {
 				buscar('{{ $entidad }}');
 			}
+		});
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="tipos"]').change(function (e) {
+			buscar('{{ $entidad }}');
 		});
 	});
 </script>

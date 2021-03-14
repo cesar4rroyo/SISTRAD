@@ -150,7 +150,7 @@ class Tramite extends Model
 			->orderBy('numero', 'ASC');
 	}
 
-    public function scopelistar2($query, $numero, $fecinicio, $fecfin, $modo=null, $area_actual=null, $personal_id)
+    public function scopelistar2($query, $numero, $fecinicio, $fecfin, $modo=null, $area_actual=null, $personal_id, $tipo=null)
 	{
 		return $query
             ->where(function ($subquery) use ($numero) {
@@ -166,6 +166,11 @@ class Tramite extends Model
 			->where(function ($subquery) use ($fecfin) {
 				if (!is_null($fecfin) && strlen($fecfin) > 0) {
 					$subquery->where('tramite.fecha', '<=', date_format(date_create($fecfin), 'Y-m-d H:i:s'));
+				}
+			})
+			->where(function ($subquery) use ($tipo) {
+				if (!is_null($tipo) && strlen($tipo) > 0) {
+					$subquery->where('tipo', 'LIKE', '%'.$tipo.'%');
 				}
 			})
 			->whereHas('seguimientos',function ($subquery) use ($area_actual) {
