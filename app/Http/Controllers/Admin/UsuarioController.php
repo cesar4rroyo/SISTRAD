@@ -28,6 +28,8 @@ class UsuarioController extends Controller
             'delete' => 'usuario.eliminar',
             'search' => 'usuario.buscar',
             'index'  => 'usuario.index',
+            'perfil'=>'usuario.perfil',
+            'cambiarpassword'=>'usuario.cambiarpassword',
     );
 
     /**
@@ -250,6 +252,32 @@ class UsuarioController extends Controller
         $formData = array('route' => array('usuario.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+    public function perfil()
+    {
+        $id = session()->get('usuario_id');
+        $modelo = Usuario::with('personal.cargo', 'personal.area')->findOrFail($id);
+        return view($this->folderview.'.perfil')->with(compact('modelo'));
+    }
+
+    public function cambiarpassword(Request $request, $id){
+        $existe = Libreria::verificarExistencia($id, 'usuario');
+        if ($existe !== true) {
+            return $existe;
+        }
+        
+        if($request->password != $request->password2){
+            return redirect()->route('usuario.perfil')->with('error', 'Las contraseñas no coinciden');
+        }
+       
+        $error = DB::transaction(function() use($request, $id){
+            $usuario = Usuario::findOrFail($id);
+            $usuario->update([
+                'password'=> $request->password,
+            ]);
+        });
+        return is_null($error) ? redirect()->route('dashboard')->with('success', 'La contraseña se actualizado correctamente') : redirect()->route('usuario.perfil')->with('error', 'Ha ocurrido un error interno');;
     }
 
 
