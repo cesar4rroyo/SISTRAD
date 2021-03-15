@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{asset("assets/$theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css")}}">
     <link rel="stylesheet" href="{{asset("select2/css/select2.min.css")}}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+    
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">

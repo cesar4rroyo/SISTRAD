@@ -20,8 +20,7 @@
                 <span class="dropdown-item dropdown-header disabled">Usuario: {{session()->get('usuario') ?? 'Invitado'}}</span>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">Perfil</a>
-                <a href="#" class="dropdown-item dropdown-footer">Cambiar Contraseña</a>
+                <a href="{{route('usuario.perfil')}}" class="dropdown-item dropdown-footer">Cambiar contraseña</a>
                 <a href="{{route('logout')}}" class="dropdown-item dropdown-footer bg-danger">Salir</a>
             </div>
         </li>

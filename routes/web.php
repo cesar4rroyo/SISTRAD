@@ -46,6 +46,11 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     /*Dashboard Principal*/
     Route::get('dashboard', 'Gestion\TramiteController@index')->name('dashboard');
 
+    /* Rutas Perfil & Cambio Contraseña */
+    Route::get('persona/perfil', 'Admin\UsuarioController@perfil')->name('usuario.perfil');
+    Route::post('persona/password/{id}', 'Admin\UsuarioController@cambiarpassword')->name('usuario.cambiarpassword');
+
+
     /* Rutas de PERSONA */
     Route::post('persona/buscar', 'Admin\PersonalController@buscar')->name('persona.buscar');
     Route::get('persona/eliminar/{id}/{listarluego}', 'Admin\PersonalController@eliminar')->name('persona.eliminar');
