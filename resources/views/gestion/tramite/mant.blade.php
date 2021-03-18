@@ -75,15 +75,10 @@
 				<div class=" form-group " id ="divremitente">
 					{!! Form::label('remitente', 'Remitente *', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::text('remitente', null,array('class' => 'form-control form-control-sm input-xs', 'id' => 'remitente')) !!}
+						{!! Form::text('remitente', null,array('class' => 'form-control form-control-sm input-xs typeahead ', 'id' => 'remitente', 'data-provide' => 'typeahead' , 'autocomplete' =>'off')) !!}
 					</div>
 				</div>
-				{{-- <div class=" form-group d-none" id ="divdestino">
-					{!! Form::label('destino', 'Destino *', array('class' => 'control-label')) !!}
-					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::select('destino', ["" => 'Seleccione'], "",array('class' => 'form-control form-control-sm input-xs', 'id' => 'destino')) !!}
-					</div>
-				</div> --}}
+				
 				
 				<div class=" form-group" id="divprocedimiento">
 					{!! Form::label('procedimiento', 'Procedimiento *', array('class' => 'control-label')) !!}
@@ -145,16 +140,50 @@
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
 	</div>
+	<style>
+		.typeahead { z-index: 1051; }
+		.modal-body{overflow-y: inherit;}
+	</style>
 {!! Form::close() !!}
 <script type="text/javascript">
 $(document).ready(function() {
 	configurarAnchoModal('1000');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 
+	// $('.typeahead').typeahead({
+	// 	source: [
+	// 		{id: "someId1", name: "Display name 1"},
+	// 		{id: "someId2", name: "Display name 2"}
+	// 	],
+	// 	autoSelect: false
+    // });
+
 	tramitesSelect2();
 	procedimientoSelect2();
 	archivadoresSelect2();
 	
+
+	$.get('{{route('tramite.listarpersonal')}}', function(data){
+		console.log(data);
+		$("#remitente").typeahead({ source:data });
+	},'json');
+	// $('#remitente').typeahead({
+	// 		source: function(query, process) {
+	// 			console.log('query');
+	// 			return $.ajax({
+	// 				url: '{{route('tramite.listarpersonal')}}',
+	// 				type: 'get',
+	// 				data: {query: query},
+	// 				dataType: 'json',
+	// 				success: function(json) {
+	// 					var data = JSON.parse(json);
+	// 					console.log(data);
+	// 					return process(data);
+	// 				}
+	// 			});
+	// 		}
+	// 	});
+
 	$("input[name=tipotramite]").change(function () {	
 		var valor = $(this).val(); 
 		if(valor == 'tupa' || valor == 'interno' || valor == 'externo'){
@@ -263,4 +292,5 @@ $(document).ready(function() {
 			}
 		});
 	}
+
 </script>

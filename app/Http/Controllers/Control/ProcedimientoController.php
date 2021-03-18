@@ -122,11 +122,9 @@ class ProcedimientoController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
             'descripcion' => 'required',
-            'plazo' => 'required|integer',
         );
         $mensajes = array(
             'descripcion.required'         => 'Debe ingresar una descripción',
-            'plazo.required'         => 'Debe ingresar el plazo',
             );
             
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
@@ -137,13 +135,20 @@ class ProcedimientoController extends Controller
 
         $error = DB::transaction(function() use($request){
             $array_areas = \json_decode($request->input('listAreas') , true);
+            $plazo = 0;
+            for ($i=0; $i < count($array_areas) ; $i++) { 
+                $temp_plazo = $request->input("plazo".$array_areas[$i]["idarea"]);
+                if($temp_plazo != "" && $temp_plazo){
+                    $plazo  = $plazo + $temp_plazo;
+                }
+            }
 
             $procedimiento = new Procedimiento();
             $procedimiento->descripcion   = strtoupper($request->input('descripcion'));
             $procedimiento->observacion   = Libreria::getParam($request->input('observacion'));
             $procedimiento->areainicio_id = $array_areas[0]["idarea"];
             $procedimiento->areafin_id    = $array_areas[count($array_areas)-1]["idarea"];
-            $procedimiento->plazo         = Libreria::getParam($request->input('plazo'));
+            $procedimiento->plazo         = $plazo;
             $procedimiento->save();
             
                 for ($i=0; $i < count($array_areas) ; $i++) { 

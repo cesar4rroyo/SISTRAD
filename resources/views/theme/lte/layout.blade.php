@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{asset("assets/$theme/dist/css/adminlte.min.css")}}">
     <link rel="stylesheet" href="{{asset("assets/$theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css")}}">
     <link rel="stylesheet" href="{{asset("select2/css/select2.min.css")}}">
+    <link rel="stylesheet" href="{{asset("css/typeaheadjs.css")}}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
     
 </head>
@@ -46,6 +47,7 @@
     <script src="{{asset("js/funciones.js")}}"></script>
     <script src="{{asset("js/funciones2.js")}}"></script>
     <script src="{{asset("js/bootbox.min.js")}}"></script>
+    <script src="{{asset("js/bootstrap3-typeahead.min.js")}}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="{{asset("select2/js/select2.min.js")}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

@@ -92,6 +92,7 @@
 		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="tipos"]').change(function (e) {
 			buscar('{{ $entidad }}');
 		});
+
 	});
 </script>
 {{--  --}}

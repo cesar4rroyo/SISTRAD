@@ -88,7 +88,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('empresacourier/buscar', 'Control\EmpresacourierController@buscar')->name('empresacourier.buscar');
     Route::get('empresacourier/eliminar/{id}/{listarluego}', 'Control\EmpresacourierController@eliminar')->name('empresacourier.eliminar');
     Route::resource('empresacourier', 'Control\EmpresacourierController', array('except' => array('show')));
-    
+    Route::post('empresacourier/buscarRUC', 'Control\EmpresacourierController@buscarRUC')->name('empresacourier.buscarRUC');
     /* TRAMITES*/
     Route::post('tramite/buscar', 'Gestion\TramiteController@buscar')->name('tramite.buscar');
     Route::get('tramite/eliminar/{id}/{listarluego}', 'Gestion\TramiteController@eliminar')->name('tramite.eliminar');
@@ -99,6 +99,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('tramite/listarareas', 'Gestion\TramiteController@listarAreas')->name('tramite.listarareas');
     Route::get('tramite/listararchivadores', 'Gestion\TramiteController@listarArchivadores')->name('tramite.listararchivadores');
     Route::get('tramite/listartramites', 'Gestion\TramiteController@listarTramites')->name('tramite.listartramites');
+    Route::get('tramite/listarpersonal', 'Gestion\TramiteController@listarPersonal')->name('tramite.listarpersonal');
 
     Route::get('tramite/confirmacion/{id}/{listarluego}/{accion}', 'Gestion\TramiteController@confirmacion')->name('tramite.confirmacion');
     Route::post('tramite/accion/{id}/{accion}', 'Gestion\TramiteController@accion')->name('tramite.accion');

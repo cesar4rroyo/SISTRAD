@@ -10,6 +10,7 @@ use App\Models\Control\Empresacourier;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Motivo;
+use Http\Adapter\Guzzle6\Client;
 use Illuminate\Support\Facades\DB;
 
 class EmpresacourierController extends Controller
@@ -249,5 +250,16 @@ class EmpresacourierController extends Controller
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
     
-    
+    public function buscarRUC(Request $request)
+    {
+        $respuesta = array();
+        $ruc = $request->input('ruc');
+        $client = new \GuzzleHttp\Client();
+        $res = $client->get('http://157.245.85.164/facturacion/buscaCliente/BuscaClienteRuc.php?fe=N&token=qusEj_w7aHEpX&' . 'ruc=' . $ruc);
+        if ($res->getStatusCode() == 200) { // 200 OK
+            $response_data = $res->getBody()->getContents();
+            $respuesta = json_decode($response_data);
+        }
+        return json_encode($respuesta);
+    }
 }

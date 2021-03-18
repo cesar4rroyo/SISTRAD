@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\Models\Gestion\Tramite;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Personal;
 use App\Models\Control\Archivador;
 use App\Models\Control\Area;
 use App\Models\Control\Empresacourier;
@@ -650,6 +651,22 @@ class TramiteController extends Controller
         $data = array();
         foreach ($resultados as $r) {
             $data["results"][] = [ "text" => $r->numero ,"id" => $r->id];
+        }
+        return  \json_encode($data);
+    }
+
+    public function listarPersonal(Request $request){
+        $q = $request->input('query');
+
+        $resultados = Personal::where(function ($subquery) use ($q) {
+            if (!is_null($q)) {
+                $subquery->where(DB::raw('concat(personal.apellidopaterno,\' \',personal.apellidomaterno,\' \',personal.nombres)'), 'LIKE', '%' . $q . '%');
+            }
+        })->get();
+        $data = array();
+        foreach ($resultados as $r) {
+            $nombre = $r->apellidopaterno.' '.$r->apellidomaterno.' '.$r->nombres;
+            $data[] = strtoupper($nombre);
         }
         return  \json_encode($data);
     }

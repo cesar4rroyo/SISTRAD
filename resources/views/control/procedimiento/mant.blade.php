@@ -11,12 +11,12 @@
 					{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion')) !!}
 				</div>
 			</div>
-			<div class="form-group">
+			{{-- <div class="form-group">
 				{!! Form::label('plazo', 'Plazo (dias)', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
 					{!! Form::number('plazo', $procedimiento?$procedimiento->plazo : 1, array('class' => 'form-control input-xs', 'id' => 'plazo', 'placeholder' => 'Ingrese la descripción' , "min" => 1)) !!}
 				</div>
-			</div>
+			</div> --}}
 			<div class="form-group">
 				{!! Form::label('nombre', 'Observación', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
