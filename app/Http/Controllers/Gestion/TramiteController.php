@@ -206,17 +206,24 @@ class TramiteController extends Controller
             $seguimiento->correlativo_anterior = '1';
             // $seguimiento->observacion;
             // $seguimiento->ultimo;
-            $seguimiento->area = $user->personal?($user->personal->area? $user->personal->area->descripcion : null ): null;
             $seguimiento->cargo = $user->personal?($user->personal->cargo? $user->personal->cargo->descripcion : null ): null;
             $seguimiento->persona = $user->personal?($user->personal->nombres.' '.$user->personal->apellidopaterno.' '.$user->personal->apellidomaterno ): null;
             // $seguimiento->recibido ;
             // $seguimiento->fecharecibe;
             // $seguimiento->tiposeguimiento ;
             // $seguimiento->ruta;
-            $seguimiento->tramite_id = $tramite->id;
             $seguimiento->personal_id = $user->personal_id;
-            $seguimiento->area_id  = $user->personal?$user->personal->area_id : null;
             $seguimiento->cargo_id  = $user->personal?$user->personal->cargo_id : null;
+            $seguimiento->tramite_id = $tramite->id;
+            if($tramite->tipo == 'TUPA'){
+                $proc   = Procedimiento::find($tramite->procedimiento_id);
+                $area   = Area::find($proc->areainicio_id);
+                $seguimiento->area      = $area!=null?$area->descripcion:'';
+                $seguimiento->area_id   = $proc->areainicio_id;
+            }else{
+                $seguimiento->area = $user->personal?($user->personal->area? $user->personal->area->descripcion : null ): null;
+                $seguimiento->area_id  = $user->personal?$user->personal->area_id : null;
+            }
             // $seguimiento->motivocourier_id; 
             // $seguimiento->motivorechazo_id;
             $seguimiento->save(); 
