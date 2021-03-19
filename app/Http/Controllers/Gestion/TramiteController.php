@@ -71,7 +71,7 @@ class TramiteController extends Controller
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $nombre           = Libreria::getParam($request->input('numero'));
-        $resultado        = Tramite::with('seguimientos', 'procedimiento', 'latestSeguimiento')->listar2($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id, $tipo);
+        $resultado        = Tramite::with('seguimientos', 'procedimiento.rutas.areainicio', 'procedimiento.rutas.areafin', 'latestSeguimiento')->listar2($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id, $tipo);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -262,7 +262,9 @@ class TramiteController extends Controller
         $cboAreas = ['' => 'Seleccione una área'] + Area::pluck('descripcion', 'id')->all();
         $cboArchivadores = ['' => 'Seleccione una opción'] + Archivador::pluck('descripcion', 'id')->all();
         $cboOpcion = [''=>'Seleccione uno', 'anterior'=>'Sí, enviar al área anterior', 'fin'=>'No, finalizar y empezar de nuevo'];
-        return view('reusable.confirmarTramite')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar', 'accion', 'cboMotivos', 'cboAreas', 'cboOpcion', 'cboArchivadores'));
+        $usuario = session()->get('personal');      
+        $area_actual = $usuario['area_id'];
+        return view('reusable.confirmarTramite')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar', 'accion', 'cboMotivos', 'cboAreas', 'cboOpcion', 'cboArchivadores', 'area_actual'));
     }
 
     /**
