@@ -12,6 +12,9 @@
 		{!!'<div class="callout callout-warning"><p class="text-primary">¿Esta seguro de finalizar el trámite?</p></div>' !!}
 		@break
 @endswitch
+@php
+	$showbtn=true;
+@endphp
 @if($accion=='seguimiento')
 <div class="container">
     <div class="row">
@@ -74,12 +77,48 @@
 		</div>
 	</div>
 	@if ($accion=='derivar')
-		<div class="form-group">
-			{!! Form::label('area_id', 'Área de destino:', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('area_id', $cboAreas, null, array('class' => 'form-control input-xs', 'id' => 'area_id')) !!}
+		@if ($modelo->tipo == 'TUPA')
+		@foreach ($modelo->procedimiento->rutas as $ruta)
+			@if (($ruta->areainicial_id)==$area_actual)
+				@if ($ruta->areafinal_id==$area_actual)
+					<div class="container">
+						<p class=" text-bold">No se puede derivar a otra área, este documento finaliza aquí.</p>
+					</div>
+					@php
+						$showbtn=false;
+					@endphp
+					@break
+				@endif
+				<div class="form-group">
+					{!! Form::label('area_id', 'Área de destino:', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						{!! Form::hidden('area_id', $ruta->areafinal_id, array('class' => 'form-control input-xs')) !!}
+						{!! Form::text('descripcion', $ruta->areafin->descripcion, array('class' => 'form-control input-xs', 'id' => 'area_id', 'readonly'=>'true')) !!}
+					</div>
+				</div>
+				<div class="form-group">
+					{!! Form::label('observacion', 'Observación', array('class' => 'control-label')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::textarea('observacion', '',array('class' => 'form-control form-control-sm input-xs', 'id' => 'observacion', "rows"=>2 , "style"=>"resize:none;")) !!}
+					</div>
+				</div>
+				@break
+			@endif
+		@endforeach
+		@else
+			<div class="form-group">
+				{!! Form::label('area_id', 'Área de destino:', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::select('area_id', $cboAreas, null, array('class' => 'form-control input-xs', 'id' => 'area_id')) !!}
+				</div>
 			</div>
-		</div>
+			<div class="form-group">
+				{!! Form::label('observacion', 'Observación', array('class' => 'control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::textarea('observacion', '',array('class' => 'form-control form-control-sm input-xs', 'id' => 'observacion', "rows"=>2 , "style"=>"resize:none;")) !!}
+				</div>
+			</div>
+		@endif
 	@endif
 	@if ($accion=='archivar')
 		<div class="form-group">
@@ -88,13 +127,14 @@
 				{!! Form::select('archivador_id', $cboArchivadores, null, array('class' => 'form-control input-xs', 'id' => 'archivador_id')) !!}
 			</div>
 		</div>
-	@endif
-	<div class="form-group">
-		{!! Form::label('observacion', 'Observación', array('class' => 'control-label')) !!}
-		<div class="col-lg-12 col-md-12 col-sm-12">
-		{!! Form::textarea('observacion', '',array('class' => 'form-control form-control-sm input-xs', 'id' => 'observacion', "rows"=>2 , "style"=>"resize:none;")) !!}
+		<div class="form-group">
+			{!! Form::label('observacion', 'Observación', array('class' => 'control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::textarea('observacion', '',array('class' => 'form-control form-control-sm input-xs', 'id' => 'observacion', "rows"=>2 , "style"=>"resize:none;")) !!}
+			</div>
 		</div>
-	</div>
+	@endif
+	
 @endif
 @if ($accion=='rechazar' || $accion=='finalizar' || $accion=='adjuntar')
 		@if ($accion=='adjuntar')
@@ -126,7 +166,7 @@
 @endif
 <div class="form-group">
 	<div class="col-lg-12 col-md-12 col-sm-12 text-right">	
-		@if ($accion != 'seguimiento')
+		@if ($accion != 'seguimiento' && $showbtn)
 		{!! Form::button('<i class="fa fa-check "></i> '.$boton, array('class' => 'btn btn-warning btn-sm', 'id' => 'btnGuardar', 'type' => 'submit')) !!}
 		@endif	
 		{!! Form::button('<i class="fa fa-undo "></i> Cancelar', array('class' => 'btn btn-default btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal((contadorModal - 1));')) !!}

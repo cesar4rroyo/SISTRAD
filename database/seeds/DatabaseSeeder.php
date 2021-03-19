@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'acceso',
             'empresacourier',
             'tipodocumento',
-            'procedimiento',
+            // 'procedimiento',
             'rolpersonal'
         ]);
         $this->call(CargoSeeder::class);
@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AccesoSeeder::class);
         $this->call(EmpresacourierSeeder::class);
         $this->call(TipodocumentoSeeder::class);
-        $this->call(ProcedimientoSeeder::class);
+        // $this->call(ProcedimientoSeeder::class);
         $this->call(RolPersonaSeeder::class);
     }
     protected function truncateTablas(array $tablas)

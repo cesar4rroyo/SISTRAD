@@ -1,4 +1,5 @@
 @php $x = 0 ; @endphp
+
 @foreach ($lista as $value)
 	@php
 	$ultimo_seguimiento = $value->latestSeguimiento;
@@ -83,7 +84,7 @@
 		$contador = $inicio + 1;
 		?>
 		@foreach ($lista as $key => $value)
-			
+		
 			
 		@if($value->cumple == 'S')
 		@switch($value->situacion)
@@ -141,7 +142,12 @@
 			<td>{{ $value->numero }}</td>
 			<td>{{ $value->tipodocumento->descripcion }}</td>
 			<td>{{ $value->asunto }}</td>
-			<td>{{ $value->tipo }}</td>
+			<td>
+				{{ $value->tipo }}
+				@if ($value->tipo == 'TUPA')
+					<span>({{$value->procedimiento->descripcion}})</span>
+				@endif
+			</td>
 			<td>{{ $value->areaorigen() }}</td>
 			{{-- <td>{{ $value->areaactual() }}</td> --}}
 			<td>{{ $value->remitente}}</td>
@@ -162,7 +168,10 @@
 								{!! Form::button('<div class="fas fa-check"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'finalizar')).'\', \''."Finalizar Tramite".'\', this);', 'class' => 'btn btn-sm btn-success', 'title' => 'Finalizar')) !!}
 							@endif
 							@if($value->situacion == 'EN PROCESO' || $value->situacion == 'REGISTRADO')
-								{!! Form::button('<div class="fas fa-arrow-right"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'derivar')).'\', \''.'Derivar trámite'.'\', this);', 'class' => 'btn btn-sm btn-default', 'title' => 'Derivar')) !!}
+							
+								
+									{!! Form::button('<div class="fas fa-arrow-right"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'derivar')).'\', \''.'Derivar trámite'.'\', this);', 'class' => 'btn btn-sm btn-default', 'title' => 'Derivar')) !!}
+									
 							@endif
 							@break
 						@case('salida')
