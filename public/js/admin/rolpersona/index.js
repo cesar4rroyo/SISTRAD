@@ -18,7 +18,7 @@ function ajaxRequest(url, data) {
         type: 'POST',
         data: data,
         success: function (respuesta) {
-            Hotel.notificaciones(respuesta.respuesta, 'Hotel', 'success');
+            Hotel.notificaciones(respuesta.respuesta, 'Sistema', 'success');
         },
         error: function (e) {
             console.log(e);

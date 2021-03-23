@@ -45,6 +45,7 @@ class Tramite extends Model
     {
         return $this->belongsTo(Procedimiento::class);
     }
+   
     public function areaactual(){
         $ultimoseguimiento = $this->join('seguimiento as s','s.tramite_id', 'tramite.id')
                         ->where('tramite.id',$this->id)

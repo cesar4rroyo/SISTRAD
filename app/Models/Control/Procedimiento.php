@@ -31,4 +31,22 @@ class Procedimiento extends Model
     {
         return $this->hasMany(Tramite::class, 'procedimiento_id');
     }
+
+    public function rutaActual($id_areactual)
+    {
+        $rutaactual = $this->join('rutaprocedimiento as r','r.procedimiento_id', 'procedimiento.id')
+                        ->where('procedimiento.id',$this->id)
+                        ->where('areainicial_id', $id_areactual)
+                        ->whereNull('r.deleted_at')
+                        ->orderBy('r.orden', 'DESC')
+                        ->first();
+        if($rutaactual){
+            return $rutaactual->orden;
+        }else{
+            return "";
+        }
+    }
+
+
+ 
 }
