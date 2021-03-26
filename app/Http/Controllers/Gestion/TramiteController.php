@@ -490,6 +490,32 @@ class TramiteController extends Controller
                     break;
                 case 'seguimiento':
                     break;
+                case 'comentar':
+                    $reglas     = array('observacion'=>'required');
+                    $mensajes = array(
+                        'observacion.required' => 'Debe ingresar un observacion sobre el archivo',
+                    );
+                    $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                    if ($validacion->fails()) {
+                        return $validacion->messages()->toJson();
+                    }                   
+                    $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'COMENTAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'tramite_id' => $id,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                        'observacion'=> Libreria::getParam($request->input('observacion')),
+                    ]);
+                    break;
                 case 'archivar':
                     $reglas     = array('archivador_id' => 'required');
                     $mensajes = array(
