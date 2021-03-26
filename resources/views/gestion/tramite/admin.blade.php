@@ -37,6 +37,10 @@
 					  <div class="row">
 						<div class="row w-100">
 							<div class="col-lg-4 col-md-4  form-group">
+								{!! Form::label('nombresearch', 'Remitente:') !!}
+								{!! Form::text('nombresearch', '', array('class'=>'form-control', 'id'=>'nombresearch', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+							</div>
+							<div class="col-lg-4 col-md-4  form-group">
 								{!! Form::label('tipos', 'Tipo de Trámite') !!}
 								{!! Form::select('tipos', $cboTipoTramite, "",array('class' => 'form-control form-control input-xs', 'id' => 'tipos', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
@@ -83,15 +87,25 @@
     document.addEventListener("DOMContentLoaded", function(event) {
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="numero"]').keyup(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[name="nombresearch"]').keyup(function (e) {
 			var key = window.event ? e.keyCode : e.which;
+			console.log(key);
 			if (key == '13') {
 				buscar('{{ $entidad }}');
 			}
 		});
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="numero"]').keyup(function (e) {
+			var key = window.event ? e.keyCode : e.which;
+			console.log(key);
+			if (key == '13') {
+				buscar('{{ $entidad }}');
+			}
+		});		
+		
 		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="tipos"]').change(function (e) {
 			buscar('{{ $entidad }}');
 		});
+		
 
 	});
 </script>

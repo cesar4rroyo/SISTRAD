@@ -71,7 +71,8 @@ class TramiteController extends Controller
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $nombre           = Libreria::getParam($request->input('numero'));
-        $resultado        = Tramite::with('seguimientos', 'procedimiento.rutas.areainicio', 'procedimiento.rutas.areafin', 'latestSeguimiento')->listar2($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id, $tipo);
+        $remitente           = Libreria::getParam($request->input('nombresearch'));
+        $resultado        = Tramite::with('seguimientos', 'procedimiento.rutas.areainicio', 'procedimiento.rutas.areafin', 'latestSeguimiento')->listar2($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id, $tipo, $remitente);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
