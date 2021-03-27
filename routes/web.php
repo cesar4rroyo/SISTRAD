@@ -100,6 +100,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('tramite/listararchivadores', 'Gestion\TramiteController@listarArchivadores')->name('tramite.listararchivadores');
     Route::get('tramite/listartramites', 'Gestion\TramiteController@listarTramites')->name('tramite.listartramites');
     Route::get('tramite/listarpersonal', 'Gestion\TramiteController@listarPersonal')->name('tramite.listarpersonal');
+    Route::post('tramite/generarNumero', 'Gestion\TramiteController@generarNumero')->name('tramite.generarnumero');
 
     Route::get('tramite/confirmacion/{id}/{listarluego}/{accion}', 'Gestion\TramiteController@confirmacion')->name('tramite.confirmacion');
     Route::post('tramite/accion/{id}/{accion}', 'Gestion\TramiteController@accion')->name('tramite.accion');

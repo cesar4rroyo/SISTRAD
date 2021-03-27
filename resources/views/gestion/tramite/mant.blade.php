@@ -53,7 +53,7 @@
 				<div class="col form-group">
 					{!! Form::label('numero', 'Número *', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::text('numero', null,array('class' => 'form-control form-control-sm input-xs', 'id' => 'numero')) !!}
+						{!! Form::text('numero', null,array('class' => 'form-control form-control-sm input-xs', 'id' => 'numero','readonly' => 'true')) !!}
 					</div>
 				</div>
 			</div>
@@ -78,20 +78,24 @@
 						{!! Form::text('remitente', null,array('class' => 'form-control form-control-sm input-xs typeahead ', 'id' => 'remitente', 'data-provide' => 'typeahead' , 'autocomplete' =>'off')) !!}
 					</div>
 				</div>
-				
-				
+				<div class=" form-group " >
+					{!! Form::label('correo', 'Correo', array('class' => 'control-label')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						{!! Form::text('correo', null,array('class' => 'form-control form-control-sm input-xs ', 'id' => 'correo')) !!}
+					</div>
+				</div>
 				<div class=" form-group" id="divprocedimiento">
 					{!! Form::label('procedimiento', 'Procedimiento *', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::select('procedimiento', [""=>"Indique el procedimiento"] , "",array('class' => 'form-control form-control-sm input-xs', 'id' => 'procedimiento')) !!}
 					</div>
 				</div>
-				{{-- <div class="form-group d-none" id="divareadestino">
+				<div class="form-group d-none" id="divareadestino">
 					{!! Form::label('areadestino', 'Area destino *', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::select('areadestino', [""=>"Indique el area destino"] , "",array('class' => 'form-control form-control-sm input-xs', 'id' => 'areadestino')) !!}
 					</div>
-				</div> --}}
+				</div>
 				
 	</div>
 	<div class="col-6">
@@ -122,6 +126,7 @@
 			<label class="form-check-label" for="baja">Baja</label>
 		</div>
 	</div>
+	
 	<div class="form-group">
 		{!! Form::label('observacion', 'Observación ', array('class' => 'control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
@@ -157,38 +162,22 @@ $(document).ready(function() {
 	// 	],
 	// 	autoSelect: false
     // });
-
+	generarNumero();
 	tramitesSelect2();
 	procedimientoSelect2();
 	archivadoresSelect2();
-	
+	areadestinoSelect2();
 
 	$.get('{{route('tramite.listarpersonal')}}', function(data){
-		console.log(data);
 		$("#remitente").typeahead({ source:data });
 	},'json');
-	// $('#remitente').typeahead({
-	// 		source: function(query, process) {
-	// 			console.log('query');
-	// 			return $.ajax({
-	// 				url: '{{route('tramite.listarpersonal')}}',
-	// 				type: 'get',
-	// 				data: {query: query},
-	// 				dataType: 'json',
-	// 				success: function(json) {
-	// 					var data = JSON.parse(json);
-	// 					console.log(data);
-	// 					return process(data);
-	// 				}
-	// 			});
-	// 		}
-	// 	});
+
 
 	$("input[name=tipotramite]").change(function () {	
 		var valor = $(this).val(); 
 		if(valor == 'tupa' || valor == 'interno' || valor == 'externo'){
 			$('#divremitente').removeClass('d-none');
-			// $('#divdestino').addClass('d-none');
+			$('#divdestino').addClass('d-none');
 			
 		}else if (valor == 'courier'){
 			$('#divremitente').addClass('d-none');
@@ -198,10 +187,10 @@ $(document).ready(function() {
 
 		if(valor == 'tupa'){
 			$('#divprocedimiento').removeClass('d-none');
-			// $('#divareadestino').addClass('d-none');
+			$('#divareadestino').addClass('d-none');
 		}else {
 			$('#divprocedimiento').addClass('d-none');
-			// $('#divareadestino').removeClass('d-none');
+			$('#divareadestino').removeClass('d-none');
 			areadestinoSelect2();
 		}
 	});
@@ -293,4 +282,15 @@ $(document).ready(function() {
 		});
 	}
 
+	function generarNumero(){
+    $.ajax({
+        type: "POST",
+        url: "{{route('tramite.generarnumero')}}",
+        data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
+        success: function(a) {
+			console.log(a);
+            $(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
+        }
+    });
+}
 </script>

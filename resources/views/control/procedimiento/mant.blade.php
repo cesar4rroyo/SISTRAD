@@ -128,7 +128,7 @@ $(document).ready(function() {
 @if(!is_null($procedimiento))
 	@foreach ($procedimiento->rutas as $ruta)
 		<script>
-			seleccionarArea('{{$ruta->areainicial_id}}' , '{{$ruta->areainicio->descripcion}}'+'{{$ruta->orden}}' , '{{$ruta->plazo}}');
+			seleccionarArea('{{$ruta->areainicial_id}}' , '{{$ruta->areainicio->descripcion}}' , '{{$ruta->plazo}}');
 		</script>		
 	@endforeach
 @endif

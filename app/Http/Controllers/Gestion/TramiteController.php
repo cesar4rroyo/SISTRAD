@@ -153,16 +153,19 @@ class TramiteController extends Controller
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
+            'correo' => 'nullable|email',
             'numero' => 'required',
             'asunto' => 'required',
             'folios' => 'required|integer',
             'tipodocumento' => 'required|exists:tipodocumento,id',
-            'procedimiento' => 'required_if:tipotramite,tupa'
+            'procedimiento' => 'required_if:tipotramite,tupa',
+            'areadestino' => 'required_if:tipotramite,interno',
+            'remitente' => 'required',
         );
         $mensajes = array(
             'numero.required'         => 'Debe ingresar el número',
             'asunto.required'         => 'Debe ingresar el asunto',
-            'folios.required'         => 'Debe ingresar el asunto',
+            'folios.required'         => 'Debe ingresar la cantidad de folios',
             'tipodocumento.required'         => 'Debe seleccionar el tipo de documento'
             );
             
@@ -196,6 +199,7 @@ class TramiteController extends Controller
                 $tramite->empresacourier_id = Libreria::getParam($request->input('destino')); 
             }
             $tramite->tramiteref_id         = Libreria::getParam($request->tramiteref);
+            $tramite->correo                = Libreria::getParam($request->correo);
             $tramite->save();
 
 
@@ -220,13 +224,40 @@ class TramiteController extends Controller
                 $area   = Area::find($proc->areainicio_id);
                 $seguimiento->area      = $area!=null?$area->descripcion:'';
                 $seguimiento->area_id   = $proc->areainicio_id;
+                $seguimiento->save(); 
+
             }else{
                 $seguimiento->area = $user->personal?($user->personal->area? $user->personal->area->descripcion : null ): null;
                 $seguimiento->area_id  = $user->personal?$user->personal->area_id : null;
+                $seguimiento->save(); 
+
+                //ACEPTAR EL TRAMITE
+                // $aceptar = $this->accion( $request , $tramite->id , 'aceptar');
+
+                //DERIVAR AL AREA SELECCIONADA 
+                $area = Area::find($request->areadestino);
+                $ultimo_seguimiento = Seguimiento::where('tramite_id', $tramite->id)->orderBy('id', 'desc')->first();
+                $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                $seguimiento=Seguimiento::create([
+                    'fecha'=> date("Y-m-d H:i:s"),
+                    'accion' => 'DERIVAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                    'correlativo' => $correlativo_anterior+1,
+                    'correlativo_anterior' => $correlativo_anterior,
+                    'area' =>   $user['area'] ? $user['area']['descripcion'] : null, //el última área que hizo la accion de derivar
+                    'cargo' => $user['cargo'] ? $user['cargo']['descripcion'] : null,
+                    'persona' => $user['nombres'] . ' ' . $user['apellidopaterno'] . ' ' . $user['apellidomaterno'],                
+                    'tramite_id' => $tramite->id,
+                    'personal_id' => $user['id'],
+                    'area_id'  => $area['id'], //id_area a dónde se derivo el trámite
+                    'cargo_id'=>$user['cargo'] ? $user['cargo']['id'] : null,
+                    'observacion'=> Libreria::getParam($request->input('observacion')),
+                ]);
+                $tramite->update([
+                    'situacion'=>'DERIVADO',
+                ]);
             }
             // $seguimiento->motivocourier_id; 
             // $seguimiento->motivorechazo_id;
-            $seguimiento->save(); 
         });
 
         return is_null($error) ? "OK" : $error;
@@ -681,4 +712,10 @@ class TramiteController extends Controller
     }
     
     
+    public function generarNumero(Request $request)
+    {
+        $año           = date('Y');
+        $numerotramite = Tramite::NumeroSigue($año);
+        echo $año."-" . $numerotramite;
+    }
 }

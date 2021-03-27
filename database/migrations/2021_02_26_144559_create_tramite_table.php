@@ -32,7 +32,7 @@ class CreateTramiteTable extends Migration
             $table->integer('motivorechazo_id')->unsigned()->nullable();
             $table->integer('empresacourier_id')->unsigned()->nullable();
             $table->integer('tramiteref_id')->unsigned()->nullable();
-
+            
             $table->foreign('tipodocumento_id')->references('id')->on('tipodocumento')->onUpdate('restrict')->onDelete('restrict');
             $table->foreign('procedimiento_id')->references('id')->on('procedimiento')->onUpdate('restrict')->onDelete('restrict');
             $table->foreign('personal_id')->references('id')->on('personal')->onUpdate('restrict')->onDelete('restrict');
@@ -40,7 +40,8 @@ class CreateTramiteTable extends Migration
             $table->foreign('motivorechazo_id')->references('id')->on('motivorechazo')->onUpdate('restrict')->onDelete('restrict');
             $table->foreign('empresacourier_id')->references('id')->on('empresacourier')->onUpdate('restrict')->onDelete('restrict');
             $table->foreign('tramiteref_id')->references('id')->on('tramite')->onUpdate('restrict')->onDelete('restrict');
-
+            
+            $table->string('correo')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
