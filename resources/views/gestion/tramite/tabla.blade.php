@@ -14,9 +14,9 @@
   <li class="nav-item">
     <a class="nav-link" id="archivos-tab" data-toggle="tab" href="#archivos" role="tab" aria-controls="archivos" aria-selected="false">Archivos</a>
   </li>
-  <li class="nav-item">
+  {{-- <li class="nav-item">
     <a class="nav-link" id="courier-tab" data-toggle="tab" href="#courier" role="tab" aria-controls="courier" aria-selected="false">Courier</a>
-  </li>
+  </li> --}}
 </ul>  
 <script>   
    document.addEventListener("DOMContentLoaded", function(event) {
@@ -44,10 +44,10 @@
                     $('#modo').val('archivos');
                     buscar('{{ $entidad }}');
                     break;           
-                case 'courier-tab':
+                /* case 'courier-tab':
                     $('#modo').val('courier');
                     buscar('{{ $entidad }}');
-                    break;           
+                    break;  */          
                 
             }          
         });       

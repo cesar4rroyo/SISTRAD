@@ -165,13 +165,22 @@
 								{{-- {!! Form::button('<div class="fas fa-pencil-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-info', 'title' => 'Editar')) !!} --}}
 								{!! Form::button('<div class="fas fa-times"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'rechazar')).'\', \''."Rechazar Trámite".'\', this);', 'class' => 'btn btn-sm btn-danger', 'title' => 'Rechazar')) !!}
 								{!! Form::button('<div class="fas fa-file-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'adjuntar')).'\', \''."Adjuntar Archivo".'\', this);', 'class' => 'btn btn-sm btn-warning', 'title' => 'Adjuntar')) !!}
-								{!! Form::button('<div class="fas fa-check"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'finalizar')).'\', \''."Finalizar Tramite".'\', this);', 'class' => 'btn btn-sm btn-success', 'title' => 'Finalizar')) !!}
+								@if ($value->tipo == 'TUPA')
+									@if (count($value->procedimiento->rutas) == $value->procedimiento->rutaActual($area_id))
+										{!! Form::button('<div class="fas fa-check"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'finalizar')).'\', \''."Finalizar Tramite".'\', this);', 'class' => 'btn btn-sm btn-success', 'title' => 'Finalizar')) !!}
+									@endif
+								@else
+									{!! Form::button('<div class="fas fa-check"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'finalizar')).'\', \''."Finalizar Tramite".'\', this);', 'class' => 'btn btn-sm btn-success', 'title' => 'Finalizar')) !!}
+								@endif
 							@endif
 							@if($value->situacion == 'EN PROCESO' || $value->situacion == 'REGISTRADO')
-							
-								
+								@if ($value->tipo == 'TUPA')
+									@if (count($value->procedimiento->rutas) != $value->procedimiento->rutaActual($area_id))
+										{!! Form::button('<div class="fas fa-arrow-right"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'derivar')).'\', \''.'Derivar trámite'.'\', this);', 'class' => 'btn btn-sm btn-default', 'title' => 'Derivar')) !!}
+									@endif
+								@else
 									{!! Form::button('<div class="fas fa-arrow-right"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'derivar')).'\', \''.'Derivar trámite'.'\', this);', 'class' => 'btn btn-sm btn-default', 'title' => 'Derivar')) !!}
-									
+								@endif
 							@endif
 							@break
 						@case('salida')
