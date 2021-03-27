@@ -62,7 +62,14 @@
     </div>
 </div>
 @endif
-
+@if ($accion=='comentar')
+<div class="form-group">
+	{!! Form::label('observacion', 'Observación', array('class' => 'control-label')) !!}
+	<div class="col-lg-12 col-md-12 col-sm-12">
+	{!! Form::textarea('observacion', '',array('class' => 'form-control form-control-sm input-xs', 'id' => 'observacion', "rows"=>2 , "style"=>"resize:none;")) !!}
+	</div>
+</div>
+@endif
 @if($accion=='derivar' || $accion=='archivar')
 	<div class="col-lg-12 col-md-12 col-sm-12">
 		<div class="col-md-12 col-sm-12 col-xs-12">
