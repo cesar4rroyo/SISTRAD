@@ -84,6 +84,10 @@ class Tramite extends Model
     {
         return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'desc')->latest();
     }
+    public function firstSeguimiento()
+    {
+        return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'asc')->latest();
+    }
 
     public function scopelistar($query, $numero, $fecinicio, $fecfin, $modo=null, $area_actual=null, $personal_id)
 	{

@@ -101,11 +101,14 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('tramite/listartramites', 'Gestion\TramiteController@listarTramites')->name('tramite.listartramites');
     Route::get('tramite/listarpersonal', 'Gestion\TramiteController@listarPersonal')->name('tramite.listarpersonal');
     Route::post('tramite/generarNumero', 'Gestion\TramiteController@generarNumero')->name('tramite.generarnumero');
-
+    
+    
     Route::get('tramite/confirmacion/{id}/{listarluego}/{accion}', 'Gestion\TramiteController@confirmacion')->name('tramite.confirmacion');
     Route::post('tramite/accion/{id}/{accion}', 'Gestion\TramiteController@accion')->name('tramite.accion');
     Route::get('tramite/seguimiento/pdf/{id}', 'Gestion\TramiteController@printseguimiento')->name('tramite.printseguimiento');
-   
+    
+    Route::resource('reportetramite', 'Reportes\ReportetramiteController', array('except' => array('show')));
+    Route::get('reportetramite/pdftramites', 'Reportes\ReportetramiteController@pdfTramites')->name('reportetramite.pdftramites');
 });
 
     

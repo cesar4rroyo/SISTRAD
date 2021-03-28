@@ -244,13 +244,13 @@ class TramiteController extends Controller
                     'accion' => 'DERIVAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
                     'correlativo' => $correlativo_anterior+1,
                     'correlativo_anterior' => $correlativo_anterior,
-                    'area' =>   $user['area'] ? $user['area']['descripcion'] : null, //el última área que hizo la accion de derivar
-                    'cargo' => $user['cargo'] ? $user['cargo']['descripcion'] : null,
-                    'persona' => $user['nombres'] . ' ' . $user['apellidopaterno'] . ' ' . $user['apellidomaterno'],                
+                    'area' =>   $user->personal?($user->personal->area? $user->personal->area->descripcion : null ): null, //el última área que hizo la accion de derivar
+                    'cargo' => $user->personal?($user->personal->cargo? $user->personal->cargo->descripcion : null ): null,
+                    'persona' => $user->personal?($user->personal->nombres.' '.$user->personal->apellidopaterno.' '.$user->personal->apellidomaterno ): null,                
                     'tramite_id' => $tramite->id,
-                    'personal_id' => $user['id'],
-                    'area_id'  => $area['id'], //id_area a dónde se derivo el trámite
-                    'cargo_id'=>$user['cargo'] ? $user['cargo']['id'] : null,
+                    'personal_id' => $user->personal_id,
+                    'area_id'  => $area->id, //id_area a dónde se derivo el trámite
+                    'cargo_id'=>$user->personal?$user->personal->cargo_id : null,
                     'observacion'=> Libreria::getParam($request->input('observacion')),
                 ]);
                 $tramite->update([
@@ -661,7 +661,6 @@ class TramiteController extends Controller
 
     public function listarAreas(Request $request){
         $q = $request->input('term');
-
         $resultados = Area::where('descripcion','LIKE', '%'.$q.'%')->get();
 
         $data = array();
