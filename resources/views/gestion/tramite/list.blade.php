@@ -6,7 +6,9 @@
 	$accion             = strtoupper($ultimo_seguimiento->accion);
 	$area               = $ultimo_seguimiento->area_id;
 	$penultimo_seguimiento = $value->seguimientos;
-	$penultimo_seguimiento = $value->seguimientos[count($penultimo_seguimiento)-1];
+	if(count($penultimo_seguimiento)>=2){
+		$penultimo_seguimiento = $value->seguimientos[count($penultimo_seguimiento)-2];
+	}
 	if( $area_id && $area_id != ""){
 		if( $modo == 'entrada'){
 			if(($accion == 'DERIVAR' && $area == $area_id )){
@@ -27,15 +29,26 @@
 						$value->cumple = 'N';
 						$x++;
 					}
+				}
+				if($accion=='FINALIZAR'){
+					if($penultimo_seguimiento->accion=='RECHAZAR' && $penultimo_seguimiento->area_id==$area_id){
+						$value->cumple = 'S';
+					}else if($penultimo_seguimiento->accion!='RECHAZAR' && $penultimo_seguimiento->area_id==$area_id){
+						$value->cumple = 'S';						
+					}else{
+						$value->cumple = 'N';
+						$x++;
+					}
 				}else{
 					$value->cumple = 'S';
 				}	
+				
 			}else {
 				$value->cumple = 'N';
 				$x++;
 			}
 		}else if($modo == 'bandeja'){
-			if (($accion == 'ACEPTAR' || $accion=='ADJUNTAR') && $area == $area_id) {
+			if (($accion == 'ACEPTAR' || $accion=='ADJUNTAR' || $accion=='COMENTAR') && $area == $area_id) {
 				$value->cumple = 'S';
 			}else {
 				$value->cumple = 'N';
@@ -44,7 +57,7 @@
 		}else if($modo == 'general'){
 			$value->cumple = 'S';
 		}else if($modo == 'archivos'){
-			if($area == $area_id){
+			if($area != $area_id || $area==$area_id){
 				$existe=false;
 				foreach ($value->seguimientos as $item) {
 					if(!is_null($item->ruta)){
@@ -58,6 +71,9 @@
 					$value->cumple = 'N';
 					$x++;
 				}
+			}else{
+				$value->cumple = 'N';
+				$x++;
 			}
 		}else {
 			$value->cumple = 'N';
@@ -162,7 +178,7 @@
 							@break
 						@case('bandeja')
 							@if($value->situacion == 'EN PROCESO')
-								{{-- {!! Form::button('<div class="fas fa-pencil-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-info', 'title' => 'Editar')) !!} --}}
+								{!! Form::button('<div class="fas fa-pencil-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'comentar')).'\', \''."Comentar".'\', this);', 'class' => 'btn btn-sm btn-info', 'title' => 'Comentar')) !!} 
 								{!! Form::button('<div class="fas fa-times"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'rechazar')).'\', \''."Rechazar Trámite".'\', this);', 'class' => 'btn btn-sm btn-danger', 'title' => 'Rechazar')) !!}
 								{!! Form::button('<div class="fas fa-file-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'adjuntar')).'\', \''."Adjuntar Archivo".'\', this);', 'class' => 'btn btn-sm btn-warning', 'title' => 'Adjuntar')) !!}
 								@if ($value->tipo == 'TUPA')
