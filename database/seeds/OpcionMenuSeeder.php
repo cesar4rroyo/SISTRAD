@@ -85,6 +85,20 @@ class OpcionMenuSeeder extends Seeder
             'orden' => 2,
             'grupomenu_id' => 1
         ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Órdenes de Pago',
+            'icono' => 'fas fa-file-invoice-dollar',
+            'link' => 'ordenpago',
+            'orden' => 3,
+            'grupomenu_id' => 1
+        ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Inspección',
+            'icono' => 'far fa-lightbulb',
+            'link' => 'inspeccion',
+            'orden' => 4,
+            'grupomenu_id' => 1
+        ]);
                   
         //end Gestion documentos
 

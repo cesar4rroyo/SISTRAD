@@ -109,6 +109,26 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     
     Route::resource('reportetramite', 'Reportes\ReportetramiteController', array('except' => array('show')));
     Route::get('reportetramite/pdftramites', 'Reportes\ReportetramiteController@pdfTramites')->name('reportetramite.pdftramites');
+
+
+
+
+//SEGUNDA PARTE 
+
+    //ORDEN PAGO
+    Route::post('ordenpago/buscar', 'Gestion\OrdenpagoController@buscar')->name('ordenpago.buscar');
+    Route::get('ordenpago/eliminar/{id}/{listarluego}', 'Gestion\OrdenpagoController@eliminar')->name('ordenpago.eliminar');
+    Route::resource('ordenpago', 'Gestion\OrdenpagoController', array('except' => array('show')));   
+    //FIN ORDEN PAGO
+
+    //INSPECCION
+    Route::post('inspeccion/buscar', 'Gestion\InspeccionController@buscar')->name('inspeccion.buscar');
+    Route::get('inspeccion/eliminar/{id}/{listarluego}', 'Gestion\InspeccionController@eliminar')->name('inspeccion.eliminar');
+    Route::resource('inspeccion', 'Gestion\InspeccionController', array('except' => array('show')));   
+    //FIN INSPECCION
+
+
+//FIN SEGUNDA PARTE
 });
 
     
