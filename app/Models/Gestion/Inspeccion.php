@@ -16,6 +16,11 @@ class Inspeccion extends Model
         return $this->hasOne('App\Models\Gestion\Ordenpago' , 'ordenpago_id');
     }
 
+	public function resolucion()
+	{
+		return $this->hasOne(Resolucion::class, 'resolucion_id');
+	}
+
     public function scopelistar($query, $numero, $fecinicio, $fecfin, $contribuyente, $tipo)
 	{
 		return $query

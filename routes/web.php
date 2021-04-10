@@ -128,6 +128,10 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('resolucion/buscar', 'Gestion\ResolucionController@buscar')->name('resolucion.buscar');
     Route::get('resolucion/eliminar/{id}/{listarluego}', 'Gestion\ResolucionController@eliminar')->name('resolucion.eliminar');
     Route::resource('resolucion', 'Gestion\ResolucionController', array('except' => array('show')));
+    Route::get('resolucion/listarInspeccion', 'Gestion\ResolucionController@listarInspeccion')->name('resolucion.listarInspeccion');
+    Route::get('resolucion/listarOrdenpago', 'Gestion\ResolucionController@listarOrdenpago')->name('resolucion.listarOrdenpago');
+    Route::get('resolucion/pdf/{id}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
+
 
 //FIN SEGUNDA PARTE
 });

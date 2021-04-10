@@ -1,0 +1,180 @@
+<div id="divMensajeError{!! $entidad !!}"></div>
+{!! Form::model($resolucion, $formData) !!}	
+	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+	<div class="row ">
+		<div class="col-6 form-group">
+			{!! Form::label('fecha', 'Fecha', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::date('fecha', date('Y-m-d'), array('class' => 'form-control  input-xs', 'id' => 'fecha' , 'readonly' => true)) !!}
+			</div>
+		</div>
+		<div class="col-6 form-group">
+			{!! Form::label('numero', 'Número*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('numero', null, array('class' => 'form-control  input-xs', 'id' => 'numero')) !!}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-6 form-group">
+			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::select('tipo', $cboTipos, null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id')) !!}
+			</div>
+		</div>
+		<div class="col-3 form-group">
+			{!! Form::label('ordenpago_id', 'Nro. Orden pago', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::select('ordenpago_id',$cboOrdenpago , null, array('class' => 'form-control  input-xs', 'id' => 'ordenpago_id')) !!}
+			</div>
+		</div>
+		<div class="col-3 form-group">
+			{!! Form::label('inspeccion_id', 'Nro. Inspección', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::select('inspeccion_id',$cboInspeccion , null, array('class' => 'form-control  input-xs', 'id' => 'inspeccion_id')) !!}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-6 form-group">
+			{!! Form::label('dni', 'DNI', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('dni', null, array('class' => 'form-control  input-xs', 'id' => 'dni')) !!}
+			</div>
+		</div>
+		<div class="col-6 form-group">
+			{!! Form::label('ruc', 'RUC', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12 input-group pl-0">
+				<div class="col-lg-10 col-md-10 col-sm-10">
+					{!! Form::text('ruc', null, array('class' => 'form-control  input-xs', 'id' => 'ruc')) !!}
+				</div>
+				<div class="col-lg-1 col-sm-1 col-md-1 pl-1">
+					{!! Form::button('<i class="fa fa-search "></i>', array('class' => 'btn btn-primary', 'title' => 'Buscar RUC' , 'id' => 'botonBuscarRuc')) !!}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		{!! Form::label('contribuyente', 'Contribuyente*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::text('contribuyente', null, array('class' => 'form-control  input-xs', 'id' => 'contribuyente')) !!}
+		</div>
+	</div>	
+	<div class="form-group">
+		{!! Form::label('direccion', 'Dirección', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::text('direccion', null, array('class' => 'form-control  input-xs', 'id' => 'direccion')) !!}
+		</div>
+	</div>
+	<div class="form-group">
+		{!! Form::label('observacion', 'Observacion', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::textarea('observacion', null, array('class' => 'form-control  input-xs', 'id' => 'observacion','rows'=>2 , 'style' =>'resize:none;')) !!}
+		</div>
+	</div>
+    <div class="form-group">
+		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
+			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!}
+			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
+		</div>
+	</div>
+{!! Form::close() !!}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	//ordenpagoSelect2();
+	//inspeccionSelect2();
+	configurarAnchoModal('700');
+	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').inputmask("99999999999");
+	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni"]').inputmask("99999999");
+
+
+	$('#tipo_id').on('change', function(){
+		var tipo = $(this).val();
+		if(tipo==''){
+			tipo='no';
+		}
+		ordenpagoSelect2(tipo);
+		inspeccionSelect2(tipo);
+	});
+
+	$('#botonBuscarRuc').on('click', function(){
+		buscarRUC();
+	});
+
+	function buscarRUC(){
+		var reg = new RegExp('^[0-9]+$');
+		if($(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').val() == ""){
+			toastr.warning("Debe ingresar un RUC.", 'Error:');
+		}else if(!reg.test($(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').val())){
+			toastr.warning("El RUC ingresado es incorrecto.", 'Error:');
+		}else{
+			$.ajax({
+				type: "POST",
+				url: "empresacourier/buscarRUC",
+				data: "ruc="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').val()+"&_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
+				beforeSend(){
+				alert("Consultando...");
+				},
+				success: function(a) {
+					datos=JSON.parse(a);
+					if(datos.length == 0){
+						toastr.warning("El RUC ingresado es incorrecto.", 'Error:');
+					}else{
+						$("#contribuyente").val(datos.RazonSocial);
+						$("#direccion").val(datos.Direccion);
+					}
+				}
+			});
+		}
+	}
+
+});
+function inspeccionSelect2(tipo){
+		$('#inspeccion_id').select2({
+			ajax: {
+				delay: 250,
+				url: '{{route('resolucion.listarInspeccion')}}',
+				data: function (params) {
+					var query = {
+						search: params.term,
+						tipo: tipo,
+					}
+					return query;
+				},
+				placeholder: 'Nro. de Inspección',
+				minimumInputLength: 1,
+				processResults: function (res) {
+					var datos = JSON.parse(res);
+					return {
+						results: datos.results
+					};
+				}
+			}
+		});
+} 
+function ordenpagoSelect2(tipo){
+		$('#ordenpago_id').select2({
+			ajax: {
+				delay: 250,
+				url: '{{route('resolucion.listarOrdenpago')}}',
+				data: function (params) {
+					var query = {
+						search: params.term,
+						tipo: tipo,
+					}
+					return query;
+				},
+				placeholder: 'Nro. de Orden Pago',
+				minimumInputLength: 1,
+				processResults: function (res) {
+					var datos = JSON.parse(res);
+					return {
+						results: datos.results
+					};
+				}
+			}
+		});
+} 
+</script>

@@ -4,6 +4,15 @@ namespace App\Http\Controllers\Gestion;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Librerias\Libreria;
+use App\Models\Gestion\Inspeccion;
+use App\Models\Gestion\Ordenpago;
+use App\Models\Gestion\Resolucion;
+use Validator;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade as PDF;
+
+
 
 class ResolucionController extends Controller
 {
@@ -38,22 +47,23 @@ class ResolucionController extends Controller
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
         $entidad          = 'resolucion';
-        $nombres          = Libreria::getParam($request->input('nombres'));
-        $dni              = Libreria::getParam($request->input('dni'));
-        $area_id          = Libreria::getParam($request->input('area'));
-        $cargo_id         = Libreria::getParam($request->input('cargo'));
-        $resultado        = resolucion::listar($nombres, $dni, $area_id, $cargo_id);
+        $numero           = Libreria::getParam($request->input('numero'));
+        $fecinicio        = Libreria::getParam($request->input('fechainicio'));
+        $fecfin           = Libreria::getParam($request->input('fechafin'));
+        $contribuyente    = Libreria::getParam($request->input('contribuyente'));
+        $tipo             = Libreria::getParam($request->input('tipo'));
+        $resultado        = Resolucion::with('ordenpago', 'inspeccion')->listar($numero, $fecinicio, $fecfin, $contribuyente, $tipo);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Apellidos y Nombres', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'DNI', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Direccion', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Correo', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Cargo', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Area', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Contribuyente', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'DNI/RUC', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nro. Orden de Pago', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nro. de de Inspeccion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
 
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -82,14 +92,13 @@ class ResolucionController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        $cboAreas = ['' => 'TODAS'] + Area::pluck('descripcion', 'id')->all();
-        $cboCargos = ['' => 'TODOS'] + Cargo::pluck('descripcion', 'id')->all();
-        $cboRol = [''=>'TODOS'];
-        $rol = Rol::orderBy('descripcion', 'asc')->get();
-        foreach ($rol as $k => $v) {
-            $cboRol = $cboRol + array($v->id => $v->descripcion);
-        }
-        return view($this->folderview . '.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta', 'cboAreas', 'cboCargos', 'cboRol'));
+        $cboTipos = ['' => 'TODOS'] + [
+            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
+            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
+            'SALUBRIDAD'=>'SALUBRIDAD',
+            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
+        ];        
+        return view($this->folderview . '.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta', 'cboTipos'));
     }
 
      /**
@@ -101,14 +110,19 @@ class ResolucionController extends Controller
     {
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $entidad  = 'resolucion';
-        $persona = null;
-        $formData = array('persona.store');
-        $cboAreas = ['' => 'Seleccione un área'] + Area::pluck('descripcion', 'id')->all();
-        $cboCargos = ['' => 'Seleccione un cargo'] + Cargo::pluck('descripcion', 'id')->all();
-        $roles = Rol::orderBy('id')->pluck('descripcion', 'id')->toArray();        
+        $resolucion = null;
+        $formData = array('resolucion.store');
+        $cboTipos = ['' => 'Seleccione una opcion'] + [
+            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
+            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
+            'SALUBRIDAD'=>'SALUBRIDAD',
+            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
+        ];   
+        $cboInspeccion = ['' => 'Seleccione una opcion'] + Inspeccion::pluck('numero', 'id')->all();
+        $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar';
-        return view($this->folderview . '.mant')->with(compact('persona', 'formData', 'entidad', 'boton', 'listar', 'roles', 'cboAreas', 'cboCargos'));
+        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboInspeccion', 'cboOrdenpago'));
     }
 
     /**
@@ -121,44 +135,32 @@ class ResolucionController extends Controller
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
-            'nombres' => 'required|max:50',
-            'dni' => 'required|numeric|min:10000000|max:99999999|unique:resolucion,dni,' . 'id',
-            'apellidopaterno' => 'required|max:50',
-            'apellidomaterno' => 'required|max:50',
-            'rol_id' => 'required',
-            'area_id'=>'required',
-            'cargo_id'=>'required',
+            'numero' => 'required',
+            'contribuyente' => 'required',
+            'tipo' => 'required|max:50',
         );
         $mensajes = array(
-            'nombre.required'         => 'Debe ingresar un nombre',
-            'apellidopaterno.required'         => 'Debe ingresar el apellido paterno',
-            'apellidomaterno.required'         => 'Debe ingresar el apellido materno',
-            'rol_id.required'         => 'Debe seleccionar al menos un Rol',
-            'dni.unique'=>'La persona con el DNI ingresado ya se encuentra registrado',
-            'dni.required'=>'El campo DNI es obligatorio',
-            'dni.min'=>'El DNI es incorrecto',
-            'dni.max'=>'El DNI es incorrecto',
-            'cargo_id.required'=>'El campo Cargo es obligatorio',
-            'area_id.required'=>'El campo Área es obligatorio',
+            'numero.required'         => 'Debe ingresar un numero',
+            'contribuyente.required'         => 'Debe ingresar el nombre del contribuyente',
+            'tipo.required'         => 'Debe ingresar el tipo',
         );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
         $error = DB::transaction(function () use ($request) {
-            $persona = resolucion::create([
-                'apellidopaterno' => strtoupper($request->input('apellidopaterno')),
-                'apellidomaterno' => strtoupper($request->input('apellidomaterno')),
-                'nombres' => strtoupper($request->input('nombres')),
-                'dni' => strtoupper($request->input('dni')),           
-                'ruc' => strtoupper($request->input('ruc')),           
-                'direccion' => strtoupper($request->input('direccion')),
-                'email' => $request->input('email'),       
-                'telefono' => strtoupper($request->input('telefono')),
-                'cargo_id' => $request->input('cargo_id'),       
-                'area_id' => $request->input('area_id'),      
+            $resolucion = Resolucion::create([
+                'fecha' => $request->input('fecha'),           
+                'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                'observacion' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                'dni' => Libreria::getParam($request->input('dni')),           
+                'ruc' => Libreria::getParam($request->input('ruc')),           
+                'ordenpago_id' => $request->input('ordenpago_id'),       
+                'inspeccion_id' => $request->input('inspeccion_id'), 
+                'tipo'=>$request->input('tipo'),     
+                'numero'=>$request->input('numero'),     
             ]);
-            $persona->roles()->sync($request->rol_id);
             
         });
         return is_null($error) ? "OK" : $error;
@@ -177,15 +179,20 @@ class ResolucionController extends Controller
             return $existe;
         }
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
-        $persona = resolucion::find($id);
-        $roles = Rol::orderBy('id')->pluck('descripcion', 'id')->toArray();        
-        $cboAreas = ['' => 'Seleccione un área'] + Area::pluck('descripcion', 'id')->all();
-        $cboCargos = ['' => 'Seleccione un cargo'] + Cargo::pluck('descripcion', 'id')->all();
+        $resolucion = Resolucion::find($id);
+        $cboTipos = ['' => 'Seleccione una opcion'] + [
+            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
+            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
+            'SALUBRIDAD'=>'SALUBRIDAD',
+            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
+        ];   
+        $cboInspeccion = ['' => 'Seleccione una opcion'] + Inspeccion::pluck('numero', 'id')->all();
+        $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $entidad  = 'resolucion';
-        $formData = array('persona.update', $id);
+        $formData = array('resolucion.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview . '.mant')->with(compact('persona', 'formData', 'entidad', 'boton', 'listar', 'roles', 'cboAreas', 'cboCargos'));
+        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboInspeccion', 'cboOrdenpago'));
     }
 
      /**
@@ -258,7 +265,7 @@ class ResolucionController extends Controller
             return $existe;
         }
         $error = DB::transaction(function () use ($id) {
-            $resolucion = resolucion::find($id);
+            $resolucion = Resolucion::find($id);
             $resolucion->delete();
         });
         return is_null($error) ? "OK" : $error;
@@ -274,10 +281,51 @@ class ResolucionController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = resolucion::find($id);
+        $modelo   = Resolucion::find($id);
         $entidad  = 'resolucion';
-        $formData = array('route' => array('persona.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $formData = array('route' => array('resolucion.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+
+    public function pdfResolucion($id){
+        $resolucion = Resolucion::with('ordenpago', 'inspeccion')->find($id);
+        $data = $resolucion;
+        $pdf = PDF::loadView('gestion.pdf.resolucion', compact('data'))->setPaper('a4', 'portrait');
+        $nombre = 'Resolucion:' . $resolucion->numero . '-' . $resolucion->fecha . '.pdf';
+        return $pdf->stream($nombre);
+    }
+
+    public function listarInspeccion(Request $request){
+        $q = $request->input('search');
+        $tipo = $request->input('tipo');
+        if($tipo!='no'){
+            $resultados = Inspeccion::where(function($query) use($q, $tipo){
+                $query->where('numero','LIKE', '%'.$q.'%')
+                     ->where('tipo','LIKE' , '%'.$tipo.'%');   
+            })->get();
+            $data = array();
+            foreach ($resultados as $r) {
+                $data["results"][] = [ "text" => $r->numero,"id" => $r->id];
+            }
+            return  \json_encode($data);
+        }
+        
+    }
+    public function listarOrdenpago(Request $request){
+        $q = $request->input('search');
+        $tipo = $request->input('tipo');
+        if($tipo!='no'){
+            $resultados = Ordenpago::where(function($query) use($q, $tipo){
+                $query->where('numero','LIKE', '%'.$q.'%')
+                     ->where('tipo','LIKE' , '%'.$tipo.'%');   
+            })->get();
+            $data = array();
+            foreach ($resultados as $r) {
+                $data["results"][] = [ "text" => $r->numero,"id" => $r->id];
+            }
+            return  \json_encode($data);
+        }
     }
 }
