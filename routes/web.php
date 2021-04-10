@@ -109,6 +109,11 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     
     Route::resource('reportetramite', 'Reportes\ReportetramiteController', array('except' => array('show')));
     Route::get('reportetramite/pdftramites', 'Reportes\ReportetramiteController@pdfTramites')->name('reportetramite.pdftramites');
+
+    /* RESOLUCIÓN*/
+    Route::post('resolucion/buscar', 'Gestion\ResolucionController@buscar')->name('resolucion.buscar');
+    Route::get('resolucion/eliminar/{id}/{listarluego}', 'Gestion\ResolucionController@eliminar')->name('resolucion.eliminar');
+    Route::resource('resolucion', 'Gestion\ResolucionController', array('except' => array('show')));
 });
 
     
