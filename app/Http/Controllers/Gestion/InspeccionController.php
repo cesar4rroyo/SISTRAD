@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\Models\Gestion\Inspeccion;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
+use App\Models\Gestion\Ordenpago;
 use Illuminate\Support\Facades\DB;
 
 class InspeccionController extends Controller
@@ -59,7 +60,8 @@ class InspeccionController extends Controller
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -101,11 +103,18 @@ class InspeccionController extends Controller
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $entidad  = 'inspeccion';
         $inspeccion = null;
-        
+        $cboTipos = ['' => 'Seleccione una opcion'] + [
+            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
+            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
+            'SALUBRIDAD'=>'SALUBRIDAD',
+            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
+        ];
+        $toggletipo = null;
+        $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();   
         $formData = array('inspeccion.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboOrdenpago', 'toggletipo'));
     }
 
     /**
@@ -130,16 +139,62 @@ class InspeccionController extends Controller
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
-        $error = DB::transaction(function() use($request){
-            $inspeccion = new Inspeccion();
-            $inspeccion->numero          = Libreria::getParam($request->input('numero'));
-            $inspeccion->tipo            = strtoupper(Libreria::getParam($request->input('tipo')));
-            $inspeccion->fecha           = $request->input('fecha');
-            $inspeccion->observacion     = strtoupper($request->input('observacion'));
-            $inspeccion->save();
-        });
+        switch ($request->tipo) {
+            case 'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES':
+                break;
+            case 'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)':
+                break;
+            case 'SALUBRIDAD':
+                $reglas     = array(
+                    'razonsocial' => 'required',
+                    'girocomercial' => 'required',
+                    'direccion' => 'required',
+                    'observacion' => 'required',
+                    'conclusiones' => 'required',
+                    'descripcion' => 'required',
+                    'representante' => 'required',
+                    'dni' => 'required',
+                    'ruc' => 'required',
 
-        return is_null($error) ? "OK" : $error;
+                );
+                $mensajes = array(
+                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
+                    'direccion.required'         => 'Debe ingresar una dirección',
+                    'observacion.required'         => 'Debe ingresar una observación',
+                    'conclusiones.required'         => 'Debe ingresar las conclusiones',
+                    'descripcion.required'         => 'Debe ingresar una descripción',
+                    'representante.required'         => 'Debe ingresar el representante',
+                    'dni.required'         => 'Debe ingresar el DNI',
+                    'ruc.required'         => 'Debe ingresar el RUC',
+                );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                $error = DB::transaction(function() use($request){
+                    $inspeccion = new Inspeccion();
+                    $inspeccion->numero          = Libreria::getParam($request->input('numero'));
+                    $inspeccion->tipo            = strtoupper(Libreria::getParam($request->input('tipo')));
+                    $inspeccion->ordenpago_id    = Libreria::getParam($request->input('ordenpago_id'), null);
+                    $inspeccion->fecha                 = date("Y-m-d H:i:s");
+                    $inspeccion->observacion     = strtoupper($request->input('observacion'));
+                    $inspeccion->conclusiones     = strtoupper($request->input('conclusiones'));
+                    $inspeccion->descripcion     = strtoupper($request->input('descripcion'));
+                    $inspeccion->representante     = strtoupper($request->input('representante'));
+                    $inspeccion->direccion     = strtoupper($request->input('direccion'));
+                    $inspeccion->razonsocial     = strtoupper($request->input('razonsocial'));
+                    $inspeccion->girocomercial     = strtoupper($request->input('girocomercial'));
+                    $inspeccion->dni     = strtoupper($request->input('dni'));
+                    $inspeccion->ruc     = strtoupper($request->input('ruc'));
+                    $inspeccion->save();
+                });
+                return is_null($error) ? "OK" : $error;
+                break;
+            case 'DEFENSA CIVIL':
+                break;
+        }
+        
     }
 
     /**
@@ -165,13 +220,21 @@ class InspeccionController extends Controller
         if ($existe !== true) {
             return $existe;
         }
+        $cboTipos = ['' => 'Seleccione una opcion'] + [
+            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
+            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
+            'SALUBRIDAD'=>'SALUBRIDAD',
+            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
+        ];   
+        $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $inspeccion = Inspeccion::find($id);
+        $toggletipo = $inspeccion->tipo;
         $entidad  = 'inspeccion';
         $formData = array('inspeccion.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboOrdenpago', 'toggletipo'));
     }
 
     /**

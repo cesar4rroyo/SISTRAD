@@ -117,12 +117,13 @@ class ResolucionController extends Controller
             'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
             'SALUBRIDAD'=>'SALUBRIDAD',
             'DEFENSA CIVIL'=>'DEFENSA CIVIL'
-        ];   
+        ];  
+        $toggletipo = null;
         $cboInspeccion = ['' => 'Seleccione una opcion'] + Inspeccion::pluck('numero', 'id')->all();
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar';
-        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboInspeccion', 'cboOrdenpago'));
+        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
     }
 
     /**
@@ -183,7 +184,7 @@ class ResolucionController extends Controller
                         'fechavencimiento' => $request->input('fechavencimiento'),           
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
-                        'observacion' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
                         'localidad' => strtoupper(Libreria::getParam($request->input('localidad'))),                
@@ -240,14 +241,16 @@ class ResolucionController extends Controller
             'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
             'SALUBRIDAD'=>'SALUBRIDAD',
             'DEFENSA CIVIL'=>'DEFENSA CIVIL'
-        ];   
+        ];  
+        $toggletipo = $resolucion->tipo;
+         
         $cboInspeccion = ['' => 'Seleccione una opcion'] + Inspeccion::pluck('numero', 'id')->all();
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $entidad  = 'resolucion';
         $formData = array('resolucion.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboInspeccion', 'cboOrdenpago'));
+        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
     }
 
      /**

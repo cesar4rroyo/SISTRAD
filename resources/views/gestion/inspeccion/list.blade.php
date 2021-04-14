@@ -21,8 +21,19 @@
 			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
 			<td>{{ $value->tipo }}</td>
-            <td>{!! Form::button('<div class="fas fa-file-pdf"></div> Pdf', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-primary')) !!}</td>
-            <td>{!! Form::button('<div class="fas fa-trash"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}</td>
+			<td>{{ $value->descripcion }}</td>
+			{{-- <td>{{ ($value->ordenpago) ? $value->ordenpago->numero : '-' }}</td> --}}
+			<td>
+				<div class="btn-group">
+					{!! Form::button('<div class="fas fa-edit"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}
+					<a href="{{route('resolucion.pdfResolucion', $value->id)}}" target="_blank">
+						<button class="btn btn-sm btn-primary">
+							<i class="fas fa-file-pdf"></i> PDF
+						</button>
+					</a>
+					{!! Form::button('<div class="fas fa-trash"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}
+				</div>
+            <td>
 		</tr>
 		<?php
 		$contador = $contador + 1;

@@ -1,6 +1,7 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($resolucion, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+	{!! Form::hidden('toggletipo', $toggletipo, array('id'=>'toggletipo')) !!}
 	<div class="row ">
 		<div class="col-4 form-group">
 			{!! Form::label('fechaexpedicion', 'Fecha de Expedición*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
@@ -119,7 +120,11 @@
 		</div>
 	</div>
 {!! Form::close() !!}
-
+<style>
+	.select2-container--default .select2-selection--single {
+		height: fit-content !important;
+	}
+</style>
 <script type="text/javascript">
 $(document).ready(function() {
 	//ordenpagoSelect2();
@@ -128,7 +133,8 @@ $(document).ready(function() {
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').inputmask("99999999999");
 	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni"]').inputmask("99999999");
-
+	var tipotogle = $('#toggletipo').val();
+	showTipo(tipotogle);
 
 	$('#tipo_id').on('change', function(){
 		var tipo = $(this).val();
@@ -188,6 +194,25 @@ $(document).ready(function() {
 	}
 
 });
+function showTipo(tipo){
+		switch (tipo) {
+		case "LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES":
+				$('#divSalubridad').addClass('d-none');
+				break;
+			case "EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)":
+				$('#divSalubridad').addClass('d-none');
+				break;
+			case "SALUBRIDAD":
+				$('#divSalubridad').removeClass('d-none');
+				break;
+			case "DEFENSA CIVIL":
+				$('#divSalubridad').addClass('d-none');
+				break;
+			default:
+				break;
+		}
+		ordenpagoSelect2(tipo);
+}
 function inspeccionSelect2(tipo){
 		$('#inspeccion_id').select2({
 			ajax: {
