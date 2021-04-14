@@ -12,7 +12,8 @@ class Resolucion extends Model
     protected $dates = ['deleted_at'];
     protected $table = 'resolucion';
     protected $fillable = [
-        'fecha',
+        'fechaexpedicion',
+        'fechavencimiento',
         'tipo',
         'numero',
         'contribuyente',
@@ -21,7 +22,12 @@ class Resolucion extends Model
         'ruc',
         'observaciones',
         'inspeccion_id',
-        'ordenpago_id'
+        'ordenpago_id',
+		'localidad',
+		'zona',
+		'categoria',
+		'girocomercial',
+		'razonsocial',
     ];
     public function ordenpago()
     {
@@ -41,12 +47,12 @@ class Resolucion extends Model
 			})
 			->where(function ($subquery) use ($fecinicio) {
 				if (!is_null($fecinicio) && strlen($fecinicio) > 0) {
-					$subquery->where('fecha', '>=', date_format(date_create($fecinicio), 'Y-m-d H:i:s'));
+					$subquery->where('fechaexpedicion', '>=', date_format(date_create($fecinicio), 'Y-m-d H:i:s'));
 				}
 			})
 			->where(function ($subquery) use ($fecfin) {
 				if (!is_null($fecfin) && strlen($fecfin) > 0) {
-					$subquery->where('fecha', '<=', date_format(date_create($fecfin), 'Y-m-d H:i:s'));
+					$subquery->where('fechaexpedicion', '<=', date_format(date_create($fecfin), 'Y-m-d H:i:s'));
 				}
 			})
 			->where(function ($subquery) use ($tipo) {

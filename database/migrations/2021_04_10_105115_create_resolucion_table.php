@@ -15,11 +15,17 @@ class CreateResolucionTable extends Migration
     {
         Schema::create('resolucion', function (Blueprint $table) {
             $table->increments('id');
-            $table->dateTime('fecha');
+            $table->dateTime('fechaexpedicion');
+            $table->dateTime('fechavencimiento');
             $table->string('numero' , 30)->nullable();
             $table->string('tipo' , 200)->nullable();
             $table->string('contribuyente' , 200)->nullable();
             $table->string('direccion' , 100)->nullable();
+            $table->string('localidad' , 100)->nullable();
+            $table->string('zona' , 100)->nullable();
+            $table->string('categoria' , 100)->nullable();
+            $table->string('girocomercial' , 100)->nullable();
+            $table->string('razonsocial' , 200)->nullable();
             $table->string('dni' , 20)->nullable();
             $table->string('ruc' , 20)->nullable();
             $table->string('observaciones' , 300)->nullable();
