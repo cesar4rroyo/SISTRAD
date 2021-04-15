@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Trámite Nro: {{$data->numero}}</title>
+    <title>Resolucion Salubridad Nro: {{$data->numero}}</title>
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset("assets/$theme/dist/css/adminlte.min.css")}}">
 </head>

@@ -26,7 +26,7 @@
 			<td>
 				<div class="btn-group">
 					{!! Form::button('<div class="fas fa-edit"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}
-					<a href="{{route('resolucion.pdfResolucion', $value->id)}}" target="_blank">
+					<a href="{{route('inspeccion.pdfInspeccion', $value->id)}}" target="_blank">
 						<button class="btn btn-sm btn-primary">
 							<i class="fas fa-file-pdf"></i> PDF
 						</button>

@@ -121,7 +121,9 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     //INSPECCION
     Route::post('inspeccion/buscar', 'Gestion\InspeccionController@buscar')->name('inspeccion.buscar');
     Route::get('inspeccion/eliminar/{id}/{listarluego}', 'Gestion\InspeccionController@eliminar')->name('inspeccion.eliminar');
-    Route::resource('inspeccion', 'Gestion\InspeccionController', array('except' => array('show')));   
+    Route::resource('inspeccion', 'Gestion\InspeccionController', array('except' => array('show'))); 
+    Route::get('inspeccion/pdf/{id}', 'Gestion\InspeccionController@pdfInspeccion')->name('inspeccion.pdfInspeccion');
+
     //FIN INSPECCION
 
     /* RESOLUCIÓN*/

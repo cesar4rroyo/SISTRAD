@@ -357,7 +357,7 @@ class ResolucionController extends Controller
             case 'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)':
                 break;
             case 'SALUBRIDAD':
-                $pdf = PDF::loadView('gestion.pdf.resolucion.edificacion.edificacion', compact('data'))->setPaper('a4', 'landscape');
+                $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
                 break;
             case 'DEFENSA CIVIL':
                 break;

@@ -11,6 +11,8 @@ use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Models\Gestion\Ordenpago;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade as PDF;
+
 
 class InspeccionController extends Controller
 {
@@ -301,6 +303,25 @@ class InspeccionController extends Controller
         $formData = array('route' => array('inspeccion.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+    public function pdfInspeccion($id){
+        $inspeccion = Inspeccion::find($id);
+        $tipo = $inspeccion->tipo;
+        $data = $inspeccion;
+        switch ($tipo) {
+            case 'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES':
+                break;
+            case 'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)':
+                break;
+            case 'SALUBRIDAD':
+                $pdf = PDF::loadView('gestion.pdf.inspeccion.salubridad.salubridad', compact('data'))->setPaper('a4', 'portrait');
+                break;
+            case 'DEFENSA CIVIL':
+                break;
+        }
+        $nombre = 'inspeccion:' . $inspeccion->numero . '-' . $inspeccion->fecha . '.pdf';
+        return $pdf->stream($nombre);
     }
     
     
