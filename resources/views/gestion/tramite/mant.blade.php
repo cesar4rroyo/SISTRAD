@@ -288,7 +288,6 @@ $(document).ready(function() {
         url: "{{route('tramite.generarnumero')}}",
         data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
         success: function(a) {
-			console.log(a);
             $(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
         }
     });

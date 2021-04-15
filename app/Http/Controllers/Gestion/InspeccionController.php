@@ -12,8 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Gestion\Ordenpago;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
-
-
+use Illuminate\Support\Facades\Storage;
 class InspeccionController extends Controller
 {
     protected $folderview      = 'gestion.inspeccion';
@@ -62,9 +61,10 @@ class InspeccionController extends Controller
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
+
         $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
-        
+       
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
         $ruta             = $this->rutas;
@@ -114,7 +114,7 @@ class InspeccionController extends Controller
         $toggletipo = null;
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();   
         $formData = array('inspeccion.store');
-        $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad,'enctype'=>'multipart/form-data', 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
         return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboOrdenpago', 'toggletipo'));
     }
@@ -126,7 +126,7 @@ class InspeccionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
             'numero' => 'required',
@@ -141,6 +141,7 @@ class InspeccionController extends Controller
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
+
         switch ($request->tipo) {
             case 'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES':
                 break;
@@ -157,7 +158,6 @@ class InspeccionController extends Controller
                     'representante' => 'required',
                     'dni' => 'required',
                     'ruc' => 'required',
-
                 );
                 $mensajes = array(
                     'razonsocial.required'         => 'Debe ingresar la Razón Social',
@@ -325,4 +325,17 @@ class InspeccionController extends Controller
     }
     
     
+    public  function descargar($nombre){
+
+        $storage_path = storage_path();
+        // $url = $storage_path.'/public/archivos2/'.$nombre;// depende de root en el archivo filesystems.php.
+        //verificamos si el archivo existe y lo retornamos
+        // if (\Storage::exists($nombre))
+        // {
+        // }
+         $url = '/public/archivos2/'.$nombre;
+        return Storage::disk('local')->response($url);
+        //si no se encuentra lanzamos un error 404.
+        // abort(404);
+    }
 }
