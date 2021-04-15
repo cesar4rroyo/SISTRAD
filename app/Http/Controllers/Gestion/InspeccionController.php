@@ -10,6 +10,7 @@ use App\Models\Gestion\Inspeccion;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class InspeccionController extends Controller
 {
@@ -59,6 +60,7 @@ class InspeccionController extends Controller
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Archivo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -103,7 +105,7 @@ class InspeccionController extends Controller
         $inspeccion = null;
         
         $formData = array('inspeccion.store');
-        $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad,'enctype'=>'multipart/form-data', 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
         return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar'));
     }
@@ -115,7 +117,7 @@ class InspeccionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
             'numero' => 'required',
@@ -136,6 +138,15 @@ class InspeccionController extends Controller
             $inspeccion->tipo            = strtoupper(Libreria::getParam($request->input('tipo')));
             $inspeccion->fecha           = $request->input('fecha');
             $inspeccion->observacion     = strtoupper($request->input('observacion'));
+            if($request->hasFile('file')){
+
+                $file = $request->file('file');
+                $extension = $request->file('file')->getClientOriginalExtension();
+                $nombre =  time().'.'.$extension;
+                \Storage::disk('local')->put('public/archivos2/'.$nombre,  \File::get($file));
+                // $archivo = $request->file('file')->storeAs('public/archivos2', time() .  '.' .$extension);
+                $inspeccion->archivo = $nombre;
+            }
             $inspeccion->save();
         });
 
@@ -241,4 +252,17 @@ class InspeccionController extends Controller
     }
     
     
+    public  function descargar($nombre){
+
+        $storage_path = storage_path();
+        // $url = $storage_path.'/public/archivos2/'.$nombre;// depende de root en el archivo filesystems.php.
+        //verificamos si el archivo existe y lo retornamos
+        // if (\Storage::exists($nombre))
+        // {
+        // }
+         $url = '/public/archivos2/'.$nombre;
+        return Storage::disk('local')->response($url);
+        //si no se encuentra lanzamos un error 404.
+        // abort(404);
+    }
 }

@@ -21,6 +21,7 @@
 			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
 			<td>{{ $value->tipo }}</td>
+			<td> <a href="{{asset('storage\archivos2\\'.$value->archivo)}}"  target="_blank" >{{ $value->archivo }}</a></td>
             <td>{!! Form::button('<div class="fas fa-file-pdf"></div> Pdf', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-primary')) !!}</td>
             <td>{!! Form::button('<div class="fas fa-trash"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}</td>
 		</tr>
