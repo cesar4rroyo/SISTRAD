@@ -19,12 +19,18 @@ class CreateInspeccionTable extends Migration
             $table->string('tipo')->nullable();
             $table->string('numero')->nullable();
             $table->string('observacion')->nullable();
+            $table->string('conclusiones')->nullable();
+            $table->string('descripcion')->nullable();
+            $table->string('direccion')->nullable();
+            $table->string('razonsocial')->nullable();
+            $table->string('ruc')->nullable();
+            $table->string('dni')->nullable();
+            $table->string('girocomercial')->nullable();
+            $table->string('representante')->nullable();
             $table->string('situacion')->nullable();
             $table->string('archivo')->nullable();
-
             $table->integer('ordenpago_id')->unsigned()->nullable();
             $table->foreign('ordenpago_id')->references('id')->on('ordenpago')->onDelete('restrict')->onUpdate('restrict')->nullable();
-            
             $table->timestamps();
             $table->softDeletes();
         });
