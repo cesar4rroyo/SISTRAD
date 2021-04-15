@@ -189,6 +189,14 @@ class InspeccionController extends Controller
                     $inspeccion->girocomercial     = strtoupper($request->input('girocomercial'));
                     $inspeccion->dni     = strtoupper($request->input('dni'));
                     $inspeccion->ruc     = strtoupper($request->input('ruc'));
+                    if($request->hasFile('file')){
+                        $file = $request->file('file');
+                        $extension = $request->file('file')->getClientOriginalExtension();
+                        $nombre =  time().'.'.$extension;
+                        \Storage::disk('local')->put('public/archivos2/'.$nombre,  \File::get($file));
+                        // $archivo = $request->file('file')->storeAs('public/archivos2', time() .  '.' .$extension);
+                        $inspeccion->archivo = $nombre;
+                    }
                     $inspeccion->save();
                 });
                 return is_null($error) ? "OK" : $error;
