@@ -115,7 +115,8 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     //ORDEN PAGO
     Route::post('ordenpago/buscar', 'Gestion\OrdenpagoController@buscar')->name('ordenpago.buscar');
     Route::get('ordenpago/eliminar/{id}/{listarluego}', 'Gestion\OrdenpagoController@eliminar')->name('ordenpago.eliminar');
-    Route::resource('ordenpago', 'Gestion\OrdenpagoController', array('except' => array('show')));   
+    Route::resource('ordenpago', 'Gestion\OrdenpagoController', array('except' => array('show')));  
+    Route::get('ordenpago/pdf/{id}', 'Gestion\OrdenpagoController@pdf')->name('ordenpago.pdf');
     //FIN ORDEN PAGO
 
     //INSPECCION
