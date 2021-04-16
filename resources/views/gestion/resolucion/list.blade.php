@@ -21,13 +21,18 @@
 			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
 			<td>{{ $value->tipo }}</td>
-			<td>{{ $value->descripcion }}</td>
-			{{-- <td>{{ ($value->ordenpago) ? $value->ordenpago->numero : '-' }}</td> --}}
-			<td>
+			<td>{{ $value->contribuyente }}</td>
+			@if (!is_null($value->dni) && $value->dni!='')
+				<td>{{$value->dni}}</td>
+			@else
+				<td>{{$value->ruc}}</td>
+			@endif
+			<td>{{ ($value->ordenpago) ? $value->ordenpago->numero : '-' }}</td>
+			<td>{{ ($value->inspeccion) ? $value->inspeccion->numero : '-' }}</td>
+            <td>
 				<div class="btn-group">
 					{!! Form::button('<div class="fas fa-edit"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}
-					<a href="{{asset('storage\archivos2\\'.$value->archivo)}}"  target="_blank" >{{ $value->archivo }}</a>
-          <a href="{{route('inspeccion.pdfInspeccion', $value->id)}}" target="_blank">
+					<a href="{{route('resolucion.pdfResolucion', $value->id)}}" target="_blank">
 						<button class="btn btn-sm btn-primary">
 							<i class="fas fa-file-pdf"></i> PDF
 						</button>

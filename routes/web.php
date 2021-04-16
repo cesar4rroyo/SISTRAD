@@ -122,14 +122,21 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     //INSPECCION
     Route::post('inspeccion/buscar', 'Gestion\InspeccionController@buscar')->name('inspeccion.buscar');
     Route::get('inspeccion/eliminar/{id}/{listarluego}', 'Gestion\InspeccionController@eliminar')->name('inspeccion.eliminar');
-    Route::resource('inspeccion', 'Gestion\InspeccionController', array('except' => array('show')));  
-    Route::get("inspeccion/archivo/{nombre}",'Gestion\InspeccionController@descargar')->name('inspeccion.descargar'); 
+
+    Route::resource('inspeccion', 'Gestion\InspeccionController', array('except' => array('show'))); 
+    Route::get('inspeccion/pdf/{id}', 'Gestion\InspeccionController@pdfInspeccion')->name('inspeccion.pdfInspeccion');
+    Route::get("inspeccion/archivo/{nombre}",'Gestion\InspeccionController@descargar')->name('inspeccion.descargar');
+
     //FIN INSPECCION
 
     /* RESOLUCIÓN*/
     Route::post('resolucion/buscar', 'Gestion\ResolucionController@buscar')->name('resolucion.buscar');
     Route::get('resolucion/eliminar/{id}/{listarluego}', 'Gestion\ResolucionController@eliminar')->name('resolucion.eliminar');
     Route::resource('resolucion', 'Gestion\ResolucionController', array('except' => array('show')));
+    Route::get('resolucion/listarInspeccion', 'Gestion\ResolucionController@listarInspeccion')->name('resolucion.listarInspeccion');
+    Route::get('resolucion/listarOrdenpago', 'Gestion\ResolucionController@listarOrdenpago')->name('resolucion.listarOrdenpago');
+    Route::get('resolucion/pdf/{id}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
+
 
 //FIN SEGUNDA PARTE
 });

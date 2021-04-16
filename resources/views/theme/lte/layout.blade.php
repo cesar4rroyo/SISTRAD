@@ -52,6 +52,9 @@
     <script src="{{asset("select2/js/select2.min.js")}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/inputmask.js"></script>
+
     <script src={{asset("js/input-mask/jquery.inputmask.js")}}></script>
     <script src={{asset("js/input-mask/jquery.inputmask.extensions.js")}}></script>
     <script src={{asset("js/input-mask/jquery.inputmask.date.extensions.js")}}></script>

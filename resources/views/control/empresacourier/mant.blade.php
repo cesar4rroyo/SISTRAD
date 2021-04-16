@@ -1,7 +1,6 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($empresacourier, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
-
 	<div class="row">
 		<div class="col-md-6 col-lg-6">
 			<div class="form-group pb-1">
@@ -33,7 +32,6 @@
 					{!! Form::text('direccion', null, array('class' => 'form-control input-xs', 'id' => 'direccion')) !!}
 				</div>
 			</div>
-			
 		</div>
 		<div class="col-md-6 col-lg-6">
 			<div class="form-group">
@@ -82,30 +80,30 @@ $(document).ready(function() {
 	});
 
 	function buscarRUC(){
-	var reg = new RegExp('^[0-9]+$');
-    if($(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').val() == ""){
-        toastr.warning("Debe ingresar un RUC.", 'Error:');
-    }else if(!reg.test($(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').val())){
-        toastr.warning("El RUC ingresado es incorrecto.", 'Error:');
-	}else{
-        $.ajax({
-            type: "POST",
-            url: "empresacourier/buscarRUC",
-            data: "ruc="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').val()+"&_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
-            beforeSend(){
-            alert("Consultando...");
-        	},
-			success: function(a) {
-                datos=JSON.parse(a);
-				if(datos.length == 0){
-        			toastr.warning("El RUC ingresado es incorrecto.", 'Error:');
-				}else{
-					$("#razonsocial").val(datos.RazonSocial);
-					$("#direccion").val(datos.Direccion);
+		var reg = new RegExp('^[0-9]+$');
+		if($(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').val() == ""){
+			toastr.warning("Debe ingresar un RUC.", 'Error:');
+		}else if(!reg.test($(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').val())){
+			toastr.warning("El RUC ingresado es incorrecto.", 'Error:');
+		}else{
+			$.ajax({
+				type: "POST",
+				url: "empresacourier/buscarRUC",
+				data: "ruc="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').val()+"&_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
+				beforeSend(){
+				alert("Consultando...");
+				},
+				success: function(a) {
+					datos=JSON.parse(a);
+					if(datos.length == 0){
+						toastr.warning("El RUC ingresado es incorrecto.", 'Error:');
+					}else{
+						$("#razonsocial").val(datos.RazonSocial);
+						$("#direccion").val(datos.Direccion);
+					}
 				}
-            }
-        });
-    }
+			});
+		}
 	}
 }); 
 
