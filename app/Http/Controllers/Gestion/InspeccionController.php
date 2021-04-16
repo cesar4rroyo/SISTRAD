@@ -63,7 +63,8 @@ class InspeccionController extends Controller
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
 
         $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Archivo', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
        
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -170,7 +171,13 @@ class InspeccionController extends Controller
                     'dni.required'         => 'Debe ingresar el DNI',
                     'ruc.required'         => 'Debe ingresar el RUC',
                 );
-                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                
+                break;
+            case 'DEFENSA CIVIL':
+                break;
+        }
+
+        $validacion = Validator::make($request->all(), $reglas, $mensajes);
                 if ($validacion->fails()) {
                     return $validacion->messages()->toJson();
                 }
@@ -200,10 +207,6 @@ class InspeccionController extends Controller
                     $inspeccion->save();
                 });
                 return is_null($error) ? "OK" : $error;
-                break;
-            case 'DEFENSA CIVIL':
-                break;
-        }
         
     }
 
