@@ -53,7 +53,7 @@ class ResolucionController extends Controller
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $contribuyente    = Libreria::getParam($request->input('contribuyente'));
         $tipo             = Libreria::getParam($request->input('tipo'));
-        $resultado        = Resolucion::with('ordenpago', 'inspeccion')->listar($numero, $fecinicio, $fecfin, $contribuyente, $tipo);
+        $resultado        = Resolucion::with('ordenpago', 'inspeccion', 'tipotramite')->listar($numero, $fecinicio, $fecfin, $contribuyente, $tipo);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');

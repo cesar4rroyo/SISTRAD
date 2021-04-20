@@ -55,7 +55,7 @@ class InspeccionController extends Controller
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $contribuyente    = Libreria::getParam($request->input('contribuyente'));
         $tipo             = Libreria::getParam($request->input('tipo'));
-        $resultado        = Inspeccion::listar($numero, $fecinicio, $fecfin, $contribuyente, $tipo);
+        $resultado        = Inspeccion::with('tipotramite')->listar($numero, $fecinicio, $fecfin, $contribuyente, $tipo);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -94,7 +94,8 @@ class InspeccionController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta'));
+        $tipostramite     = ["" => 'Todos' ] + Tipotramitenodoc::pluck('descripcion' , 'id')->all();
+        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta', 'tipostramite'));
     }
 
     /**

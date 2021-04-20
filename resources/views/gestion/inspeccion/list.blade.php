@@ -20,7 +20,7 @@
 			<td>{{ $contador }}</td>
 			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
-			<td>{{ $value->tipo }}</td>
+			<td>{{ $value->tipotramite->descripcion }}</td>
 			<td>{{ $value->descripcion }}</td>
 			{{-- <td>{{ ($value->ordenpago) ? $value->ordenpago->numero : '-' }}</td> --}}
 			<td>

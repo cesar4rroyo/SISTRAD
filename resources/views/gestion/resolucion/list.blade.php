@@ -20,7 +20,7 @@
 			<td>{{ $contador }}</td>
 			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
-			<td>{{ $value->tipo }}</td>
+			<td>{{ $value->tipotramite->descripcion }}</td>
 			<td>{{ $value->contribuyente }}</td>
 			@if (!is_null($value->dni) && $value->dni!='')
 				<td>{{$value->dni}}</td>

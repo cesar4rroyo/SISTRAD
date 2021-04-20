@@ -45,9 +45,9 @@
 		</div>
 	</div>
 	<div class="form-group">
-		{!! Form::label('dirección', 'Dirección', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		{!! Form::label('direccion', 'Dirección', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
-			{!! Form::text('dirección', null, array('class' => 'form-control  input-xs', 'id' => 'dirección')) !!}
+			{!! Form::text('direccion', null, array('class' => 'form-control  input-xs', 'id' => 'direccion')) !!}
 		</div>
 	</div>
 	

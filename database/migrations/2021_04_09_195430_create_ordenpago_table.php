@@ -19,8 +19,8 @@ class CreateOrdenpagoTable extends Migration
             $table->string('contribuyente' , 200)->nullable();
             $table->string('dni_ruc' , 20)->nullable();
             $table->datetime('fecha')->nullable();
-            $table->string('descripcion' , 30)->nullable();
-            $table->string('direccion' , 30)->nullable();
+            $table->string('descripcion' , 200)->nullable();
+            $table->string('direccion' , 200)->nullable();
             $table->double('monto' , 8 , 2)->nullable();
             $table->integer('tipo_id')->unsigned()->nullable();
 
