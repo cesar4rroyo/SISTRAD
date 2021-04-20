@@ -16,13 +16,15 @@ class CreateOrdenpagoTable extends Migration
         Schema::create('ordenpago', function (Blueprint $table) {
             $table->increments('id');
             $table->string('numero' , 30)->nullable();
-            $table->string('tipo' , 150)->nullable();
             $table->string('contribuyente' , 200)->nullable();
             $table->string('dni_ruc' , 20)->nullable();
             $table->datetime('fecha')->nullable();
             $table->string('descripcion' , 30)->nullable();
             $table->string('direccion' , 30)->nullable();
             $table->double('monto' , 8 , 2)->nullable();
+            $table->integer('tipo_id')->unsigned()->nullable();
+
+            $table->foreign('tipo_id')->references('id')->on('tipotramitenodoc')->onUpdate('restrict')->onDelete('restrict');
             
             $table->softDeletes();
             $table->timestamps();

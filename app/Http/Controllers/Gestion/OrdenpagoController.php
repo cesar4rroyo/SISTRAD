@@ -10,6 +10,7 @@ use App\Models\Gestion\Ordenpago;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Librerias\EnLetras;
+use App\Models\Gestion\Tipotramitenodoc;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -105,11 +106,11 @@ class OrdenpagoController extends Controller
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $entidad  = 'ordenpago';
         $ordenpago = null;
-        
+        $tipostramite = ['' => 'Seleccione'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
         $formData = array('ordenpago.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('ordenpago', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.mant')->with(compact('ordenpago', 'formData', 'entidad', 'boton', 'listar' ,'tipostramite'));
     }
 
     /**
@@ -140,7 +141,7 @@ class OrdenpagoController extends Controller
         $error = DB::transaction(function() use($request){
             $ordenpago = new Ordenpago();
             $ordenpago->numero          = Libreria::getParam($request->input('numero'));
-            $ordenpago->tipo            = strtoupper(Libreria::getParam($request->input('tipo')));
+            $ordenpago->tipo_id            = strtoupper(Libreria::getParam($request->input('tipo')));
             $ordenpago->dni_ruc         = Libreria::getParam($request->input('dni_ruc'));
             $ordenpago->contribuyente   = Libreria::getParam($request->input('contribuyente'));
             $ordenpago->direccion       = Libreria::getParam($request->input('direccion'));
@@ -267,5 +268,13 @@ class OrdenpagoController extends Controller
        // return $pdf->download('F'.$cotizacion->documento->correlativo.'.pdf');  
     //Ver
        return $pdf->stream('ordenpago.pdf');
+    }
+
+    public function generarNumero(Request $request)
+    {
+        $tipo          = $request->input('tipo');
+
+        $numerotramite = Ordenpago::NumeroSigue($tipo);
+        echo $numerotramite;
     }
 }

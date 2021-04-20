@@ -117,6 +117,8 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('ordenpago/eliminar/{id}/{listarluego}', 'Gestion\OrdenpagoController@eliminar')->name('ordenpago.eliminar');
     Route::resource('ordenpago', 'Gestion\OrdenpagoController', array('except' => array('show')));  
     Route::get('ordenpago/pdf/{id}', 'Gestion\OrdenpagoController@pdf')->name('ordenpago.pdf');
+    Route::post('ordenpago/generarNumero', 'Gestion\OrdenpagoController@generarNumero')->name('ordenpago.generarnumero');
+
     //FIN ORDEN PAGO
 
     //INSPECCION

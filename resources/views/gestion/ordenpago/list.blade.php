@@ -20,7 +20,7 @@
 			<td>{{ $contador }}</td>
 			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
-			<td>{{ $value->tipo }}</td>
+			<td>{{ $value->tipotramite->descripcion }}</td>
 			<td>{{ $value->dni_ruc }}</td>
 			<td>{{ $value->monto }}</td>
             <td>{!! Form::button('<div class="fas fa-file-pdf"></div> Pdf', array('onclick' =>'pdf(\''.$value->id.'\')', 'class' => 'btn btn-sm btn-primary')) !!}</td>

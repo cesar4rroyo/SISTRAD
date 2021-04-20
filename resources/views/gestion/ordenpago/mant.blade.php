@@ -19,7 +19,7 @@
 		<div class="col-9 form-group">
 			{!! Form::label('tipo', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('tipo', null, array('class' => 'form-control  input-xs', 'id' => 'tipo')) !!}
+				{!! Form::select('tipo',$tipostramite, null, array('class' => 'form-control  input-xs', 'id' => 'tipo' , 'onchange' => 'generarNumero();')) !!}
 			</div>
 		</div>
 		<div class="col-3 form-group">
@@ -34,7 +34,7 @@
 		<div class="col-4 form-group">
 			{!! Form::label('dni_ruc', 'DNI/RUC*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('dni_ruc', null, array('class' => 'form-control  input-xs', 'id' => 'dni_ruc')) !!}
+				{!! Form::text('dni_ruc', null, array('class' => 'form-control  input-xs', 'id' => 'dni_ruc' , 'maxlength' => '11' )) !!}
 			</div>
 		</div>
 		<div class="col-8 form-group">
@@ -70,5 +70,26 @@ $(document).ready(function() {
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 
 	$('#monto').inputmask('decimal', { rightAlign: false , digits:2  });
+
+	$("input#dni_ruc").bind('keypress', function(event) {
+  var regex = new RegExp("^[0-9]+$");
+  var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+  if (!regex.test(key)) {
+    event.preventDefault();
+    return false;
+  }
+});
 }); 
+
+
+function generarNumero(){
+    $.ajax({
+        type: "POST",
+        url: "{{route('ordenpago.generarnumero')}}",
+        data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&tipo=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="tipo"]').val(),
+        success: function(a) {
+            $(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
+        }
+    });
+}
 </script>
