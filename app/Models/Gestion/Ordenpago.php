@@ -37,7 +37,7 @@ class Ordenpago extends Model
 			})
 			->where(function ($subquery) use ($tipo) {
 				if (!is_null($tipo) && strlen($tipo) > 0) {
-					$subquery->where('tipo', 'LIKE', '%'.$tipo.'%');
+					$subquery->where('tipo_id', $tipo);
 				}
 			})
 			->where(function ($subquery) use ($contribuyente) {

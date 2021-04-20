@@ -55,7 +55,7 @@
                 </tr>
                 <tr>
                     <td class="b" >TIPO</td>
-                    <td>{{$ordenpago->tipo}}</td>
+                    <td>{{$ordenpago->tipotramite->descripcion}}</td>
                 </tr>
                 <tr class="height150">
                     <td class="b"  >DESCRIPCIÓN</td>

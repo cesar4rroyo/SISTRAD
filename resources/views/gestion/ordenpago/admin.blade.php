@@ -39,7 +39,7 @@
 							</div>
 							<div class="col-lg-4 col-md-4  form-group">
 								{!! Form::label('tipo', 'Tipo') !!}
-								{!! Form::text('tipo', '', array('class' => 'form-control ', 'id' => 'tipo')) !!}
+								{!! Form::select('tipo', $tipostramite,'', array('class' => 'form-control ', 'id' => 'tipo' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
 							<div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
 								{!! Form::label('nombre', 'Filas a mostrar') !!}
