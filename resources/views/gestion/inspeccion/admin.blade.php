@@ -20,8 +20,8 @@
 
 						<div class="row w-100">
 							<div class="col-lg-4 col-md-4  form-group">
-								{!! Form::label('numero', 'Numero') !!}
-								{!! Form::text('numero', '', array('class' => 'form-control ', 'id' => 'numero')) !!}
+								{!! Form::label('numero_search', 'Numero') !!}
+								{!! Form::text('numero_search', '', array('class' => 'form-control ', 'id' => 'numero_search')) !!}
 							</div>
 							<div class="col-lg-4 col-md-4  form-group">
 								{!! Form::label('fechainicio', 'Fecha inicio') !!}

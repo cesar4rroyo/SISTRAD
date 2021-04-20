@@ -21,7 +21,7 @@
 			}
 
 		}else if($modo == 'salida'){ 
-			if(($accion != 'REGISTRAR' && $accion != 'ACEPTAR' && $accion != 'ADJUNTAR')){ // EN EL METODO LISTAR DEL MODELO YA SE HA VERIFICADO QUE TENGA TENGO AL MENOS UN SEGUIMIENTO CON EL AREA_ID DEL USUARIO
+			if(($accion != 'REGISTRAR' && $accion != 'ACEPTAR' && $accion != 'ADJUNTAR' && $accion!='COMENTAR')){ // EN EL METODO LISTAR DEL MODELO YA SE HA VERIFICADO QUE TENGA TENGO AL MENOS UN SEGUIMIENTO CON EL AREA_ID DEL USUARIO
 				if($accion=='DERIVAR'){
 					if($ultimo_seguimiento->area == $area_actual){
 						$value->cumple = 'S';

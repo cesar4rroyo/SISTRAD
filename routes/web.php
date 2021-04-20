@@ -128,7 +128,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::resource('inspeccion', 'Gestion\InspeccionController', array('except' => array('show'))); 
     Route::get('inspeccion/pdf/{id}', 'Gestion\InspeccionController@pdfInspeccion')->name('inspeccion.pdfInspeccion');
     Route::get("inspeccion/archivo/{nombre}",'Gestion\InspeccionController@descargar')->name('inspeccion.descargar');
-
+    Route::post('inspeccion/generarNumero', 'Gestion\InspeccionController@generarNumero')->name('inspeccion.generarnumero');
     //FIN INSPECCION
 
     /* RESOLUCIÓN*/
@@ -138,6 +138,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('resolucion/listarInspeccion', 'Gestion\ResolucionController@listarInspeccion')->name('resolucion.listarInspeccion');
     Route::get('resolucion/listarOrdenpago', 'Gestion\ResolucionController@listarOrdenpago')->name('resolucion.listarOrdenpago');
     Route::get('resolucion/pdf/{id}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
+    Route::post('resolucion/generarNumero', 'Gestion\ResolucionController@generarNumero')->name('resolucion.generarnumero');
 
 
 //FIN SEGUNDA PARTE

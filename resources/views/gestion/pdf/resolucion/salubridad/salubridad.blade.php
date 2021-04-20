@@ -15,24 +15,27 @@
     .underline {
         text-decoration: underline;
     }
+    .tabledatos tr td{
+        font-size: 0.8rem;
+    }
 </style>
 
 <body>
     <table width="100%">
         <tr>
             <td valign="top">
-                <img src="{{asset('imagenes/logo.jpeg')}}" alt="" width="100"/>
+                <img src="{{asset('imagenes/logo.jpeg')}}" alt="" width="80"/>
             </td>
             <td align="center">
-                <h3 style="font-size: 1.5rem">MUNICIPALIDAD DISTRITAL DE JOSE LEONARDO ORTIZ</h3>
-                <h4 style="font-size: 1.3rem">PALACIO MUNICIPAL. AV. SAENZ PEÑA N° 2151 - URB. LATINA</h4>
-                <h5 style="font-size: 1.2rem">PORTAL WEB: www.munijlo.gob.pe</h5>
+                <h3 style="font-size: 1.3rem">MUNICIPALIDAD DISTRITAL DE JOSE LEONARDO ORTIZ</h3>
+                <h4 style="font-size: 1.1rem">PALACIO MUNICIPAL. AV. SAENZ PEÑA N° 2151 - URB. LATINA</h4>
+                <h5 style="font-size: 1rem">PORTAL WEB: www.munijlo.gob.pe</h5>
             </td>
         </tr>
     </table>
     <hr>
     <div class=" text-center">
-        <h1 style="color: red; font-size:1.8rem">CERTIFICADO DE SALUBRIDAD</h1>
+        <h1 style="color: red; font-size:1.5rem">CERTIFICADO DE SALUBRIDAD</h1>
     </div>
     <div class="ml-5">
         <h3 style="text-decoration: underline; color:red; font-size:1rem">LA MUNICIPALIDAD DISTRITAL DE JOSÉ LEONARDO ORTIZ CERTIFICA:</h3>

@@ -16,6 +16,7 @@ class UsuarioSeeder extends Seeder
             'login' => 'admin',
             'password' => bcrypt('admin'),
             'tipousuario_id' => 1,
+            'personal_id'=>5,
         ]);
         DB::table('usuario')->insert([
             'login' => 'area1',

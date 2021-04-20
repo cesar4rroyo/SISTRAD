@@ -18,7 +18,6 @@ class CreateResolucionTable extends Migration
             $table->dateTime('fechaexpedicion');
             $table->dateTime('fechavencimiento');
             $table->string('numero' , 30)->nullable();
-            $table->string('tipo' , 200)->nullable();
             $table->string('contribuyente' , 200)->nullable();
             $table->string('direccion' , 100)->nullable();
             $table->string('localidad' , 100)->nullable();
@@ -33,6 +32,8 @@ class CreateResolucionTable extends Migration
             $table->integer('ordenpago_id')->unsigned()->nullable();
             $table->foreign('inspeccion_id')->references('id')->on('inspeccion')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('ordenpago_id')->references('id')->on('ordenpago')->onDelete('restrict')->onUpdate('restrict');
+            $table->integer('tipo_id')->unsigned()->nullable();
+            $table->foreign('tipo_id')->references('id')->on('tipotramitenodoc')->onUpdate('restrict')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();
 

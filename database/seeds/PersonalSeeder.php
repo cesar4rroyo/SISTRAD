@@ -49,5 +49,15 @@ class PersonalSeeder extends Seeder
             'area_id'=>1,
             'cargo_id'=>1
         ]);
+
+        DB::table('personal')->insert([
+            'nombres' => 'Admin',
+            'apellidopaterno' => 'Admin',
+            'apellidomaterno' => '',
+            'dni' => '11111111',
+            'telefono' => '999999999',
+            'area_id'=>1,
+            'cargo_id'=>1
+        ]);
     }
 }

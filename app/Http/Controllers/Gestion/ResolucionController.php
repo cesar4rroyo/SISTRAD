@@ -8,6 +8,7 @@ use App\Librerias\Libreria;
 use App\Models\Gestion\Inspeccion;
 use App\Models\Gestion\Ordenpago;
 use App\Models\Gestion\Resolucion;
+use App\Models\Gestion\Tipotramitenodoc;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -92,13 +93,8 @@ class ResolucionController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        $cboTipos = ['' => 'TODOS'] + [
-            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
-            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
-            'SALUBRIDAD'=>'SALUBRIDAD',
-            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
-        ];        
-        return view($this->folderview . '.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta', 'cboTipos'));
+        $tipostramite = ['' => 'TODOS'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
+        return view($this->folderview . '.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta', 'tipostramite'));
     }
 
      /**
@@ -112,18 +108,13 @@ class ResolucionController extends Controller
         $entidad  = 'resolucion';
         $resolucion = null;
         $formData = array('resolucion.store');
-        $cboTipos = ['' => 'Seleccione una opcion'] + [
-            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
-            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
-            'SALUBRIDAD'=>'SALUBRIDAD',
-            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
-        ];  
+        $tipostramite = ['' => 'Seleccione'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
         $toggletipo = null;
         $cboInspeccion = ['' => 'Seleccione una opcion'] + Inspeccion::pluck('numero', 'id')->all();
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar';
-        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
+        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
     }
 
     /**
@@ -155,11 +146,11 @@ class ResolucionController extends Controller
             return $validacion->messages()->toJson();
         }
         switch ($request->tipo) {
-            case 'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES':
+            case '1':
                 break;
-            case 'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)':
+            case '2':
                 break;
-            case 'SALUBRIDAD':
+            case '3':
                 $reglas     = array(
                     'localidad' => 'required',
                     'categoria' => 'required',
@@ -194,14 +185,14 @@ class ResolucionController extends Controller
                         'ruc' => Libreria::getParam($request->input('ruc')),           
                         'ordenpago_id' => $request->input('ordenpago_id'),       
                         'inspeccion_id' => $request->input('inspeccion_id'), 
-                        'tipo'=>$request->input('tipo'),     
+                        'tipo_id'=>$request->input('tipo'),     
                         'numero'=>$request->input('numero'),     
                     ]);
                     
                 });
                 return is_null($error) ? "OK" : $error;
                 break;
-            case 'DEFENSA CIVIL':
+            case '4':
                 break;
         }
         /* $error = DB::transaction(function () use ($request) {
@@ -236,13 +227,8 @@ class ResolucionController extends Controller
         }
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $resolucion = Resolucion::find($id);
-        $cboTipos = ['' => 'Seleccione una opcion'] + [
-            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
-            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
-            'SALUBRIDAD'=>'SALUBRIDAD',
-            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
-        ];  
-        $toggletipo = $resolucion->tipo;
+        $tipostramite = ['' => 'Seleccione'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
+        $toggletipo = $resolucion->tipo_id;
          
         $cboInspeccion = ['' => 'Seleccione una opcion'] + Inspeccion::pluck('numero', 'id')->all();
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
@@ -250,7 +236,7 @@ class ResolucionController extends Controller
         $formData = array('resolucion.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
+        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
     }
 
      /**
@@ -349,17 +335,17 @@ class ResolucionController extends Controller
 
     public function pdfResolucion($id){
         $resolucion = Resolucion::with('ordenpago', 'inspeccion')->find($id);
-        $tipo = $resolucion->tipo;
+        $tipo = $resolucion->tipo_id;
         $data = $resolucion;
         switch ($tipo) {
-            case 'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES':
+            case '1':
                 break;
-            case 'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)':
+            case '2':
                 break;
-            case 'SALUBRIDAD':
+            case '3':
                 $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
                 break;
-            case 'DEFENSA CIVIL':
+            case '4':
                 break;
         }
         $nombre = 'Resolucion:' . $resolucion->numero . '-' . $resolucion->fecha . '.pdf';
@@ -372,7 +358,7 @@ class ResolucionController extends Controller
         if($tipo!='no'){
             $resultados = Inspeccion::where(function($query) use($q, $tipo){
                 $query->where('numero','LIKE', '%'.$q.'%')
-                     ->where('tipo','LIKE' , '%'.$tipo.'%');   
+                     ->where('tipo_id','LIKE' , '%'.$tipo.'%');   
             })->get();
             $data = array();
             foreach ($resultados as $r) {
@@ -388,7 +374,7 @@ class ResolucionController extends Controller
         if($tipo!='no'){
             $resultados = Ordenpago::where(function($query) use($q, $tipo){
                 $query->where('numero','LIKE', '%'.$q.'%')
-                     ->where('tipo','LIKE' , '%'.$tipo.'%');   
+                     ->where('tipo_id','LIKE' , '%'.$tipo.'%');   
             })->get();
             $data = array();
             foreach ($resultados as $r) {
@@ -396,5 +382,11 @@ class ResolucionController extends Controller
             }
             return  \json_encode($data);
         }
+    }
+    public function generarNumero(Request $request)
+    {
+        $tipo          = $request->input('tipo');
+        $numerotramite = Resolucion::NumeroSigue($tipo);
+        echo $numerotramite;
     }
 }
