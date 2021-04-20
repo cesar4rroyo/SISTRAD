@@ -28,10 +28,15 @@ class Resolucion extends Model
 		'categoria',
 		'girocomercial',
 		'razonsocial',
+		'tipo_id'
     ];
     public function ordenpago()
     {
         return $this->belongsTo(Ordenpago::class, 'ordenpago_id');
+    }
+	public function tipotramite()
+    {
+        return $this->belongsTo(Tipotramitenodoc::class, 'tipo_id');
     }
     public function inspeccion()
     {
@@ -57,7 +62,7 @@ class Resolucion extends Model
 			})
 			->where(function ($subquery) use ($tipo) {
 				if (!is_null($tipo) && strlen($tipo) > 0) {
-					$subquery->where('tipo', 'LIKE', '%'.$tipo.'%');
+					$subquery->where('tipo_id', 'LIKE', '%'.$tipo.'%');
 				}
 			})
 			->where(function ($subquery) use ($contribuyente) {
@@ -67,5 +72,16 @@ class Resolucion extends Model
 				}
 			})
 			->orderBy('created_at', 'DESC');
+	}
+	public function scopeNumeroSigue($query , $tipo)
+	{
+			$rs = $query
+				->where(function ($subquery) use ($tipo) {
+					if (!is_null($tipo) && strlen($tipo) > 0) {
+						$subquery->where('tipo_id', $tipo);
+					}
+				})->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,1,8),SIGNED  integer) END)*1) AS maximo"))->first();
+		
+        return str_pad($rs->maximo + 1, 8, '0', STR_PAD_LEFT);
 	}
 }

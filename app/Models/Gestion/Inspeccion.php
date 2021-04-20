@@ -4,6 +4,7 @@ namespace App\Models\Gestion;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Inspeccion extends Model
 {
@@ -11,6 +12,11 @@ class Inspeccion extends Model
     protected $table = 'inspeccion';
     protected $dates = ['deleted_at'];
 
+	public function tipotramite()
+    {
+        return $this->belongsTo(Tipotramitenodoc::class, 'tipo_id');
+    }
+	
     public function ordenpago()
     {
         return $this->hasOne('App\Models\Gestion\Ordenpago' , 'ordenpago_id');
@@ -45,5 +51,17 @@ class Inspeccion extends Model
 				}
 			})
 			->orderBy('created_at', 'DESC');
+	}
+
+	public function scopeNumeroSigue($query , $tipo)
+	{
+			$rs = $query
+				->where(function ($subquery) use ($tipo) {
+					if (!is_null($tipo) && strlen($tipo) > 0) {
+						$subquery->where('tipo_id', $tipo);
+					}
+				})->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,1,8),SIGNED  integer) END)*1) AS maximo"))->first();
+		
+        return str_pad($rs->maximo + 1, 8, '0', STR_PAD_LEFT);
 	}
 }

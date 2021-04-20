@@ -37,7 +37,7 @@
 							</div>
 							<div class="col-lg-4 col-md-4  form-group">
 								{!! Form::label('tipo', 'Tipo') !!}
-								{!! Form::select('tipo', $cboTipos, '', array('class' => 'form-control ', 'id' => 'tipo')) !!}
+								{!! Form::select('tipo', $tipostramite, '', array('class' => 'form-control ', 'id' => 'tipo')) !!}
 							</div>
 							<div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
 								{!! Form::label('nombre', 'Filas a mostrar') !!}

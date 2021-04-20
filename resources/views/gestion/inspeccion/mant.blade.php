@@ -21,7 +21,7 @@
 		<div class="col-7 form-group">
 			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('tipo', $cboTipos, null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id')) !!}
+				{!! Form::select('tipo',$tipostramite, null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero();')) !!}
 			</div>
 		</div>
 		<div class="col-5 form-group">
@@ -115,13 +115,10 @@ $(document).ready(function() {
 
 	configurarAnchoModal('1000');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+	
 	var tipotogle = $('#toggletipo').val();
 	showTipo(tipotogle);
-	/* $('#toggletipo').on('change', function(){
-		var tipo = $(this).val();
-		showTipo(tipo);
-	});
-	 */
+
 	$( IDFORMMANTENIMIENTO + '{{ $entidad }}').submit(function( event ) {
 			event.preventDefault();
 			var idformulario = IDFORMMANTENIMIENTO + '{{ $entidad }}';
@@ -160,37 +157,10 @@ $(document).ready(function() {
 				}
 			}); 
     	});
-
-
-	$('#tipo_id').on('change', function(){
-		var tipo = $(this).val();
-		if(tipo==''){
-			tipo='no';
-		}
-		switch (tipo) {
-			case "LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES":
-				$('#divSalubridad').addClass('d-none');
-				break;
-			case "EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)":
-				$('#divSalubridad').addClass('d-none');
-				break;
-			case "SALUBRIDAD":
-				$('#divSalubridad').removeClass('d-none');
-				break;
-			case "DEFENSA CIVIL":
-				$('#divSalubridad').addClass('d-none');
-				break;
-			default:
-				$('#divSalubridad').addClass('d-none');
-				break;
-		}
-		ordenpagoSelect2(tipo);
-	});	 
+	 
 	$('#botonBuscarRuc').on('click', function(){
 		buscarRUC();
 	});
-
-	
 
 	function buscarRUC(){
 		var reg = new RegExp('^[0-9]+$');
@@ -220,18 +190,19 @@ $(document).ready(function() {
 	}
 
 }); 
-function showTipo(tipo){
+	function showTipo(tipo){
+		console.log(tipo);
 		switch (tipo) {
-		case "LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES":
+			case "1":
 				$('#divSalubridad').addClass('d-none');
 				break;
-			case "EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)":
+			case "2":
 				$('#divSalubridad').addClass('d-none');
 				break;
-			case "SALUBRIDAD":
+			case "3":
 				$('#divSalubridad').removeClass('d-none');
 				break;
-			case "DEFENSA CIVIL":
+			case "4":
 				$('#divSalubridad').addClass('d-none');
 				break;
 			default:
@@ -239,7 +210,7 @@ function showTipo(tipo){
 		}
 		ordenpagoSelect2(tipo);
 	}
-function ordenpagoSelect2(tipo){
+	function ordenpagoSelect2(tipo){
 		$('#ordenpago_id').select2({
 			ajax: {
 				delay: 250,
@@ -259,6 +230,19 @@ function ordenpagoSelect2(tipo){
 						results: datos.results
 					};
 				}
+			}
+		});
+	}
+
+	function generarNumero(){
+		var tipo = $('#tipo_id').val();
+		showTipo(tipo);
+		$.ajax({
+			type: "POST",
+			url: "{{route('inspeccion.generarnumero')}}",
+			data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&tipo=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="tipo"]').val(),
+			success: function(a) {
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
 			}
 		});
 	}

@@ -10,6 +10,7 @@ use App\Models\Gestion\Inspeccion;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Models\Gestion\Ordenpago;
+use App\Models\Gestion\Tipotramitenodoc;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Storage;
@@ -49,7 +50,7 @@ class InspeccionController extends Controller
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
         $entidad          = 'inspeccion';
-        $numero           = Libreria::getParam($request->input('numero'));
+        $numero           = Libreria::getParam($request->input('numero_search'));
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $contribuyente    = Libreria::getParam($request->input('contribuyente'));
@@ -106,18 +107,14 @@ class InspeccionController extends Controller
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $entidad  = 'inspeccion';
         $inspeccion = null;
-        $cboTipos = ['' => 'Seleccione una opcion'] + [
-            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
-            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
-            'SALUBRIDAD'=>'SALUBRIDAD',
-            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
-        ];
+        $tipostramite = ['' => 'Seleccione'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
+        
         $toggletipo = null;
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();   
         $formData = array('inspeccion.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad,'enctype'=>'multipart/form-data', 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboOrdenpago', 'toggletipo'));
+        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo'));
     }
 
     /**
@@ -184,7 +181,7 @@ class InspeccionController extends Controller
                 $error = DB::transaction(function() use($request){
                     $inspeccion = new Inspeccion();
                     $inspeccion->numero          = Libreria::getParam($request->input('numero'));
-                    $inspeccion->tipo            = strtoupper(Libreria::getParam($request->input('tipo')));
+                    $inspeccion->tipo_id            = strtoupper(Libreria::getParam($request->input('tipo')));
                     $inspeccion->ordenpago_id    = Libreria::getParam($request->input('ordenpago_id'), null);
                     $inspeccion->fecha                 = date("Y-m-d H:i:s");
                     $inspeccion->observacion     = strtoupper($request->input('observacion'));
@@ -233,21 +230,16 @@ class InspeccionController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $cboTipos = ['' => 'Seleccione una opcion'] + [
-            'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES'=>'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',
-            'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)'=>'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',
-            'SALUBRIDAD'=>'SALUBRIDAD',
-            'DEFENSA CIVIL'=>'DEFENSA CIVIL'
-        ];   
+        $tipostramite = ['' => 'Seleccione'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $inspeccion = Inspeccion::find($id);
-        $toggletipo = $inspeccion->tipo;
+        $toggletipo = $inspeccion->tipo_id;
         $entidad  = 'inspeccion';
         $formData = array('inspeccion.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'cboTipos', 'cboOrdenpago', 'toggletipo'));
+        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo'));
     }
 
     /**
@@ -318,17 +310,17 @@ class InspeccionController extends Controller
 
     public function pdfInspeccion($id){
         $inspeccion = Inspeccion::find($id);
-        $tipo = $inspeccion->tipo;
+        $tipo = $inspeccion->tipo_id;
         $data = $inspeccion;
         switch ($tipo) {
-            case 'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES':
+            case '1':
                 break;
-            case 'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)':
+            case '2':
                 break;
-            case 'SALUBRIDAD':
+            case '3':
                 $pdf = PDF::loadView('gestion.pdf.inspeccion.salubridad.salubridad', compact('data'))->setPaper('a4', 'portrait');
                 break;
-            case 'DEFENSA CIVIL':
+            case '4':
                 break;
         }
         $nombre = 'inspeccion:' . $inspeccion->numero . '-' . $inspeccion->fecha . '.pdf';
@@ -348,5 +340,12 @@ class InspeccionController extends Controller
         return Storage::disk('local')->response($url);
         //si no se encuentra lanzamos un error 404.
         // abort(404);
+    }
+
+    public function generarNumero(Request $request)
+    {
+        $tipo          = $request->input('tipo');
+        $numerotramite = Inspeccion::NumeroSigue($tipo);
+        echo $numerotramite;
     }
 }

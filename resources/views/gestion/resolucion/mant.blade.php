@@ -26,7 +26,7 @@
 		<div class="col-6 form-group">
 			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('tipo', $cboTipos, null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id')) !!}
+				{!! Form::select('tipo',$tipostramite, null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero();')) !!}
 			</div>
 		</div>
 		<div class="col-3 form-group">
@@ -136,32 +136,7 @@ $(document).ready(function() {
 	var tipotogle = $('#toggletipo').val();
 	showTipo(tipotogle);
 
-	$('#tipo_id').on('change', function(){
-		var tipo = $(this).val();
-		if(tipo==''){
-			tipo='no';
-		}
-		switch (tipo) {
-			case "LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES":
-				$('#divSalubridad').addClass('d-none');
-				break;
-			case "EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)":
-				$('#divSalubridad').addClass('d-none');
-				break;
-			case "SALUBRIDAD":
-				$('#divSalubridad').removeClass('d-none');
-				break;
-			case "DEFENSA CIVIL":
-				$('#divSalubridad').addClass('d-none');
-				break;
-			default:
-				$('#divSalubridad').addClass('d-none');
-				break;
-		}
-		ordenpagoSelect2(tipo);
-		inspeccionSelect2(tipo);
-	});
-
+	
 	$('#botonBuscarRuc').on('click', function(){
 		buscarRUC();
 	});
@@ -196,22 +171,23 @@ $(document).ready(function() {
 });
 function showTipo(tipo){
 		switch (tipo) {
-		case "LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES":
+			case "1":
 				$('#divSalubridad').addClass('d-none');
 				break;
-			case "EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)":
+			case "2":
 				$('#divSalubridad').addClass('d-none');
 				break;
-			case "SALUBRIDAD":
+			case "3":
 				$('#divSalubridad').removeClass('d-none');
 				break;
-			case "DEFENSA CIVIL":
+			case "4":
 				$('#divSalubridad').addClass('d-none');
 				break;
 			default:
 				break;
 		}
 		ordenpagoSelect2(tipo);
+		inspeccionSelect2(tipo);
 }
 function inspeccionSelect2(tipo){
 		$('#inspeccion_id').select2({
@@ -259,4 +235,16 @@ function ordenpagoSelect2(tipo){
 			}
 		});
 } 
+function generarNumero(){
+		var tipo = $('#tipo_id').val();
+		showTipo(tipo);
+		$.ajax({
+			type: "POST",
+			url: "{{route('resolucion.generarnumero')}}",
+			data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&tipo=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="tipo"]').val(),
+			success: function(a) {
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
+			}
+		});
+	}
 </script>

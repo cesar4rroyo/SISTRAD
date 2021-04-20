@@ -16,7 +16,6 @@ class CreateInspeccionTable extends Migration
         Schema::create('inspeccion', function (Blueprint $table) {
             $table->increments('id');
             $table->dateTime('fecha');
-            $table->string('tipo')->nullable();
             $table->string('numero')->nullable();
             $table->string('observacion')->nullable();
             $table->string('conclusiones')->nullable();
@@ -31,6 +30,8 @@ class CreateInspeccionTable extends Migration
             $table->string('archivo')->nullable();
             $table->integer('ordenpago_id')->unsigned()->nullable();
             $table->foreign('ordenpago_id')->references('id')->on('ordenpago')->onDelete('restrict')->onUpdate('restrict')->nullable();
+            $table->integer('tipo_id')->unsigned()->nullable();
+            $table->foreign('tipo_id')->references('id')->on('tipotramitenodoc')->onUpdate('restrict')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();
         });
