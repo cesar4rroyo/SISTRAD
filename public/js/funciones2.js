@@ -200,6 +200,20 @@ function guardar (entidad, idboton, entidad2) {
 					}
 					buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
 				}        
+			}else if(respuesta.includes('id')){
+				var id = respuesta.trim();
+				var matches = id.match(/(\d+)/);
+				id=matches[0];
+				console.log(id);
+				cerrarModal();
+				Hotel.notificaciones("Accion realizada correctamente", "Realizado" , "success");
+				if (listar.trim() === 'SI') {
+					if(typeof entidad2 != 'undefined' && entidad2 !== ''){
+						entidad = entidad2;
+					}
+					buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+				}
+				window.open("tramite/ticket/pdf/?ticket=" + id, "_blank")
 			} else {
 				mostrarErrores(respuesta, idformulario, entidad);
 			}

@@ -261,7 +261,8 @@ class TramiteController extends Controller
             // $seguimiento->motivorechazo_id;
         });
 
-        return is_null($error) ? "OK" : $error;
+        $ultimotramite = Tramite::with('procedimiento', 'tipodocumento')->orderBy('id', 'DESC')->first()->toArray()['id'];
+        return is_null($error) ? 'id'. $ultimotramite : $error;
     }
 
     /**
@@ -743,5 +744,15 @@ class TramiteController extends Controller
         $año           = date('Y');
         $numerotramite = Tramite::NumeroSigue($año);
         echo $año."-" . $numerotramite;
+    }
+
+    public function generarTicket(Request $request){
+        $id = $request->ticket;
+        $tramite = Tramite::with('tipodocumento', 'procedimiento')->find($id);
+        $data = $tramite;
+        $customPaper = array(0,0,567.00,283.80);
+        $pdf = PDF::loadView('gestion.tramite.ticket', compact('data'))->setPaper($customPaper, 'landscape');
+        $nombre = 'Ticket Nro. :' . $data->numero . '-' . $data->fecha . '.pdf';
+        return $pdf->stream($nombre);
     }
 }

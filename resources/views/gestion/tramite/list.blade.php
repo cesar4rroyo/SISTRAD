@@ -213,6 +213,13 @@
 							@endif
 						@endforeach
 						@break
+						@case('general')
+							<a href={{"tramite/ticket/pdf/?ticket=" . $value->id}} target="_blank"> 
+								<button class="btn btn-sm btn-info" title="Imprimir">
+									<i class="fas fa-print"></i>
+								</button>
+							</a>	
+						@break
 						@default
 						@break
 					@endswitch

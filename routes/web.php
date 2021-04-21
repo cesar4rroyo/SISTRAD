@@ -107,6 +107,9 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('tramite/accion/{id}/{accion}', 'Gestion\TramiteController@accion')->name('tramite.accion');
     Route::get('tramite/seguimiento/pdf/{id}', 'Gestion\TramiteController@printseguimiento')->name('tramite.printseguimiento');
     
+    Route::get('tramite/ticket/pdf', 'Gestion\TramiteController@generarTicket')->name('tramite.ticket');
+
+
     Route::resource('reportetramite', 'Reportes\ReportetramiteController', array('except' => array('show')));
     Route::get('reportetramite/pdftramites', 'Reportes\ReportetramiteController@pdfTramites')->name('reportetramite.pdftramites');
 
