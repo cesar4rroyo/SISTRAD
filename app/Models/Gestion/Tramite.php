@@ -184,9 +184,12 @@ class Tramite extends Model
 					$subquery->where('remitente', 'LIKE', '%'.$remitente.'%');
 				}
 			})
-			->whereHas('seguimientos',function ($subquery) use ($area_actual) {
+			->whereHas('seguimientos',function ($subquery) use ($area_actual , $modo) {
 				if (!is_null($area_actual) && strlen($area_actual) > 0) {
-					$subquery->where('area_id' , $area_actual);
+                    if($modo == 'general' && $area_actual == 1){ //Si es mesa de partes y busqueda general , mostrar todos los trámites
+                    }else{
+                        $subquery->where('area_id' , $area_actual);
+                    }
 				}
 			})
 			->orderBy('numero', 'ASC');
