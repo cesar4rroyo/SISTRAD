@@ -124,6 +124,7 @@ class AreaController extends Controller
         $error = DB::transaction(function() use($request){
             $area = new Area();
             $area->descripcion= strtoupper($request->input('descripcion'));
+            $area->mesadepartes= $request->input('mesadepartes')?true:false;
             $area->save();
         });
 
@@ -187,6 +188,7 @@ class AreaController extends Controller
         $error = DB::transaction(function() use($request, $id){
             $area = Area::find($id);
             $area->descripcion = strtoupper($request->input('descripcion'));
+            $area->mesadepartes= $request->input('mesadepartes')?true:false;
             $area->save();
         });
         return is_null($error) ? "OK" : $error;

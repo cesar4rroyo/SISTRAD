@@ -13,7 +13,8 @@ class AreaSeeder extends Seeder
     public function run()
     {
         DB::table('area')->insert([
-            'descripcion' => 'Mesa de Partes', //Asegurarnos que el id sea 1           
+            'descripcion' => 'Mesa de Partes', 
+            'mesadepartes' => true         
         ]);
         DB::table('area')->insert([
             'descripcion' => 'Area 2',

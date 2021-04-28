@@ -2,6 +2,7 @@
 
 namespace App\Models\Gestion;
 
+use App\Models\Control\Area;
 use App\Models\Control\Procedimiento;
 use App\Models\Control\Tipodocumento;
 use Illuminate\Database\Eloquent\Model;
@@ -186,7 +187,8 @@ class Tramite extends Model
 			})
 			->whereHas('seguimientos',function ($subquery) use ($area_actual , $modo) {
 				if (!is_null($area_actual) && strlen($area_actual) > 0) {
-                    if($modo == 'general' && $area_actual == 1){ //Si es mesa de partes y busqueda general , mostrar todos los trámites
+                    $area = Area::find($area_actual);
+                    if($modo == 'general' && $area->mesadepartes){ //Si es mesa de partes y busqueda general , mostrar todos los trámites
                     }else{
                         $subquery->where('area_id' , $area_actual);
                     }

@@ -16,6 +16,7 @@ class CreateAreaTable extends Migration
         Schema::create('area', function (Blueprint $table) {
             $table->increments('id');
             $table->string('descripcion', 200);
+            $table->boolean('mesadepartes')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
