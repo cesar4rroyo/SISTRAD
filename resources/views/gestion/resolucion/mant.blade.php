@@ -6,13 +6,13 @@
 		<div class="col-4 form-group">
 			{!! Form::label('fechaexpedicion', 'Fecha de Expedición*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::date('fechaexpedicion', date('Y-m-d'), array('class' => 'form-control  input-xs', 'id' => 'fechaexpedicion' , 'readonly' => true)) !!}
+				{!! Form::date('fechaexpedicion', ($resolucion) ? date_create($resolucion->fechaexpedicion) : date('Y-m-d'), array('class' => 'form-control  input-xs', 'id' => 'fechaexpedicion' , 'readonly' => true)) !!}
 			</div>
 		</div>
 		<div class="col-4 form-group">
 			{!! Form::label('fechavencimiento', 'Fecha de Vencimiento*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::date('fechavencimiento', null, array('class' => 'form-control  input-xs', 'id' => 'fechavencimiento')) !!}
+				{!! Form::date('fechavencimiento', ($resolucion) ? date_create($resolucion->fechavencimiento) : null, array('class' => 'form-control  input-xs', 'id' => 'fechavencimiento')) !!}
 			</div>
 		</div>
 		<div class="col-4 form-group">
@@ -26,7 +26,7 @@
 		<div class="col-6 form-group">
 			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('tipo',$tipostramite, null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero();')) !!}
+				{!! Form::select('tipo',$tipostramite, $toggletipo, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero();')) !!}
 			</div>
 		</div>
 		<div class="col-3 form-group">
@@ -62,6 +62,54 @@
 			</div>
 		</div>
 	</div>
+	<div id="divEdificaciones" class="d-none">
+		<div class="form-group">
+			{!! Form::label('proyecto', 'Proyecto*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblproyecto')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('proyecto', null, array('class' => 'form-control  input-xs', 'id' => 'proyecto', 'placeholder'=>'Ejm. LICENCIA DE CONSTRUCCION DE OBRA NUEVA VIVIENDA UNIFAMILIAR')) !!}
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-sm">
+				{!! Form::label('uso', 'Uso*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lbluso')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::text('uso', null, array('class' => 'form-control  input-xs', 'id' => 'uso', 'placeholder'=>'Ejm. Vivienda')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('zonificacion', 'Zonificación*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblzonificacion')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::text('zona', null, array('class' => 'form-control  input-xs', 'id' => 'zonificacion', 'placeholder'=>'Ejm. R.D.M')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('altura', 'Altura*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblaltura')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::text('altura', null, array('class' => 'form-control  input-xs', 'id' => 'altura', 'placeholder'=>'Ejm. 01 Nivel')) !!}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-sm">
+				{!! Form::label('area', 'Área Construida(m2)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::number('area', null, array('class' => 'form-control  input-xs', 'id' => 'area', 'step'=>'0.01')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('valor', 'Valor de la Obra(S/.)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblvalor')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::number('valor', null, array('class' => 'form-control  input-xs', 'id' => 'valor', 'step'=>'0.01')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('responsableobra', 'Responsable de la Obra*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblresponsableobra')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::text('responsableobra', null, array('class' => 'form-control  input-xs', 'id' => 'responsableobra')) !!}
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-6 form-group">
 			{!! Form::label('dni', 'DNI', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
@@ -82,12 +130,12 @@
 		</div>
 	</div>
 	<div class="form-group">
-		{!! Form::label('contribuyente', 'Contribuyente*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		{!! Form::label('contribuyente', 'Contribuyente*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblcontribuyente')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
 			{!! Form::text('contribuyente', null, array('class' => 'form-control  input-xs', 'id' => 'contribuyente')) !!}
 		</div>
 	</div>	
-	<div class="row">
+	<div class="row" id="inforuc">
 		<div class="form-group col-sm">
 			{!! Form::label('razonsocial', 'Razon Social*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
@@ -102,7 +150,7 @@
 		</div>	
 	</div>
 	<div class="form-group">
-		{!! Form::label('direccion', 'Dirección*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		{!! Form::label('direccion', 'Dirección*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lbldireccion')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
 			{!! Form::text('direccion', null, array('class' => 'form-control  input-xs', 'id' => 'direccion')) !!}
 		</div>
@@ -110,7 +158,7 @@
 	<div class="form-group">
 		{!! Form::label('observacion', 'Observacion*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
-			{!! Form::textarea('observacion', null, array('class' => 'form-control  input-xs', 'id' => 'observacion','rows'=>2 , 'style' =>'resize:none;')) !!}
+			{!! Form::textarea('observacion', $resolucion->observaciones ?? null, array('class' => 'form-control  input-xs', 'id' => 'observacion','rows'=>2 , 'style' =>'resize:none;')) !!}
 		</div>
 	</div>
     <div class="form-group">
@@ -129,7 +177,7 @@
 $(document).ready(function() {
 	//ordenpagoSelect2();
 	//inspeccionSelect2();
-	configurarAnchoModal('900');
+	configurarAnchoModal('1000');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').inputmask("99999999999");
 	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni"]').inputmask("99999999");
@@ -173,17 +221,38 @@ function showTipo(tipo){
 		switch (tipo) {
 			case "1":
 				$('#divSalubridad').addClass('d-none');
+				$('#divEdificaciones').addClass('d-none');
+				$('#inforuc').removeClass('d-none');
+				$('#lblcontribuyente').text('Contribuyente*');
+				$('#lbldireccion').text('Dirección*');
+
 				break;
 			case "2":
 				$('#divSalubridad').addClass('d-none');
+				$('#divEdificaciones').removeClass('d-none');
+				$('#lblcontribuyente').text('Propietario*');
+				$('#lbldireccion').text('Ubicación*');
+				$('#inforuc').addClass('d-none');
 				break;
 			case "3":
 				$('#divSalubridad').removeClass('d-none');
+				$('#divEdificaciones').addClass('d-none');
+				$('#inforuc').removeClass('d-none');
+				$('#lblcontribuyente').text('Contribuyente*');
+				$('#lbldireccion').text('Dirección*');
+
 				break;
 			case "4":
 				$('#divSalubridad').addClass('d-none');
+				$('#divEdificaciones').addClass('d-none');
+				$('#inforuc').removeClass('d-none');
+				$('#lblcontribuyente').text('Contribuyente*');
+				$('#lbldireccion').text('Dirección*');
+
 				break;
 			default:
+				$('#lblcontribuyente').text('Contribuyente*');
+				$('#lbldireccion').text('Dirección*');
 				break;
 		}
 		ordenpagoSelect2(tipo);
@@ -248,3 +317,4 @@ function generarNumero(){
 		});
 	}
 </script>
+

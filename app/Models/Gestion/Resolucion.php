@@ -28,7 +28,13 @@ class Resolucion extends Model
 		'categoria',
 		'girocomercial',
 		'razonsocial',
-		'tipo_id'
+		'tipo_id',
+		'uso',
+		'altura',
+		'proyecto',
+		'area',
+		'valor',
+		'responsableobra'
     ];
     public function ordenpago()
     {
