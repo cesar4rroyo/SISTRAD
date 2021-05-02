@@ -80,6 +80,20 @@
 			</div>
 		</div>
 	</div>
+	<div class="row d-none" id="divLicencias">
+		<div class="col-sm form-group">
+			{!! Form::label('localidad', 'Localidad (Ubr.- PJ)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('localidad', null, array('class' => 'form-control  input-xs', 'id' => 'localidad')) !!}
+			</div>
+		</div>
+		<div class="form-group col-sm">
+			{!! Form::label('area', 'Área Construida(m2)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::number('area', null, array('class' => 'form-control  input-xs', 'id' => 'area', 'step'=>'0.01')) !!}
+			</div>
+		</div>
+	</div>
 	<div class="form-group">
 		{!! Form::label('descripcion', 'Descripción*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
@@ -194,16 +208,20 @@ $(document).ready(function() {
 		console.log(tipo);
 		switch (tipo) {
 			case "1":
-				$('#divSalubridad').addClass('d-none');
+				$('#divSalubridad').removeClass('d-none');
+				$('#divLicencias').removeClass('d-none');
 				break;
 			case "2":
 				$('#divSalubridad').addClass('d-none');
+				$('#divLicencias').addClass('d-none');
 				break;
 			case "3":
 				$('#divSalubridad').removeClass('d-none');
+				$('#divLicencias').addClass('d-none');
 				break;
 			case "4":
 				$('#divSalubridad').addClass('d-none');
+				$('#divLicencias').addClass('d-none');
 				break;
 			default:
 				break;

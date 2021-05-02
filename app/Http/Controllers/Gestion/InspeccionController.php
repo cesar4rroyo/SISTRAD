@@ -143,6 +143,32 @@ class InspeccionController extends Controller
 
         switch ($request->tipo) {
             case 'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES':
+                $reglas     = array(
+                    'razonsocial' => 'required',
+                    'girocomercial' => 'required',
+                    'direccion' => 'required',
+                    'observacion' => 'required',
+                    'conclusiones' => 'required',
+                    'descripcion' => 'required',
+                    'representante' => 'required',
+                    'dni' => 'required',
+                    'ruc' => 'required',
+                    'area' => 'required',
+                    'localidad' => 'required',
+                );
+                $mensajes = array(
+                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
+                    'direccion.required'         => 'Debe ingresar una dirección',
+                    'observacion.required'         => 'Debe ingresar una observación',
+                    'conclusiones.required'         => 'Debe ingresar las conclusiones',
+                    'descripcion.required'         => 'Debe ingresar una descripción',
+                    'representante.required'         => 'Debe ingresar el representante',
+                    'dni.required'         => 'Debe ingresar el DNI',
+                    'ruc.required'         => 'Debe ingresar el RUC',
+                    'area.required'         => 'Debe ingresar el área',
+                    'localidad.required'         => 'Debe ingresar la localidad',
+                );
                 break;
             case 'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)':
                 break;
@@ -194,6 +220,9 @@ class InspeccionController extends Controller
                     $inspeccion->girocomercial     = strtoupper($request->input('girocomercial'));
                     $inspeccion->dni     = strtoupper($request->input('dni'));
                     $inspeccion->ruc     = strtoupper($request->input('ruc'));
+                    $inspeccion->localidad          = Libreria::getParam($request->input('localidad'));
+                    $inspeccion->area          = Libreria::getParam($request->input('area'));
+
                     if($request->hasFile('file')){
                         $file = $request->file('file');
                         $extension = $request->file('file')->getClientOriginalExtension();
@@ -315,6 +344,7 @@ class InspeccionController extends Controller
         $data = $inspeccion;
         switch ($tipo) {
             case '1':
+                $pdf = PDF::loadView('gestion.pdf.inspeccion.licenciayautorizacion.licencia', compact('data'))->setPaper('a4', 'portrait');
                 break;
             case '2':
                 break;
