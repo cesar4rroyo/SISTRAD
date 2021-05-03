@@ -129,6 +129,8 @@ $(document).ready(function() {
 
 	configurarAnchoModal('1000');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').inputmask("99999999999");
+	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni"]').inputmask("99999999");
 	
 	var tipotogle = $('#toggletipo').val();
 	showTipo(tipotogle);

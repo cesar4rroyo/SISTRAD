@@ -161,7 +161,7 @@
 			<div class="form-group col-sm">
 				{!! Form::label('arearesolucion', 'Área*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
-					{!! Form::number('area', null, array('class' => 'form-control  input-xs', 'id' => 'arearesolucion', 'step'=>'0.01')) !!}
+					{!! Form::number('arearesolucion', $resolucion ? $resolucion->area : null, array('class' => 'form-control  input-xs', 'id' => 'arearesolucion', 'step'=>'0.01')) !!}
 				</div>
 			</div>
 		</div>
