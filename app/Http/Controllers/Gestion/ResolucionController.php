@@ -147,6 +147,49 @@ class ResolucionController extends Controller
         }
         switch ($request->tipo) {
             case '1':
+                $reglas     = array(
+                    'funcionamiento' => 'required',
+                    'nombrecomercial' => 'required',
+                    'nroexpediente' => 'required',
+                    'viapublica' => 'required',
+                    'area' => 'required',
+                );
+                $mensajes = array(
+                    'nroexpediente.required'         => 'Debe ingresar el Nro. de Expediente',
+                    'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                    'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                    'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                    'area.required'         => 'Debe ingresar el área',
+                );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                $error = DB::transaction(function () use ($request) {
+                    $resolucion = Resolucion::create([
+                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
+                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
+                        'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
+                        'dni' => Libreria::getParam($request->input('dni')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ordenpago_id' => $request->input('ordenpago_id'),       
+                        'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'tipo_id'=>$request->input('tipo'),     
+                        'area' => $request->input('area'),           
+                        'numero'=>$request->input('numero'),     
+                        'nroexpediente'=>strtoupper($request->input('nroexpediente')),     
+                        'nrocertificado'=>strtoupper($request->input('nrocertificado')),     
+                        'nombrecomercial'=>strtoupper($request->input('nombrecomercial')),     
+                        'viapublica'=>strtoupper($request->input('viapublica')),     
+                        'funcionamiento'=>strtoupper($request->input('funcionamiento')),     
+                    ]);
+                    
+                });
+                return is_null($error) ? "OK" : $error;
                 break;
             case '2':
                 $reglas     = array(
@@ -180,9 +223,6 @@ class ResolucionController extends Controller
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
-                        //'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
-                        //'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
-                        //'localidad' => strtoupper(Libreria::getParam($request->input('localidad'))),                
                         'zona' => strtoupper(Libreria::getParam($request->input('zona'))),                
                         'altura' => strtoupper(Libreria::getParam($request->input('altura'))),                
                         'uso' => strtoupper(Libreria::getParam($request->input('uso'))),                
@@ -190,7 +230,6 @@ class ResolucionController extends Controller
                         'responsableobra' => strtoupper(Libreria::getParam($request->input('responsableobra'))), 
                         'area' => $request->input('area'),           
                         'valor' => $request->input('valor'),           
-                        //'categoria' => strtoupper(Libreria::getParam($request->input('categoria'))),                
                         'dni' => Libreria::getParam($request->input('dni')),           
                         'ruc' => Libreria::getParam($request->input('ruc')),           
                         'ordenpago_id' => $request->input('ordenpago_id'),       
@@ -326,6 +365,49 @@ class ResolucionController extends Controller
 
         switch ($request->tipo) {
             case '1':
+                $reglas     = array(
+                    'funcionamiento' => 'required',
+                    'nombrecomercial' => 'required',
+                    'nroexpediente' => 'required',
+                    'viapublica' => 'required',
+                    'area' => 'required',
+                );
+                $mensajes = array(
+                    'nroexpediente.required'         => 'Debe ingresar el Nro. de Expediente',
+                    'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                    'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                    'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                    'area.required'         => 'Debe ingresar el área',
+                );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                $error = DB::transaction(function () use ($request, $resolucion) {
+                    $resolucion->update([
+                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
+                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
+                        'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
+                        'dni' => Libreria::getParam($request->input('dni')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ordenpago_id' => $request->input('ordenpago_id'),       
+                        'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'tipo_id'=>$request->input('tipo'),     
+                        'area' => $request->input('area'),           
+                        'numero'=>$request->input('numero'),     
+                        'nroexpediente'=>strtoupper($request->input('nroexpediente')),     
+                        'nrocertificado'=>strtoupper($request->input('nrocertificado')),     
+                        'nombrecomercial'=>strtoupper($request->input('nombrecomercial')),     
+                        'viapublica'=>strtoupper($request->input('viapublica')),     
+                        'funcionamiento'=>strtoupper($request->input('funcionamiento')),     
+                    ]);
+                    
+                });
+                return is_null($error) ? "OK" : $error;
                 break;
             case '2':
                 $reglas     = array(
@@ -471,6 +553,7 @@ class ResolucionController extends Controller
         $data = $resolucion;
         switch ($tipo) {
             case '1':
+                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.licencia', compact('data'))->setPaper('a4', 'portrait');
                 break;
             case '2':
                 $pdf = PDF::loadView('gestion.pdf.resolucion.edificaciones.edificaciones', compact('data'))->setPaper('a4', 'portrait');

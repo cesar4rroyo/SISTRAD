@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<div class="col-4 form-group">
-			{!! Form::label('numero', 'Número*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			{!! Form::label('numero', 'Número de Resolución*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('numero', null, array('class' => 'form-control  input-xs', 'id' => 'numero')) !!}
 			</div>
@@ -110,14 +110,70 @@
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-6 form-group">
+	<div class="d-none" id="divLicenciasAutorizaciones">
+		<div class="row">
+			<div class="form-group col-sm">
+				{!! Form::label('nombrecomercial', 'Nombre Comercial*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnombrecomercial')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::text('nombrecomercial', null, array('class' => 'form-control  input-xs', 'id' => 'nombrecomercial')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('funcionamiento', 'Tipo de Funcionamiento*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="row  form-group ml-2">
+					<div class="form-check form-check-inline">
+						{{Form::radio('funcionamiento', 'Temporal', true , array("class"=>"form-check-input"))}}
+						<label class="form-check-label" for="Temporal">Temporal</label>
+					</div>
+					<div class="form-check form-check-inline">
+						{{Form::radio('funcionamiento', 'Definitivo',false , array("class"=>"form-check-input"))}}
+						<label class="form-check-label" for="Definitivo">Definitivo</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm form-group">
+				{!! Form::label('viapublica', 'Uso de Vía Pública*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="row  form-group ml-2">
+					<div class="form-check form-check-inline">
+						{{Form::radio('viapublica', 'Si', false , array("class"=>"form-check-input"))}}
+						<label class="form-check-label" for="Si">Sí</label>
+					</div>
+					<div class="form-check form-check-inline">
+						{{Form::radio('viapublica', 'No',true , array("class"=>"form-check-input"))}}
+						<label class="form-check-label" for="No">No</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm form-group">
+				{!! Form::label('nroexpediente', 'Expediente Nro*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnroexpediente')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::text('nroexpediente', null, array('class' => 'form-control  input-xs', 'id' => 'nroexpediente')) !!}
+				</div>
+			</div>
+			<div class="col-sm form-group">
+				{!! Form::label('nrocertificado', 'Certificado Nro*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnrocertificado')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::text('nrocertificado', null, array('class' => 'form-control  input-xs', 'id' => 'nroexpediente')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('arearesolucion', 'Área*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::number('area', null, array('class' => 'form-control  input-xs', 'id' => 'arearesolucion', 'step'=>'0.01')) !!}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">		
+		<div class="col-sm form-group">
 			{!! Form::label('dni', 'DNI', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('dni', null, array('class' => 'form-control  input-xs', 'id' => 'dni')) !!}
 			</div>
 		</div>
-		<div class="col-6 form-group">
+		<div class="col-sm form-group">
 			{!! Form::label('ruc', 'RUC', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12 input-group pl-0">
 				<div class="col-lg-10 col-md-10 col-sm-10">
@@ -223,6 +279,7 @@ function showTipo(tipo){
 				$('#divSalubridad').addClass('d-none');
 				$('#divEdificaciones').addClass('d-none');
 				$('#inforuc').removeClass('d-none');
+				$('#divLicenciasAutorizaciones').removeClass('d-none');
 				$('#lblcontribuyente').text('Contribuyente*');
 				$('#lbldireccion').text('Dirección*');
 
@@ -233,6 +290,8 @@ function showTipo(tipo){
 				$('#lblcontribuyente').text('Propietario*');
 				$('#lbldireccion').text('Ubicación*');
 				$('#inforuc').addClass('d-none');
+				$('#divLicenciasAutorizaciones').addClass('d-none');
+
 				break;
 			case "3":
 				$('#divSalubridad').removeClass('d-none');
@@ -240,6 +299,8 @@ function showTipo(tipo){
 				$('#inforuc').removeClass('d-none');
 				$('#lblcontribuyente').text('Contribuyente*');
 				$('#lbldireccion').text('Dirección*');
+				$('#divLicenciasAutorizaciones').addClass('d-none');
+
 
 				break;
 			case "4":
@@ -248,11 +309,12 @@ function showTipo(tipo){
 				$('#inforuc').removeClass('d-none');
 				$('#lblcontribuyente').text('Contribuyente*');
 				$('#lbldireccion').text('Dirección*');
-
+				$('#divLicenciasAutorizaciones').addClass('d-none');
 				break;
 			default:
 				$('#lblcontribuyente').text('Contribuyente*');
 				$('#lbldireccion').text('Dirección*');
+				$('#divLicenciasAutorizaciones').addClass('d-none');
 				break;
 		}
 		ordenpagoSelect2(tipo);

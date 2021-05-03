@@ -34,7 +34,12 @@ class Resolucion extends Model
 		'proyecto',
 		'area',
 		'valor',
-		'responsableobra'
+		'responsableobra',
+		'funcionamiento',
+		'nroexpediente',
+		'viapublica',
+		'nombrecomercial',
+		'nrocertificado'
     ];
     public function ordenpago()
     {
