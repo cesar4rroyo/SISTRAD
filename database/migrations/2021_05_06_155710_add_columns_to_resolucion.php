@@ -25,7 +25,6 @@ class AddColumnsToResolucion extends Migration
             $table->double('area' , 8 , 2)->nullable();
             $table->double('valor' , 8 , 2)->nullable();
             $table->string('viapublica')->default('No');
-
         });
     }
 
@@ -48,7 +47,6 @@ class AddColumnsToResolucion extends Migration
             $table->dropColumn('valor');
             $table->dropColumn('area');
             $table->dropColumn('viapublica');
-            
         });
     }
 }

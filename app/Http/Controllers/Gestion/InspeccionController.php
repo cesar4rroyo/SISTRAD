@@ -142,7 +142,7 @@ class InspeccionController extends Controller
         }
 
         switch ($request->tipo) {
-            case 'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES':
+            case '1':
                 $reglas     = array(
                     'razonsocial' => 'required',
                     'girocomercial' => 'required',
@@ -170,9 +170,9 @@ class InspeccionController extends Controller
                     'localidad.required'         => 'Debe ingresar la localidad',
                 );
                 break;
-            case 'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)':
+            case '2':
                 break;
-            case 'SALUBRIDAD':
+            case '3':
                 $reglas     = array(
                     'razonsocial' => 'required',
                     'girocomercial' => 'required',
@@ -197,7 +197,7 @@ class InspeccionController extends Controller
                 );
                 
                 break;
-            case 'DEFENSA CIVIL':
+            case '4':
                 break;
         }
 

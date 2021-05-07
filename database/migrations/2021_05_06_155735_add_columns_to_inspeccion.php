@@ -15,6 +15,7 @@ class AddColumnsToInspeccion extends Migration
     {
         Schema::table('inspeccion', function (Blueprint $table) {
             $table->string('localidad')->nullable();
+            $table->string('estado')->nullable();
             $table->double('area' , 8 , 2)->nullable();
         });
     }
@@ -29,6 +30,7 @@ class AddColumnsToInspeccion extends Migration
         Schema::table('inspeccion', function (Blueprint $table) {
             $table->dropColumn('localidad');
             $table->dropColumn('area');
+            $table->dropColumn('estado');
         });
     }
 }

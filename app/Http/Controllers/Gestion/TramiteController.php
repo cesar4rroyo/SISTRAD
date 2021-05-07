@@ -262,7 +262,7 @@ class TramiteController extends Controller
         });
 
         $ultimotramite = Tramite::with('procedimiento', 'tipodocumento')->orderBy('id', 'DESC')->first()->toArray()['id'];
-        return is_null($error) ? 'id'. $ultimotramite : $error;
+        return is_null($error) ? 'id=?'. $ultimotramite : $error;
     }
 
     /**

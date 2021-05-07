@@ -200,7 +200,7 @@ function guardar (entidad, idboton, entidad2) {
 					}
 					buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
 				}        
-			}else if(respuesta.includes('id')){
+			}else if(respuesta.includes('id=?')){
 				var id = respuesta.trim();
 				var matches = id.match(/(\d+)/);
 				id=matches[0];
