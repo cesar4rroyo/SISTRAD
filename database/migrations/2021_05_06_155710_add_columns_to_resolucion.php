@@ -25,6 +25,8 @@ class AddColumnsToResolucion extends Migration
             $table->double('area' , 8 , 2)->nullable();
             $table->double('valor' , 8 , 2)->nullable();
             $table->string('viapublica')->default('No');
+            $table->integer('inspeccion_id')->unsigned()->nullable();
+            $table->foreign('inspeccion_id')->references('id')->on('inspeccion')->onUpdate('restrict')->onDelete('restrict');
         });
     }
 
@@ -47,6 +49,7 @@ class AddColumnsToResolucion extends Migration
             $table->dropColumn('valor');
             $table->dropColumn('area');
             $table->dropColumn('viapublica');
+            $table->dropColumn('inspeccion_id');
         });
     }
 }

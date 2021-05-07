@@ -103,7 +103,6 @@
 					{!! Form::text('nombrenegocio', null, array('class' => 'form-control  input-xs', 'id' => 'nombrenegocio')) !!}
 				</div>
 			</div>
-				
 		</div>
 		<div class="row">
 			<div class="form-group col-8">
@@ -200,8 +199,6 @@ function showTipo(tipo){
 			case "1":
 				$('#divSalubridad').addClass('d-none');
 				$('#divLicencias').removeClass('d-none');
-
-
 				break;
 			case "2":
 				$('#divSalubridad').addClass('d-none');
@@ -245,8 +242,6 @@ function ordenpagoSelect2(tipo){
 		}
 	});
 }
-
-
 function generarNumero(){
 	var tipo = $('#tipo_id').val();
 	showTipo(tipo);
