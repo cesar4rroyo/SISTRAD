@@ -106,13 +106,13 @@ class OpcionMenuSeeder extends Seeder
             'orden' => 5,
             'grupomenu_id' => 1
         ]);
-        DB::table('opcionmenu')->insert([
+       /*  DB::table('opcionmenu')->insert([
             'descripcion' => 'Solicitud o Expediente',
             'icono' => 'far fa-file-alt',
             'link' => 'solicitud',
             'orden' => 6,
             'grupomenu_id' => 1
-        ]);
+        ]); */
                   
         //end Gestion documentos
 
