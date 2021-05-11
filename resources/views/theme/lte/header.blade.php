@@ -5,7 +5,7 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{route('dashboard')}}" class="nav-link">Inicio</a>
+            <a href="#main" onclick="cargarRuta('{{URL::to('tramite')}}', 'container');" class="nav-link">Inicio</a>
         </li>
     </ul>
     <!-- Right navbar links -->
@@ -20,7 +20,7 @@
                 <span class="dropdown-item dropdown-header disabled">Usuario: {{session()->get('usuario') ?? 'Invitado'}}</span>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-divider"></div>
-                <a href="{{route('usuario.perfil')}}" class="dropdown-item dropdown-footer">Cambiar contraseña</a>
+                <a onclick="cargarRuta('{{URL::to('persona/perfil')}}', 'container');" class="dropdown-item dropdown-footer">Cambiar contraseña</a>
                 <a href="{{route('logout')}}" class="dropdown-item dropdown-footer bg-danger">Salir</a>
             </div>
         </li>

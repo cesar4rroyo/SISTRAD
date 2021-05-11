@@ -44,7 +44,11 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware'=>['auth'
 //aca las demas rutas
 Route::group(['middleware' => ['auth', 'acceso']], function () {
     /*Dashboard Principal*/
-    Route::get('dashboard', 'Gestion\TramiteController@index')->name('dashboard');
+    Route::get('dashboard', function(){
+        return view('theme.lte.layout');
+    })->name('dashboard');
+    //Route::get('dashboard', 'Gestion\TramiteController@index')->name('dashboard');
+    
 
     /* Rutas Perfil & Cambio Contraseña */
     Route::get('persona/perfil', 'Admin\UsuarioController@perfil')->name('usuario.perfil');

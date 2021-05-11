@@ -1,9 +1,5 @@
 <!-- Content Header (Page header) -->
-
-
-
 <div class="container" id="container">
-
     <div class="row">
         <div class="col">
             <div class="card">
@@ -38,7 +34,6 @@
                         {!! Form::close() !!}
                       </div>
 					</div>
-                   
                       <div class="row mt-2" >
 						<div class="col-md-12">
 						  <div class="card">
@@ -62,7 +57,6 @@
         </div>
     </div>
 </div>
-
 <script>
    $(document).ready(function () {
 		buscar('{{ $entidad }}');
