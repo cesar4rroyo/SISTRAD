@@ -136,10 +136,10 @@ class ResolucionController extends Controller
         );
         $mensajes = array(
             'numero.required'         => 'Debe ingresar un numero',
-            'contribuyente.required'         => 'Debe ingresar el nombre del contribuyente',
+            'contribuyente.required'         => 'Debe ingresar el nombre del Propietario',
             'tipo.required'         => 'Debe ingresar el tipo',
             'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
-            'direccion.required'         => 'Debe ingresar una direccion',
+            'direccion.required'         => 'Debe ingresar una direccion/ubicación',
         );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
@@ -147,8 +147,99 @@ class ResolucionController extends Controller
         }
         switch ($request->tipo) {
             case '1':
+                $reglas     = array(
+                    'funcionamiento' => 'required',
+                    'nombrecomercial' => 'required',
+                    'nroexpediente' => 'required',
+                    'viapublica' => 'required',
+                    'arearesolucion' => 'required',
+                );
+                $mensajes = array(
+                    'nroexpediente.required'         => 'Debe ingresar el Nro. de Expediente',
+                    'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                    'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                    'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                    'arearesolucion.required'         => 'Debe ingresar el área',
+                );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                $error = DB::transaction(function () use ($request) {
+                    $resolucion = Resolucion::create([
+                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
+                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
+                        'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
+                        'dni' => Libreria::getParam($request->input('dni')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ordenpago_id' => $request->input('ordenpago_id'),       
+                        'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'tipo_id'=>$request->input('tipo'),     
+                        'area' => $request->input('arearesolucion'),           
+                        'numero'=>$request->input('numero'),     
+                        'nroexpediente'=>strtoupper($request->input('nroexpediente')),     
+                        'nrocertificado'=>strtoupper($request->input('nrocertificado')),     
+                        'nombrecomercial'=>strtoupper($request->input('nombrecomercial')),     
+                        'viapublica'=>strtoupper($request->input('viapublica')),     
+                        'funcionamiento'=>strtoupper($request->input('funcionamiento')),     
+                    ]);
+                    
+                });
+                return is_null($error) ? "OK" : $error;
                 break;
             case '2':
+                $reglas     = array(
+                    'proyecto' => 'required',
+                    'uso' => 'required',
+                    'zona' => 'required',
+                    'altura' => 'required',
+                    'area' => 'required',
+                    'valor' => 'required',
+                    'responsableobra' => 'required',
+                    'ordenpago_id'=>'required'
+                );
+                $mensajes = array(
+                    'uso.required'         => 'Debe ingresar un uso',
+                    'zona.required'         => 'Debe ingresar el nombre de la Zonificación',
+                    'proyecto.required'         => 'Debe ingresar la proyecto',
+                    'altura.required'         => 'Debe ingresar la altura',
+                    'area.required'         => 'Debe ingresar el área',
+                    'valor.required'         => 'Debe ingresar el Valor de la Obra',
+                    'responsableobra.required'         => 'Debe ingresar el Nombre del Responsable de la Obra',
+                    'ordenpago_id.required' => 'Debe Ingresar el Nro. de Orden de Pago'
+                );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                $error = DB::transaction(function () use ($request) {
+                    $resolucion = Resolucion::create([
+                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
+                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        'zona' => strtoupper(Libreria::getParam($request->input('zona'))),                
+                        'altura' => strtoupper(Libreria::getParam($request->input('altura'))),                
+                        'uso' => strtoupper(Libreria::getParam($request->input('uso'))),                
+                        'proyecto' => strtoupper(Libreria::getParam($request->input('proyecto'))),                
+                        'responsableobra' => strtoupper(Libreria::getParam($request->input('responsableobra'))), 
+                        'area' => $request->input('area'),           
+                        'valor' => $request->input('valor'),           
+                        'dni' => Libreria::getParam($request->input('dni')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ordenpago_id' => $request->input('ordenpago_id'),       
+                        'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'tipo_id'=>$request->input('tipo'),     
+                        'numero'=>$request->input('numero'),     
+                    ]);
+                    
+                });
+                return is_null($error) ? "OK" : $error;
                 break;
             case '3':
                 $reglas     = array(
@@ -188,11 +279,29 @@ class ResolucionController extends Controller
                         'tipo_id'=>$request->input('tipo'),     
                         'numero'=>$request->input('numero'),     
                     ]);
-                    
                 });
                 return is_null($error) ? "OK" : $error;
                 break;
             case '4':
+                $error = DB::transaction(function () use ($request) {
+                    $resolucion = Resolucion::create([
+                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
+                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'observacion' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        'dni' => Libreria::getParam($request->input('dni')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ordenpago_id' => $request->input('ordenpago_id'),       
+                        'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'tipo_id'=>$request->input('tipo'),     
+                        'numero'=>$request->input('numero'),     
+                        'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
+                        'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),  
+                    ]);
+                    
+                });
+                return is_null($error) ? "OK" : $error;
                 break;
         }
         /* $error = DB::transaction(function () use ($request) {
@@ -251,49 +360,191 @@ class ResolucionController extends Controller
         $existe = Libreria::verificarExistencia($id, 'resolucion');
         if ($existe !== true) {
             return $existe;
-        }
+        }        
         $reglas     = array(
-            'nombres' => 'required|max:50',
-            'apellidopaterno' => 'required|max:50',
-            'apellidomaterno' => 'required|max:50',
-            'rol_id' => 'required',
-            'area_id'=>'required',
-            'cargo_id'=>'required',
+            'numero' => 'required',
+            'contribuyente' => 'required',
+            'tipo' => 'required',
+            'fechavencimiento'         => 'required',
+            'direccion'         => 'required',
         );
         $mensajes = array(
-            'nombre.required'         => 'Debe ingresar un nombre',
-            'apellidopaterno.required'         => 'Debe ingresar el apellido paterno',
-            'apellidomaterno.required'         => 'Debe ingresar el apellido materno',
-            'rol_id.required'         => 'Debe seleccionar al menos un Rol',
-            'dni.unique'=>'La persona con el DNI ingresado ya se encuentra registrado',
-            'dni.required'=>'El campo DNI es obligatorio',
-            'dni.min'=>'El DNI es incorrecto',
-            'dni.max'=>'El DNI es incorrecto',
-            'cargo_id.required'=>'El campo Cargo es obligatorio',
-            'area_id.required'=>'El campo Área es obligatorio',
+            'numero.required'         => 'Debe ingresar un numero',
+            'contribuyente.required'         => 'Debe ingresar el nombre del Propietario',
+            'tipo.required'         => 'Debe ingresar el tipo',
+            'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+            'direccion.required'         => 'Debe ingresar una direccion/ubicación',
         );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
-        $error = DB::transaction(function () use ($request, $id) {
-            $persona = resolucion::find($id);
-            $persona->update([
-                'apellidopaterno' => strtoupper($request->input('apellidopaterno')),
-                'apellidomaterno' => strtoupper($request->input('apellidomaterno')),
-                'nombres' => strtoupper($request->input('nombres')),
-                'dni' => strtoupper($request->input('dni')),           
-                'ruc' => strtoupper($request->input('ruc')),           
-                'direccion' => strtoupper($request->input('direccion')),
-                'email' => $request->input('email'),       
-                'telefono' => strtoupper($request->input('telefono')),
-                'cargo_id' => $request->input('cargo_id'),       
-                'area_id' => $request->input('area_id'), 
-            ]);
-            $persona->roles()->sync($request->rol_id);
-            
-        });
-        return is_null($error) ? "OK" : $error;
+        $resolucion = Resolucion::find($id);
+
+        switch ($request->tipo) {
+            case '1':
+                $reglas     = array(
+                    'funcionamiento' => 'required',
+                    'nombrecomercial' => 'required',
+                    'nroexpediente' => 'required',
+                    'viapublica' => 'required',
+                    'arearesolucion' => 'required',
+                );
+                $mensajes = array(
+                    'nroexpediente.required'         => 'Debe ingresar el Nro. de Expediente',
+                    'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                    'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                    'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                    'arearesolucion.required'         => 'Debe ingresar el área',
+                );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                $error = DB::transaction(function () use ($request, $resolucion) {
+                    $resolucion->update([
+                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
+                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
+                        'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
+                        'dni' => Libreria::getParam($request->input('dni')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ordenpago_id' => $request->input('ordenpago_id'),       
+                        'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'tipo_id'=>$request->input('tipo'),     
+                        'area' => $request->input('arearesolucion'),           
+                        'numero'=>$request->input('numero'),     
+                        'nroexpediente'=>strtoupper($request->input('nroexpediente')),     
+                        'nrocertificado'=>strtoupper($request->input('nrocertificado')),     
+                        'nombrecomercial'=>strtoupper($request->input('nombrecomercial')),     
+                        'viapublica'=>strtoupper($request->input('viapublica')),     
+                        'funcionamiento'=>strtoupper($request->input('funcionamiento')),     
+                    ]);
+                    
+                });
+                return is_null($error) ? "OK" : $error;
+                break;
+            case '2':
+                $reglas     = array(
+                    'proyecto' => 'required',
+                    'uso' => 'required',
+                    'zona' => 'required',
+                    'altura' => 'required',
+                    'area' => 'required',
+                    'valor' => 'required',
+                    'responsableobra' => 'required',
+                    'ordenpago_id'=>'required'
+                );
+                $mensajes = array(
+                    'uso.required'         => 'Debe ingresar un uso',
+                    'zona.required'         => 'Debe ingresar el nombre de la Zonificación',
+                    'proyecto.required'         => 'Debe ingresar la proyecto',
+                    'altura.required'         => 'Debe ingresar la altura',
+                    'area.required'         => 'Debe ingresar el área',
+                    'valor.required'         => 'Debe ingresar el Valor de la Obra',
+                    'responsableobra.required'         => 'Debe ingresar el Nombre del Responsable de la Obra',
+                    'ordenpago_id.required' => 'Debe Ingresar el Nro. de Orden de Pago'
+                );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                $error = DB::transaction(function () use ($request, $resolucion) {
+                    $resolucion->update([
+                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
+                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        //'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
+                        //'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
+                        //'localidad' => strtoupper(Libreria::getParam($request->input('localidad'))),                
+                        'zona' => strtoupper(Libreria::getParam($request->input('zona'))),                
+                        'altura' => strtoupper(Libreria::getParam($request->input('altura'))),                
+                        'uso' => strtoupper(Libreria::getParam($request->input('uso'))),                
+                        'proyecto' => strtoupper(Libreria::getParam($request->input('proyecto'))),                
+                        'responsableobra' => strtoupper(Libreria::getParam($request->input('responsableobra'))), 
+                        'area' => $request->input('area'),           
+                        'valor' => $request->input('valor'),           
+                        //'categoria' => strtoupper(Libreria::getParam($request->input('categoria'))),                
+                        'dni' => Libreria::getParam($request->input('dni')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ordenpago_id' => $request->input('ordenpago_id'),       
+                        'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'tipo_id'=>$request->input('tipo'),     
+                        'numero'=>$request->input('numero'),     
+                    ]);
+                    
+                });
+                return is_null($error) ? "OK" : $error;
+                break;
+            case '3':
+                $reglas     = array(
+                    'localidad' => 'required',
+                    'categoria' => 'required',
+                    'zona' => 'required',
+                    'razonsocial' => 'required',
+                    'girocomercial' => 'required',
+                );
+                $mensajes = array(
+                    'categoria.required'         => 'Debe ingresar una categoria',
+                    'zona.required'         => 'Debe ingresar el nombre de la zona',
+                    'localidad.required'         => 'Debe ingresar la localidad',
+                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
+                );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                $error = DB::transaction(function () use ($request, $resolucion) {
+                    $resolucion->update([
+                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
+                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
+                        'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
+                        'localidad' => strtoupper(Libreria::getParam($request->input('localidad'))),                
+                        'zona' => strtoupper(Libreria::getParam($request->input('zona'))),                
+                        'categoria' => strtoupper(Libreria::getParam($request->input('categoria'))),                
+                        'dni' => Libreria::getParam($request->input('dni')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ordenpago_id' => $request->input('ordenpago_id'),       
+                        'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'tipo_id'=>$request->input('tipo'),     
+                        'numero'=>$request->input('numero'),     
+                    ]);
+                    
+                });
+                return is_null($error) ? "OK" : $error;
+                break;
+            case '4':
+                $error = DB::transaction(function () use ($request) {
+                    $resolucion = Resolucion::create([
+                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
+                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
+                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'observacion' => strtoupper(Libreria::getParam($request->input('observacion'))),                
+                        'dni' => Libreria::getParam($request->input('dni')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ordenpago_id' => $request->input('ordenpago_id'),       
+                        'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'tipo_id'=>$request->input('tipo'),     
+                        'numero'=>$request->input('numero'),     
+                        'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
+                        'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),  
+                    ]);
+                    
+                });
+                return is_null($error) ? "OK" : $error;
+                break;
+        }
     }
 
     /**
@@ -339,13 +590,16 @@ class ResolucionController extends Controller
         $data = $resolucion;
         switch ($tipo) {
             case '1':
+                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.licencia', compact('data'))->setPaper('a4', 'portrait');
                 break;
             case '2':
+                $pdf = PDF::loadView('gestion.pdf.resolucion.edificaciones.edificaciones', compact('data'))->setPaper('a4', 'portrait');
                 break;
             case '3':
                 $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
                 break;
             case '4':
+                $pdf = PDF::loadView('gestion.pdf.resolucion.defensacivil.defensa', compact('data'))->setPaper('a4', 'portrait');
                 break;
         }
         $nombre = 'Resolucion:' . $resolucion->numero . '-' . $resolucion->fecha . '.pdf';

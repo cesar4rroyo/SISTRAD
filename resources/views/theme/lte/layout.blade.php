@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="{{asset("assets/$theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css")}}">
     <link rel="stylesheet" href="{{asset("select2/css/select2.min.css")}}">
     <link rel="stylesheet" href="{{asset("css/typeaheadjs.css")}}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
     
 </head>
 
@@ -52,15 +51,15 @@
     <script src="{{asset("select2/js/select2.min.js")}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/inputmask.js"></script>
+{{--     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/inputmask.js"></script> --}}
 
-    <script src={{asset("js/input-mask/jquery.inputmask.js")}}></script>
-    <script src={{asset("js/input-mask/jquery.inputmask.extensions.js")}}></script>
-    <script src={{asset("js/input-mask/jquery.inputmask.date.extensions.js")}}></script>
-    <script src={{asset("js/input-mask/jquery.inputmask.numeric.extensions.js")}}></script>
-    <script src={{asset("js/input-mask/jquery.inputmask.phone.extensions.js")}}></script>
-    <script src={{asset("js/input-mask/jquery.inputmask.regex.extensions.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask/jquery.inputmask.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask/jquery.inputmask.extensions.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask/jquery.inputmask.date.extensions.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask/jquery.inputmask.numeric.extensions.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask/jquery.inputmask.phone.extensions.js")}}></script>
+    <script src={{asset("js/input-mask/jquery.inputmask/jquery.inputmask.regex.extensions.js")}}></script>
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"

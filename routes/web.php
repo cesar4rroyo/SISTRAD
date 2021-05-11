@@ -143,16 +143,25 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('resolucion/pdf/{id}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
     Route::post('resolucion/generarNumero', 'Gestion\ResolucionController@generarNumero')->name('resolucion.generarnumero');
 
-    /* TIPO TRAMITE */
+    //Tipo tramite
     Route::post('tipotramitenodoc/buscar', 'Control\TipotramitenodocController@buscar')->name('tipotramitenodoc.buscar');
     Route::get('tipotramitenodoc/eliminar/{id}/{listarluego}', 'Control\TipotramitenodocController@eliminar')->name('tipotramitenodoc.eliminar');
     Route::resource('tipotramitenodoc', 'Control\TipotramitenodocController', array('except' => array('show')));
-    /* SUBTIPO TRAMITE */
+   //Sub tipo tramite
     Route::post('subtipotramitenodoc/buscar', 'Control\SubtipotramitenodocController@buscar')->name('subtipotramitenodoc.buscar');
     Route::get('subtipotramitenodoc/eliminar/{id}/{listarluego}', 'Control\SubtipotramitenodocController@eliminar')->name('subtipotramitenodoc.eliminar');
     Route::resource('subtipotramitenodoc', 'Control\SubtipotramitenodocController', array('except' => array('show')));
 
-    //FIN SEGUNDA PARTE
+    //SOLICITUD
+    Route::post('solicitud/buscar', 'Gestion\SolicitudController@buscar')->name('solicitud.buscar');
+    Route::get('solicitud/eliminar/{id}/{listarluego}', 'Gestion\SolicitudController@eliminar')->name('solicitud.eliminar');
+    Route::resource('solicitud', 'Gestion\SolicitudController', array('except' => array('show')));  
+    Route::get('solicitud/pdf/{id}', 'Gestion\SolicitudController@pdf')->name('solicitud.pdf');
+    Route::post('solicitud/generarNumero', 'Gestion\SolicitudController@generarNumero')->name('solicitud.generarnumero');
+
+    //FIN SOLICITUD
+
+//FIN SEGUNDA PARTE
 });
 
     

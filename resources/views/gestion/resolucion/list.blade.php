@@ -18,7 +18,7 @@
 		@foreach ($lista as $key => $value)
         <tr>
 			<td>{{ $contador }}</td>
-			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
+			<td>{{ date_format(date_create($value->fechaexpedicion), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
 			<td>{{ $value->tipotramite->descripcion }}</td>
 			<td>{{ $value->contribuyente }}</td>
@@ -31,13 +31,13 @@
 			<td>{{ ($value->inspeccion) ? $value->inspeccion->numero : '-' }}</td>
             <td>
 				<div class="btn-group">
-					{!! Form::button('<div class="fas fa-edit"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}
+					{!! Form::button('<div class="fas fa-edit"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}
 					<a href="{{route('resolucion.pdfResolucion', $value->id)}}" target="_blank">
 						<button class="btn btn-sm btn-primary">
-							<i class="fas fa-file-pdf"></i> PDF
+							<i class="fas fa-file-pdf"></i> 
 						</button>
 					</a>
-					{!! Form::button('<div class="fas fa-trash"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}
+					{!! Form::button('<div class="fas fa-trash"></div>', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}
 				</div>
             <td>
 		</tr>
