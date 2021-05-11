@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Admin\OpcionMenu;
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,5 +30,8 @@ class AppServiceProvider extends ServiceProvider
             $view->with('opciones', $opciones);
         });
         view()->share('theme', 'lte');
+
+        Carbon::setLocale(config('app.locale'));
+        
     }
 }

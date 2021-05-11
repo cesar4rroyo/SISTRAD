@@ -10,21 +10,22 @@
 			</div>
 		</div>
 		<div class="col-6 form-group">
+			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::select('tipo',$tipostramite, ($inspeccion)?$inspeccion->tipo_id:null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero();')) !!}
+			</div>
+		</div>
+		
+	</div>
+	<div class="row">
+		<div class="col-6 form-group">
 			{!! Form::label('numero', 'Número*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('numero', null, array('class' => 'form-control  input-xs', 'id' => 'numero')) !!}
 			</div>
 		</div>
-	</div>
-	<div class="row">
-
-		<div class="col-7 form-group">
-			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('tipo',$tipostramite, null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero();')) !!}
-			</div>
-		</div>
-		<div class="col-5 form-group">
+		
+		<div class="col-6 form-group">
 			{!! Form::label('ordenpago_id', 'Nro. Orden pago', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('ordenpago_id',$cboOrdenpago , null, array('class' => 'form-control  input-xs', 'id' => 'ordenpago_id')) !!}
@@ -88,7 +89,7 @@
 			</div>
 		</div>
 		<div class="form-group col-sm">
-			{!! Form::label('area', 'Área Construida(m2)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
+			{!! Form::label('area', 'Área Construida o del Establecimiento(m2)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::number('area', null, array('class' => 'form-control  input-xs', 'id' => 'area', 'step'=>'0.01')) !!}
 			</div>
@@ -99,22 +100,54 @@
 		<div class="col-lg-12 col-md-12 col-sm-12">
 			{!! Form::textarea('descripcion', null, array('class' => 'form-control  input-xs', 'id' => 'descripcion','rows'=>2 , 'style' =>'resize:none;')) !!}	
 	</div>
-  <div class="form-group">
-			{!! Form::label('file', 'Archivo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+	<div class="row">
+		<div class="form-group col-sm">
+			{!! Form::label('inspector', 'Inspector Designado*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::file('file', null, array('class' => 'form-control-file  input-xs', 'id' => 'file' )) !!}
+				{!! Form::text('inspector', null, array('class' => 'form-control  input-xs', 'id' => 'inspector')) !!}
 			</div>
+		</div>
+	  	<div class="form-group col-sm">
+				{!! Form::label('file', 'Archivo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::file('file', null, array('class' => 'form-control-file  input-xs', 'id' => 'file' )) !!}
+				</div>
+		</div>
+	</div>	
+	<div class="form-group">
+		{!! Form::label('conclusiones', 'Conclusiones*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::textarea('conclusiones', null, array('class' => 'form-control  input-xs', 'id' => 'conclusiones','rows'=>2 , 'style' =>'resize:none;')) !!}
+		</div>
 	</div>
+	@if (!$inspeccion)
+		<div class="row">
+			<div class="col-12 form-group">
+				{!! Form::label('hasObservacion', 'La Inspección realizada, ¿presenta observaciones?*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="row  form-group ml-2">
+					<div class="form-check form-check-inline">
+						{{Form::radio('hasObservacion', 'Si',  false , array("class"=>"form-check-input"))}}
+						<label class="form-check-label" for="Si">Si</label>
+					</div>
+					<div class="form-check form-check-inline">
+						{{Form::radio('hasObservacion', 'No', true , array("class"=>"form-check-input"))}}
+						<label class="form-check-label" for="No">No</label>
+					</div>
+				</div>			
+			</div>
+		</div>
+	@else
 	<div class="form-group">
 		{!! Form::label('observacion', 'Observacion*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
 			{!! Form::textarea('observacion', null, array('class' => 'form-control  input-xs', 'id' => 'observacion','rows'=>2 , 'style' =>'resize:none;')) !!}
 		</div>
 	</div>
-	<div class="form-group">
-		{!! Form::label('conclusiones', 'Conclusiones*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+	@endif	
+	<div class="form-group d-none" id="divObservacion">
+		{!! Form::label('observacion', 'Observacion*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
-			{!! Form::textarea('conclusiones', null, array('class' => 'form-control  input-xs', 'id' => 'conclusiones','rows'=>2 , 'style' =>'resize:none;')) !!}
+			{!! Form::textarea('observacion', null, array('class' => 'form-control  input-xs', 'id' => 'observacion','rows'=>2 , 'style' =>'resize:none;')) !!}
 		</div>
 	</div>
     <div class="form-group">
@@ -131,6 +164,20 @@ $(document).ready(function() {
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').inputmask("99999999999");
 	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni"]').inputmask("99999999");
+	$("input[name=hasObservacion]").change(function () {	
+		var valor = $(this).val(); 
+		verificarObservacion(valor);
+	});
+
+	function verificarObservacion(valor){
+		console.log(valor);
+		if(valor == 'Si'){
+			$('#divObservacion').removeClass('d-none');
+		}else {
+			$('#divObservacion').addClass('d-none');
+
+		}
+	}
 	
 	var tipotogle = $('#toggletipo').val();
 	showTipo(tipotogle);

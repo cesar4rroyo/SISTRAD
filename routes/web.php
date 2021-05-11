@@ -132,6 +132,8 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('inspeccion/pdf/{id}', 'Gestion\InspeccionController@pdfInspeccion')->name('inspeccion.pdfInspeccion');
     Route::get("inspeccion/archivo/{nombre}",'Gestion\InspeccionController@descargar')->name('inspeccion.descargar');
     Route::post('inspeccion/generarNumero', 'Gestion\InspeccionController@generarNumero')->name('inspeccion.generarnumero');
+    Route::put('inspeccion/observaciones', 'Gestion\InspeccionController@levantarObservaciones')->name('inspeccion.levantarObservaciones');
+
     //FIN INSPECCION
 
     /* RESOLUCIÓN*/
@@ -151,6 +153,15 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('solicitud/generarNumero', 'Gestion\SolicitudController@generarNumero')->name('solicitud.generarnumero');
 
     //FIN SOLICITUD
+
+    //CARTA
+    Route::post('carta/buscar', 'Gestion\CartaController@buscar')->name('carta.buscar');
+    Route::get('carta/eliminar/{id}/{listarluego}', 'Gestion\CartaController@eliminar')->name('carta.eliminar');
+    Route::resource('carta', 'Gestion\CartaController', array('except' => array('show')));  
+    Route::get('carta/pdf/{id}', 'Gestion\CartaController@pdf')->name('carta.pdf');
+    Route::post('carta/generarNumero', 'Gestion\CartaController@generarNumero')->name('carta.generarnumero');
+
+    //FIN CARTA
 
 //FIN SEGUNDA PARTE
 });

@@ -106,6 +106,13 @@ class OpcionMenuSeeder extends Seeder
             'orden' => 5,
             'grupomenu_id' => 1
         ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Notificación o Carta',
+            'icono' => 'far fa-file-invoice',
+            'link' => 'carta',
+            'orden' => 6,
+            'grupomenu_id' => 1
+        ]);
        /*  DB::table('opcionmenu')->insert([
             'descripcion' => 'Solicitud o Expediente',
             'icono' => 'far fa-file-alt',
