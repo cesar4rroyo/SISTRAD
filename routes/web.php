@@ -143,8 +143,16 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('resolucion/pdf/{id}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
     Route::post('resolucion/generarNumero', 'Gestion\ResolucionController@generarNumero')->name('resolucion.generarnumero');
 
+    /* TIPO TRAMITE */
+    Route::post('tipotramitenodoc/buscar', 'Control\TipotramitenodocController@buscar')->name('tipotramitenodoc.buscar');
+    Route::get('tipotramitenodoc/eliminar/{id}/{listarluego}', 'Control\TipotramitenodocController@eliminar')->name('tipotramitenodoc.eliminar');
+    Route::resource('tipotramitenodoc', 'Control\TipotramitenodocController', array('except' => array('show')));
+    /* SUBTIPO TRAMITE */
+    Route::post('subtipotramitenodoc/buscar', 'Control\SubtipotramitenodocController@buscar')->name('subtipotramitenodoc.buscar');
+    Route::get('subtipotramitenodoc/eliminar/{id}/{listarluego}', 'Control\SubtipotramitenodocController@eliminar')->name('subtipotramitenodoc.eliminar');
+    Route::resource('subtipotramitenodoc', 'Control\SubtipotramitenodocController', array('except' => array('show')));
 
-//FIN SEGUNDA PARTE
+    //FIN SEGUNDA PARTE
 });
 
     

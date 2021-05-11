@@ -76,6 +76,20 @@ class OpcionMenuSeeder extends Seeder
             'orden' =>7,
             'grupomenu_id' => 2
         ]); 
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Tipo de trámite',
+            'icono' => 'far fa-file-alt',
+            'link' => 'tipotramitenodoc',
+            'orden' =>8,
+            'grupomenu_id' => 2
+        ]); 
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Subtipo de trámite',
+            'icono' => 'far fa-file-alt',
+            'link' => 'subtipotramitenodoc',
+            'orden' =>9,
+            'grupomenu_id' => 2
+        ]); 
         //end Control
         //start Gestion documentos        
         DB::table('opcionmenu')->insert([
