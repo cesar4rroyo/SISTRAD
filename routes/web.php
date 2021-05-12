@@ -113,9 +113,12 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     
     Route::get('tramite/ticket/pdf', 'Gestion\TramiteController@generarTicket')->name('tramite.ticket');
 
-
+    //tramite reportes
     Route::resource('reportetramite', 'Reportes\ReportetramiteController', array('except' => array('show')));
     Route::get('reportetramite/pdftramites', 'Reportes\ReportetramiteController@pdfTramites')->name('reportetramite.pdftramites');
+    //inspeccion reporte
+    Route::resource('reporteInspeccion', 'Reportes\ReporteInspeccionController', array('except' => array('show')));
+    Route::get('reporteInspeccion/pdfInspeccion', 'Reportes\ReporteInspeccionController@pdfInspeccion')->name('reporteinspeccion.pdfInspeccion');
 
 //SEGUNDA PARTE 
 

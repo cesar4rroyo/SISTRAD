@@ -8,7 +8,7 @@
     @if (session("mensaje"))
     <div class="alert alert-success alert-dismissible" data-auto-dismiss="3000">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h4><i class="icon fa fa-check"></i> Mensaje sistema Biblioteca</h4>
+        <h4><i class="icon fa fa-check"></i> Mensaje</h4>
         <ul>
             <li>{{ session("mensaje") }}</li>
         </ul>
@@ -56,3 +56,35 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('.rol_persona').on('change', function () {
+            var data = {
+                persona_id: $(this).data('personaid'),
+                rol_id: $(this).val(),
+                _token: $('input[name=_token]').val()
+            };
+            if ($(this).is(':checked')) {
+                data.estado = 1
+            } else {
+                data.estado = 0
+            }
+            ajaxRequest('admin/rolpersona', data);
+        });
+    }); 
+
+    function ajaxRequest(url, data) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            success: function (respuesta) {
+                Hotel.notificaciones(respuesta.respuesta, 'Sistema', 'success');
+            },
+            error: function (e) {
+                console.log(e);
+            }
+
+        });
+    }
+</script>

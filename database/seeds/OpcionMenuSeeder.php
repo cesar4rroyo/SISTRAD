@@ -183,6 +183,13 @@ class OpcionMenuSeeder extends Seeder
             'orden' => 1,
             'grupomenu_id' => 5
         ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Reporte Inspección',
+            'icono' => 'fas fa-chart-line',
+            'link' => 'reporteInspeccion',
+            'orden' => 2,
+            'grupomenu_id' => 5
+        ]);
 
         //end Grupo Reportes
 

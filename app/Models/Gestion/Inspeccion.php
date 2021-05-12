@@ -30,9 +30,14 @@ class Inspeccion extends Model
 	}
 
 	public function getFullInspeccionAttribute()
-{
-    return $this->tipotramite->descripcion . ' - ' . $this->numero;
-}
+	{
+		return $this->tipotramite->descripcion . ' - ' . $this->numero;
+	}
+
+	public function carta()
+	{
+		return $this->hasMany(Carta::class);
+	}
 
     public function scopelistar($query, $numero, $fecinicio, $fecfin, $contribuyente, $tipo)
 	{
