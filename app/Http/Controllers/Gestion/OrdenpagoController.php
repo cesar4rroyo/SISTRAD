@@ -10,7 +10,9 @@ use App\Models\Gestion\Ordenpago;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Librerias\EnLetras;
+use App\Models\Control\Subtipotramitenodoc;
 use App\Models\Gestion\Tipotramitenodoc;
+use App\Models\Gestion\Tramite;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -64,7 +66,8 @@ class OrdenpagoController extends Controller
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'DNI/RUC', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Monto', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -107,11 +110,12 @@ class OrdenpagoController extends Controller
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $entidad  = 'ordenpago';
         $ordenpago = null;
-        $tipostramite = ['' => 'Seleccione'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
+        $tipostramite = ["" => 'Seleccione'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
+        $subtipos = null;
         $formData = array('ordenpago.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('ordenpago', 'formData', 'entidad', 'boton', 'listar' ,'tipostramite'));
+        return view($this->folderview.'.mant')->with(compact('ordenpago', 'formData', 'entidad', 'boton', 'listar' ,'tipostramite','subtipos'));
     }
 
     /**
@@ -125,11 +129,15 @@ class OrdenpagoController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
             'numero' => 'required',
-            'tipo' => 'required',
+            'tipotramite' => 'required',
             'monto' => 'required|numeric',
             'dni_ruc' => 'required',
             'contribuyente' => 'required',
-            'fecha' => 'required'
+            'fecha' => 'required',
+            'estado' => 'required',
+            'numerooperacion' => 'required_if:estado,==,confirmado',
+            'fechaoperacion' => 'required_if:estado,==,confirmado',
+            'tramiteref' => 'required_if:estado,==,confirmado',
         );
         $mensajes = array(
             'contribuyente.required'         => 'Debe ingresar el nombre del contribuyente'
@@ -142,13 +150,31 @@ class OrdenpagoController extends Controller
         $error = DB::transaction(function() use($request){
             $ordenpago = new Ordenpago();
             $ordenpago->numero          = Libreria::getParam($request->input('numero'));
-            $ordenpago->tipo_id            = strtoupper(Libreria::getParam($request->input('tipo')));
+            $ordenpago->tipo_id            = strtoupper(Libreria::getParam($request->input('tipotramite')));
             $ordenpago->dni_ruc         = Libreria::getParam($request->input('dni_ruc'));
             $ordenpago->contribuyente   = Libreria::getParam($request->input('contribuyente'));
             $ordenpago->direccion       = Libreria::getParam($request->input('direccion'));
             $ordenpago->fecha           = $request->input('fecha');
-            $ordenpago->descripcion     = strtoupper($request->input('descripcion'));
             $ordenpago->monto           = $request->input('monto');
+            
+            $ordenpago->representante   = strtoupper($request->input('representante'));
+            $ordenpago->estado          = $request->input('estado');
+            
+            if($ordenpago->estado == 'confirmado'){
+                $ordenpago->descripcion     = strtoupper($request->input('descripcion'));
+                $ordenpago->tramiteref_id  = $request->input('tramiteref');
+                $ordenpago->numerooperacion  = $request->input('numerooperacion');
+                $ordenpago->fechaoperacion      = $request->input('fechaoperacion');
+                $ordenpago->cuenta      = $request->input('cuenta');
+                if($request->hasFile('file')){
+                    $file = $request->file('file');
+                    $extension = $request->file('file')->getClientOriginalExtension();
+                    $nombre =  time().'.'.$extension;
+                    \Storage::disk('local')->put('public/archivos2/'.$nombre,  \File::get($file));
+                    // $archivo = $request->file('file')->storeAs('public/archivos2', time() .  '.' .$extension);
+                    $ordenpago->imagen = $nombre;
+                }
+            }
             $ordenpago->save();
         });
 
@@ -184,7 +210,10 @@ class OrdenpagoController extends Controller
         $formData = array('ordenpago.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('ordenpago', 'formData', 'entidad', 'boton', 'listar'));
+        $tramites = ["" => 'Seleccione'] +Tramite::pluck('numero', 'id')->all();
+        $tipostramite = ["" => 'Seleccione'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
+        $subtipos =["" => 'Seleccione'] + Subtipotramitenodoc::where('tipotramitenodoc_id', $ordenpago->tipo_id)->pluck('descripcion','id')->all();
+        return view($this->folderview.'.mant')->with(compact('ordenpago', 'formData', 'entidad', 'boton', 'listar','tipostramite','subtipos','tramites'));
     }
 
     /**
@@ -201,9 +230,20 @@ class OrdenpagoController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $reglas     = array('descripcion' => 'required');
+        $reglas     = array(
+            'numero' => 'required',
+            'tipotramite' => 'required',
+            'monto' => 'required|numeric',
+            'dni_ruc' => 'required',
+            'contribuyente' => 'required',
+            'fecha' => 'required',
+            'estado' => 'required',
+            'numerooperacion' => 'required_if:estado,==,confirmado',
+            'fechaoperacion' => 'required_if:estado,==,confirmado',
+            'tramiteref' => 'required_if:estado,==,confirmado',
+        );
         $mensajes = array(
-            'descripcion.required'         => 'Debe ingresar una descripcion'
+            'contribuyente.required'         => 'Debe ingresar el nombre del contribuyente'
             );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
@@ -211,7 +251,32 @@ class OrdenpagoController extends Controller
         } 
         $error = DB::transaction(function() use($request, $id){
             $ordenpago = Ordenpago::find($id);
-            $ordenpago->descripcion = strtoupper($request->input('descripcion'));
+            $ordenpago->numero          = Libreria::getParam($request->input('numero'));
+            $ordenpago->tipo_id            = strtoupper(Libreria::getParam($request->input('tipotramite')));
+            $ordenpago->dni_ruc         = Libreria::getParam($request->input('dni_ruc'));
+            $ordenpago->contribuyente   = Libreria::getParam($request->input('contribuyente'));
+            $ordenpago->direccion       = Libreria::getParam($request->input('direccion'));
+            // $ordenpago->fecha           = $request->input('fecha');
+            $ordenpago->monto           = $request->input('monto');
+            
+            $ordenpago->representante   = strtoupper($request->input('representante'));
+            $ordenpago->estado          = $request->input('estado');
+            
+            if($ordenpago->estado == 'confirmado'){
+                $ordenpago->descripcion     = strtoupper($request->input('descripcion'));
+                $ordenpago->tramiteref_id  = $request->input('tramiteref');
+                $ordenpago->numerooperacion  = $request->input('numerooperacion');
+                $ordenpago->fechaoperacion      = $request->input('fechaoperacion');
+                $ordenpago->cuenta      = $request->input('cuenta');
+                if($request->hasFile('file')){
+                    $file = $request->file('file');
+                    $extension = $request->file('file')->getClientOriginalExtension();
+                    $nombre =  time().'.'.$extension;
+                    \Storage::disk('local')->put('public/archivos2/'.$nombre,  \File::get($file));
+                    // $archivo = $request->file('file')->storeAs('public/archivos2', time() .  '.' .$extension);
+                    $ordenpago->imagen = $nombre;
+                }
+            }
             $ordenpago->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -278,4 +343,6 @@ class OrdenpagoController extends Controller
         $numerotramite = Ordenpago::NumeroSigue($tipo);
         echo $numerotramite;
     }
+
+    
 }

@@ -121,7 +121,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::resource('ordenpago', 'Gestion\OrdenpagoController', array('except' => array('show')));  
     Route::get('ordenpago/pdf/{id}', 'Gestion\OrdenpagoController@pdf')->name('ordenpago.pdf');
     Route::post('ordenpago/generarNumero', 'Gestion\OrdenpagoController@generarNumero')->name('ordenpago.generarnumero');
-
+    Route::get('ordenpago/listarsubtipostramite', 'Control\SubtipotramitenodocController@listarSubtipos')->name('ordenpago.listarsubtipos');
     //FIN ORDEN PAGO
 
     //INSPECCION

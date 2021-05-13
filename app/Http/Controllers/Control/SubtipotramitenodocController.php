@@ -248,4 +248,15 @@ class SubtipotramitenodocController extends Controller
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
     
+
+    public function listarSubtipos(Request $request){
+        try {    
+            $tipotramite_id = $request->input('tipotramite_id');
+            $subtipos = Subtipotramitenodoc::where('tipotramitenodoc_id', $tipotramite_id)->get();
+            $response = ['data' => $subtipos];
+        } catch (\Exception $exception) {
+            return response()->json([ 'message' => 'There was an error retrieving the records' ], 500);
+        }
+        return response()->json($response);
+    }
 }
