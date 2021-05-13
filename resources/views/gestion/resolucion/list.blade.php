@@ -33,10 +33,17 @@
 				<div class="btn-group">
 					{!! Form::button('<div class="fas fa-edit"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}
 					<a href="{{route('resolucion.pdfResolucion', $value->id)}}" target="_blank">
-						<button class="btn btn-sm btn-primary">
+						<button class="btn btn-sm btn-primary" title="FORMATO PDF">
 							<i class="fas fa-file-pdf"></i> 
 						</button>
 					</a>
+					@if ($value->tipo_id=='3')
+					<a href="{{route('resolucion.pdfResolucion', ['id'=>$value->id, 'blanco'=>'si'])}}" target="_blank">
+						<button class="btn btn-sm btn-secondary" title="FORMATO CARTILLA">
+							<i class="fas fa-file-word"></i> 
+						</button>
+					</a>
+					@endif
 					{!! Form::button('<div class="fas fa-trash"></div>', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}
 				</div>
             <td>

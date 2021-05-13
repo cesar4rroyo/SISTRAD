@@ -1,11 +1,5 @@
 <!-- Content Header (Page header) -->
-
-
-@extends("theme.$theme.layout")
-
-@section('content')
-<div class="container">
-
+<div class="container" id="container">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -72,6 +66,4 @@
         </div>
     </div>
 </div>
-@endsection
-
 {{--  --}}

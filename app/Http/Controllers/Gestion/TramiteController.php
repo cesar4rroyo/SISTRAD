@@ -58,21 +58,20 @@ class TramiteController extends Controller
      */
     public function buscar(Request $request)
     {
-        // dd($request->all());
         $usuario = session()->get('personal');
         $personal_id = $usuario['id'];
         $tipo = $request->input('tipos');
         $area_actual = (session()->get('area')['area']['descripcion']) ?? 'MESA DE PARTES';
         $area_id = $usuario['area_id'];
         $pagina           = $request->input('page');
-        $filas            = $request->input('filas');
+        $filas            = ($request->filas) ? $request->filas : 10;
         $entidad          = 'tramite';
         $modo             = Libreria::getParam($request->input('modo'));
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
-        $nombre           = Libreria::getParam($request->input('numero'));
-        $remitente           = Libreria::getParam($request->input('nombresearch'));
-        $resultado        = Tramite::with('seguimientos', 'procedimiento.rutas.areainicio', 'procedimiento.rutas.areafin', 'latestSeguimiento')->listar2($nombre , $fecinicio, $fecfin, $modo, $area_id, $personal_id, $tipo, $remitente);
+        $numero           = Libreria::getParam($request->input('numero'));
+        $remitente           = Libreria::getParam($request->input('remisor'));
+        $resultado        = Tramite::with('seguimientos', 'procedimiento.rutas.areainicio', 'procedimiento.rutas.areafin', 'latestSeguimiento')->listar2($numero , $fecinicio, $fecfin, $modo, $area_id, $personal_id, $tipo, $remitente);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
