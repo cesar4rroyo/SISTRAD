@@ -431,7 +431,7 @@ class ResolucionController extends Controller
                 $reglas     = array(
                     'proyecto' => 'required',
                     'uso' => 'required',
-                    'zona' => 'required',
+                    'zonificacion' => 'required',
                     'altura' => 'required',
                     'area' => 'required',
                     'valor' => 'required',
@@ -440,7 +440,7 @@ class ResolucionController extends Controller
                 );
                 $mensajes = array(
                     'uso.required'         => 'Debe ingresar un uso',
-                    'zona.required'         => 'Debe ingresar el nombre de la Zonificación',
+                    'zonificacion.required'         => 'Debe ingresar el nombre de la Zonificación',
                     'proyecto.required'         => 'Debe ingresar la proyecto',
                     'altura.required'         => 'Debe ingresar la altura',
                     'area.required'         => 'Debe ingresar el área',
@@ -462,7 +462,7 @@ class ResolucionController extends Controller
                         //'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
                         //'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
                         //'localidad' => strtoupper(Libreria::getParam($request->input('localidad'))),                
-                        'zona' => strtoupper(Libreria::getParam($request->input('zona'))),                
+                        'zona' => strtoupper(Libreria::getParam($request->input('zonificacion'))),                
                         'altura' => strtoupper(Libreria::getParam($request->input('altura'))),                
                         'uso' => strtoupper(Libreria::getParam($request->input('uso'))),                
                         'proyecto' => strtoupper(Libreria::getParam($request->input('proyecto'))),                
@@ -584,7 +584,7 @@ class ResolucionController extends Controller
     }
 
 
-    public function pdfResolucion($id){
+    public function pdfResolucion($id, $blanco=null){
         $resolucion = Resolucion::with('ordenpago', 'inspeccion')->find($id);
         $tipo = $resolucion->tipo_id;
         $data = $resolucion;
@@ -596,7 +596,11 @@ class ResolucionController extends Controller
                 $pdf = PDF::loadView('gestion.pdf.resolucion.edificaciones.edificaciones', compact('data'))->setPaper('a4', 'portrait');
                 break;
             case '3':
-                $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
+                if(!is_null($blanco)){
+                    $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad2', compact('data'))->setPaper('a4', 'landscape');
+                }else{
+                    $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
+                }
                 break;
             case '4':
                 $pdf = PDF::loadView('gestion.pdf.resolucion.defensacivil.defensa', compact('data'))->setPaper('a4', 'portrait');

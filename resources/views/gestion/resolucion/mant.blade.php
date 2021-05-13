@@ -79,7 +79,7 @@
 			<div class="form-group col-sm">
 				{!! Form::label('zonificacion', 'Zonificación*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblzonificacion')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
-					{!! Form::text('zona', null, array('class' => 'form-control  input-xs', 'id' => 'zonificacion', 'placeholder'=>'Ejm. R.D.M')) !!}
+					{!! Form::text('zonificacion', null, array('class' => 'form-control  input-xs', 'id' => 'zonificacion', 'placeholder'=>'Ejm. R.D.M')) !!}
 				</div>
 			</div>
 			<div class="form-group col-sm">

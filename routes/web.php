@@ -149,7 +149,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::resource('resolucion', 'Gestion\ResolucionController', array('except' => array('show')));
     Route::get('resolucion/listarInspeccion', 'Gestion\ResolucionController@listarInspeccion')->name('resolucion.listarInspeccion');
     Route::get('resolucion/listarOrdenpago', 'Gestion\ResolucionController@listarOrdenpago')->name('resolucion.listarOrdenpago');
-    Route::get('resolucion/pdf/{id}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
+    Route::get('resolucion/pdf/{id}/{blanco?}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
     Route::post('resolucion/generarNumero', 'Gestion\ResolucionController@generarNumero')->name('resolucion.generarnumero');
 
     //SOLICITUD
