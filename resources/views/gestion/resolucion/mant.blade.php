@@ -26,7 +26,7 @@
 		<div class="col-6 form-group">
 			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('tipo',$tipostramite, $toggletipo, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero();')) !!}
+				{!! Form::select('tipo',$tipostramite, $toggletipo, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero(); cambiarsubtipos();')) !!}
 			</div>
 		</div>
 		<div class="col-3 form-group">
@@ -111,6 +111,23 @@
 		</div>
 	</div>
 	<div class="d-none" id="divLicenciasAutorizaciones">
+		<div class="row">
+			@if($resolucion)
+				<div class="col-9 form-group">
+					{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						{!! Form::select('subtipotramite',  $subtipos, $resolucion->subtipo_id?$resolucion->subtipo_id:'', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' )) !!}
+					</div>
+				</div>
+				@else
+				<div class="col-9 form-group">
+					{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						{!! Form::select('subtipotramite',  ['' => '--Elije un subtipo'], null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' )) !!}
+					</div>
+				</div>
+				@endif
+		</div>
 		<div class="row">
 			<div class="form-group col-sm">
 				{!! Form::label('nombrecomercial', 'Nombre Comercial*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnombrecomercial')) !!}
@@ -378,5 +395,28 @@ function generarNumero(){
 			}
 		});
 	}
+	function cambiarsubtipos(){
+	  var tipo_id =	$('#tipo_id').val();
+	  if(tipo_id.length > 0){
+		  $.ajax({
+                url: "{{ route('ordenpago.listarsubtipos') }}",
+                type: 'GET',
+                data: { tipo_id },
+                dataType: 'json',
+                success: function (response) {
+					var areaselect = $('#subtipotramite');
+					areaselect.empty();
+                    areaselect.append('<option value="">--Elije un subtipo</option>')
+                    $.each(response.data, function (key, value) {
+                        areaselect.append("<option value='" + value.id + "'>" + value.descripcion + "</option>");
+                    });
+                },
+                error : function(){
+                    alert('Hubo un error obteniendo las areas!');
+                }
+            });
+	  }
+	}
+
 </script>
 

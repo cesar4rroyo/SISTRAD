@@ -27,6 +27,7 @@ class AddColumnsToResolucion extends Migration
             $table->string('viapublica')->default('No');
             $table->integer('solicitud_id')->unsigned()->nullable();
             $table->foreign('solicitud_id')->references('id')->on('solicitud')->onUpdate('restrict')->onDelete('restrict');
+            
         });
     }
 

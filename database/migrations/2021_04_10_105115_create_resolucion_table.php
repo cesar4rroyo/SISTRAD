@@ -34,6 +34,8 @@ class CreateResolucionTable extends Migration
             $table->foreign('ordenpago_id')->references('id')->on('ordenpago')->onDelete('restrict')->onUpdate('restrict');
             $table->integer('tipo_id')->unsigned()->nullable();
             $table->foreign('tipo_id')->references('id')->on('tipotramitenodoc')->onUpdate('restrict')->onDelete('restrict');
+            $table->integer('subtipo_id')->unsigned()->nullable();
+            $table->foreign('subtipo_id')->references('id')->on('subtipotramitenodoc')->onUpdate('restrict')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();
 

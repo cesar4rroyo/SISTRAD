@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Gestion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Librerias\Libreria;
+use App\Models\Control\Subtipotramitenodoc;
 use App\Models\Gestion\Inspeccion;
 use App\Models\Gestion\Ordenpago;
 use App\Models\Gestion\Resolucion;
@@ -114,7 +115,8 @@ class ResolucionController extends Controller
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar';
-        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
+        $subtipos=null;
+        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboInspeccion', 'cboOrdenpago', 'toggletipo', 'subtipos'));
     }
 
     /**
@@ -125,7 +127,6 @@ class ResolucionController extends Controller
      */
     public function store(Request $request)
     {
-        
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
             'numero' => 'required',
@@ -145,6 +146,7 @@ class ResolucionController extends Controller
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
+        dd($request->tipo);
         switch ($request->tipo) {
             case '1':
                 $reglas     = array(
@@ -153,6 +155,7 @@ class ResolucionController extends Controller
                     'nroexpediente' => 'required',
                     'viapublica' => 'required',
                     'arearesolucion' => 'required',
+                    'subtipotramite' => 'required',
                 );
                 $mensajes = array(
                     'nroexpediente.required'         => 'Debe ingresar el Nro. de Expediente',
@@ -160,6 +163,7 @@ class ResolucionController extends Controller
                     'viapublica.required'         => 'Debe especificar si usa la vía pública',
                     'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
                     'arearesolucion.required'         => 'Debe ingresar el área',
+                    'subtipotramite.required'         => 'Debe ingresar el Subtipo',
                 );
                 $validacion = Validator::make($request->all(), $reglas, $mensajes);
                 if ($validacion->fails()) {
@@ -345,6 +349,7 @@ class ResolucionController extends Controller
         $formData = array('resolucion.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
+        $subtipos =["" => 'Seleccione'] + Subtipotramitenodoc::where('tipotramitenodoc_id', $resolucion->tipo_id)->pluck('descripcion','id')->all();
         return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
     }
 

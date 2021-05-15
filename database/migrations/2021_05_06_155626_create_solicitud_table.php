@@ -18,7 +18,6 @@ class CreateSolicitudTable extends Migration
             $table->datetime('fecha')->nullable();
             $table->string('numero')->nullable();
             $table->string('descripcion')->nullable();            
-            $table->string('subtipo')->nullable();
             $table->string('funcionario')->nullable();
             $table->string('telefono')->nullable();
             $table->string('contribuyente')->nullable();
