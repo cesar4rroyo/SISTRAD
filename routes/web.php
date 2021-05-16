@@ -119,6 +119,9 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     //inspeccion reporte
     Route::resource('reporteInspeccion', 'Reportes\ReporteInspeccionController', array('except' => array('show')));
     Route::get('reporteInspeccion/pdfInspeccion', 'Reportes\ReporteInspeccionController@pdfInspeccion')->name('reporteinspeccion.pdfInspeccion');
+    //resolucion reporte
+    Route::resource('reporteResolucion', 'Reportes\ReporteResolucionController', array('except' => array('show')));
+    Route::get('reporteResolucion/pdfResolucion', 'Reportes\ReporteResolucionController@pdfResolucion')->name('reporteresolucion.pdfResolucion');
 
 //SEGUNDA PARTE 
 
@@ -139,6 +142,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('inspeccion/pdf/{id}', 'Gestion\InspeccionController@pdfInspeccion')->name('inspeccion.pdfInspeccion');
     Route::get("inspeccion/archivo/{nombre}",'Gestion\InspeccionController@descargar')->name('inspeccion.descargar');
     Route::post('inspeccion/generarNumero', 'Gestion\InspeccionController@generarNumero')->name('inspeccion.generarnumero');
+    Route::post('inspeccion/getInfo', 'Gestion\InspeccionController@getInfo')->name('inspeccion.getInfo');
     Route::put('inspeccion/observaciones', 'Gestion\InspeccionController@levantarObservaciones')->name('inspeccion.levantarObservaciones');
 
     //FIN INSPECCION
@@ -149,8 +153,9 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::resource('resolucion', 'Gestion\ResolucionController', array('except' => array('show')));
     Route::get('resolucion/listarInspeccion', 'Gestion\ResolucionController@listarInspeccion')->name('resolucion.listarInspeccion');
     Route::get('resolucion/listarOrdenpago', 'Gestion\ResolucionController@listarOrdenpago')->name('resolucion.listarOrdenpago');
-    Route::get('resolucion/pdf/{id}/{blanco?}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
+    Route::get('resolucion/pdf/{id}/{blanco?}/{subtipo?}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
     Route::post('resolucion/generarNumero', 'Gestion\ResolucionController@generarNumero')->name('resolucion.generarnumero');
+    Route::post('resolucion/generarNumero2', 'Gestion\ResolucionController@generarNumero2')->name('resolucion.generarnumero2');
 
     //Tipo tramite
     Route::post('tipotramitenodoc/buscar', 'Control\TipotramitenodocController@buscar')->name('tipotramitenodoc.buscar');

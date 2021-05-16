@@ -24,7 +24,7 @@ class SubTipoTramiteSeeder extends Seeder
         ]);
         //id=3
         DB::table('subtipotramitenodoc')->insert([
-            'descripcion' => 'AUTORIZACION PARA BODEGAS',   
+            'descripcion' => 'AUTORIZACION DE FUNCIONAMIENTO DE BODEGAS',   
             'tipotramitenodoc_id'=>1,          
         ]);
     }

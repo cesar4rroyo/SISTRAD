@@ -16,26 +16,58 @@
 			</div>
 		</div>
 		<div class="col-4 form-group">
-			{!! Form::label('numero', 'Número de Resolución*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('numero', null, array('class' => 'form-control  input-xs', 'id' => 'numero')) !!}
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-6 form-group">
 			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('tipo',$tipostramite, $toggletipo, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero(); cambiarsubtipos();')) !!}
 			</div>
 		</div>
-		<div class="col-3 form-group">
+	</div>
+	<div class="row">
+		@if($resolucion)
+			<div class="col-8 form-group">
+				{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::select('subtipotramite',  $subtipos, $resolucion->subtipo_id?$resolucion->subtipo_id:'', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite', 'onchange'=>'handleChangeSubtipo();' )) !!}
+				</div>
+			</div>
+			@else
+			<div class="col-8 form-group">
+				{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::select('subtipotramite',  ['' => '--Elije un subtipo'], null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' , 'onchange'=>'handleChangeSubtipo();' )) !!}
+				</div>
+			</div>
+			@endif
+			@if ($resolucion)
+			<div class=" form-group col-4">
+				{!! Form::label('tramiteref', 'Tramite ref.', array('class' => 'control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::select('tramiteref', $tramites, $resolucion->tramiteref_id,array('class' => 'form-control form-control-sm input-xs', 'id' => 'tramiteref')) !!}
+				</div>
+			</div>	
+			@else
+			<div class=" form-group col-4">
+				{!! Form::label('tramiteref', 'Tramite ref.', array('class' => 'control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::select('tramiteref', [""=>"Seleccione"] , "",array('class' => 'form-control form-control-sm input-xs', 'id' => 'tramiteref')) !!}
+				</div>
+			</div>	
+			@endif
+	</div>
+	<div class="row">
+		<div class="col-4 form-group">
+			{!! Form::label('numero', 'Número de Resolución*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnrodocumento')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('numero', null, array('class' => 'form-control  input-xs', 'id' => 'numero')) !!}
+			</div>
+		</div>
+		<div class="col-4 form-group">
 			{!! Form::label('ordenpago_id', 'Nro. Orden pago', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('ordenpago_id',$cboOrdenpago , null, array('class' => 'form-control  input-xs', 'id' => 'ordenpago_id')) !!}
 			</div>
 		</div>
-		<div class="col-3 form-group">
+		<div class="col-4 form-group">
 			{!! Form::label('inspeccion_id', 'Nro. Inspección', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('inspeccion_id',$cboInspeccion , null, array('class' => 'form-control  input-xs', 'id' => 'inspeccion_id')) !!}
@@ -111,24 +143,35 @@
 		</div>
 	</div>
 	<div class="d-none" id="divLicenciasAutorizaciones">
-		<div class="row">
-			@if($resolucion)
-				<div class="col-9 form-group">
-					{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="d-none" id="divAnuncios">
+			<div class="row">
+				<div class="form-group col-sm">
+					{!! Form::label('claseanuncio', 'Clase*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblclaseanuncio')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::select('subtipotramite',  $subtipos, $resolucion->subtipo_id?$resolucion->subtipo_id:'', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' )) !!}
+						{!! Form::text('claseanuncio', null, array('class' => 'form-control  input-xs', 'id' => 'claseanuncio', 'placeholder'=>'Ej. LUMINOSO')) !!}
 					</div>
 				</div>
-				@else
-				<div class="col-9 form-group">
-					{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="form-group col-sm">
+					{!! Form::label('ubicacionanuncio', 'Ubicación*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblubicacionanuncio')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::select('subtipotramite',  ['' => '--Elije un subtipo'], null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' )) !!}
+						{!! Form::text('ubicacionanuncio', null, array('class' => 'form-control  input-xs', 'id' => 'ubicacionanuncio', 'placeholder'=>'Ej. EN FACHADA')) !!}
 					</div>
 				</div>
-				@endif
+				<div class="form-group col-sm">
+					{!! Form::label('vigencia', 'Vigencia (Años)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblvigencia')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						{!! Form::text('vigencia', null, array('class' => 'form-control  input-xs', 'id' => 'vigencia', 'placeholder'=>'Ej. 02')) !!}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				{!! Form::label('leyenda', 'Leyenda del Anuncio*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblleyenda')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						{!! Form::text('leyenda', null, array('class' => 'form-control  input-xs', 'id' => 'leyenda', 'placeholder'=>'')) !!}
+					</div>
+			</div>
 		</div>
-		<div class="row">
+		<div class="row" id="divLicenciasFuncionamiento">
 			<div class="form-group col-sm">
 				{!! Form::label('nombrecomercial', 'Nombre Comercial*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnombrecomercial')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
@@ -163,20 +206,20 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm form-group">
-				{!! Form::label('nroexpediente', 'Expediente Nro*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnroexpediente')) !!}
-				<div class="col-lg-12 col-md-12 col-sm-12">
-					{!! Form::text('nroexpediente', null, array('class' => 'form-control  input-xs', 'id' => 'nroexpediente')) !!}
-				</div>
-			</div>
-			<div class="col-sm form-group">
+			<div class="col-sm form-group" id="certificadoGroup">
 				{!! Form::label('nrocertificado', 'Certificado Nro*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnrocertificado')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
-					{!! Form::text('nrocertificado', null, array('class' => 'form-control  input-xs', 'id' => 'nroexpediente')) !!}
+					{!! Form::text('nrocertificado', null, array('class' => 'form-control  input-xs', 'id' => 'nrocertificado')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm d-none" id="divNombreComercial">
+				{!! Form::label('nombrecomercial2', 'Nombre Comercial*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnombrecomercial2')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::text('nombrecomercial2', $resolucion ? $resolucion->nombrecomercial : null, array('class' => 'form-control  input-xs', 'id' => 'nombrecomercial2')) !!}
 				</div>
 			</div>
 			<div class="form-group col-sm">
-				{!! Form::label('arearesolucion', 'Área*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
+				{!! Form::label('arearesolucion', 'Área (m2)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
 					{!! Form::number('arearesolucion', $resolucion ? $resolucion->area : null, array('class' => 'form-control  input-xs', 'id' => 'arearesolucion', 'step'=>'0.01')) !!}
 				</div>
@@ -251,6 +294,7 @@ $(document).ready(function() {
 	//ordenpagoSelect2();
 	//inspeccionSelect2();
 	configurarAnchoModal('1000');
+	tramitesSelect2();
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="ruc"]').inputmask("99999999999");
 	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni"]').inputmask("99999999");
@@ -290,6 +334,35 @@ $(document).ready(function() {
 	}
 
 });
+function handleChangeSubtipo(){
+	var subtipo = $('#subtipotramite').val();
+	var tipo = $('#tipo_id').val();
+	if(tipo=='1'){
+		if(subtipo=='1'){
+			$('#certificadoGroup').removeClass('d-none');
+			$('#lblnrodocumento').text('Nro. de Resolución');
+			$('#divAnuncios').addClass('d-none');
+			$('#divLicenciasFuncionamiento').removeClass('d-none');
+			$('#divNombreComercial').addClass('d-none');
+			generarNumero2(subtipo, tipo);
+			generarNumero3(subtipo, tipo);
+		}else if(subtipo=='2' || subtipo=='3'){
+			if(subtipo=='2'){
+				$('#divAnuncios').removeClass('d-none');
+				$('#divLicenciasFuncionamiento').addClass('d-none');
+				$('#divNombreComercial').addClass('d-none');
+			}
+			if(subtipo=='3'){
+				$('#divAnuncios').addClass('d-none');
+				$('#divLicenciasFuncionamiento').addClass('d-none');
+				$('#divNombreComercial').removeClass('d-none');
+			}
+			generarNumero3(subtipo, tipo);
+			$('#certificadoGroup').addClass('d-none');
+			$('#lblnrodocumento').text('Nro. de Autorización');
+		}
+	}
+}
 function showTipo(tipo){
 		switch (tipo) {
 			case "1":
@@ -299,6 +372,8 @@ function showTipo(tipo){
 				$('#divLicenciasAutorizaciones').removeClass('d-none');
 				$('#lblcontribuyente').text('Contribuyente*');
 				$('#lbldireccion').text('Dirección*');
+				$('#lblnrodocumento').text('Nro. de Resolucion');
+
 
 				break;
 			case "2":
@@ -308,6 +383,8 @@ function showTipo(tipo){
 				$('#lbldireccion').text('Ubicación*');
 				$('#inforuc').addClass('d-none');
 				$('#divLicenciasAutorizaciones').addClass('d-none');
+				$('#lblnrodocumento').text('Nro. de Resolución');
+
 
 				break;
 			case "3":
@@ -317,6 +394,7 @@ function showTipo(tipo){
 				$('#lblcontribuyente').text('Contribuyente*');
 				$('#lbldireccion').text('Dirección*');
 				$('#divLicenciasAutorizaciones').addClass('d-none');
+				$('#lblnrodocumento').text('Nro. de Certificado');
 
 
 				break;
@@ -327,11 +405,15 @@ function showTipo(tipo){
 				$('#lblcontribuyente').text('Contribuyente*');
 				$('#lbldireccion').text('Dirección*');
 				$('#divLicenciasAutorizaciones').addClass('d-none');
+				$('#lblnrodocumento').text('Nro. de Resolución');
+
 				break;
 			default:
 				$('#lblcontribuyente').text('Contribuyente*');
 				$('#lbldireccion').text('Dirección*');
 				$('#divLicenciasAutorizaciones').addClass('d-none');
+				$('#lblnrodocumento').text('Nro. de Resolución');
+
 				break;
 		}
 		ordenpagoSelect2(tipo);
@@ -395,6 +477,32 @@ function generarNumero(){
 			}
 		});
 	}
+
+
+function generarNumero2(value, tipo){
+		var subtipo = value;
+		showTipo(tipo);
+		$.ajax({
+			type: "POST",
+			url: "{{route('resolucion.generarnumero2')}}",
+			data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&subtipotramite=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="subtipotramite"]').val(),
+			success: function(a) {
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="nrocertificado"]').val(a);
+			}
+		});
+	}
+function generarNumero3(value, tipo){
+		var subtipo = value;
+		showTipo(tipo);
+		$.ajax({
+			type: "POST",
+			url: "{{route('resolucion.generarnumero2')}}",
+			data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&subtipotramite=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="subtipotramite"]').val(),
+			success: function(a) {
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
+			}
+		});
+	}
 	function cambiarsubtipos(){
 	  var tipo_id =	$('#tipo_id').val();
 	  if(tipo_id.length > 0){
@@ -416,6 +524,23 @@ function generarNumero(){
                 }
             });
 	  }
+	}
+
+	function tramitesSelect2(){
+		$('#tramiteref').select2({
+			ajax: {
+				delay: 250,
+				url: '{{route('tramite.listartramites')}}',
+				placeholder: 'Indique el trámite de referencia',
+				minimumInputLength: 1,
+				processResults: function (data) {
+					var datos = JSON.parse(data);
+					return {
+						results: datos.results
+					};
+				}
+			}
+		});
 	}
 
 </script>

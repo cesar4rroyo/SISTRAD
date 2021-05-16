@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Reporte trámites</title>
+    <title>Reporte Inspección</title>
 </head>
 <style>
     body {
@@ -67,7 +67,7 @@
                 <td class="padding-left">{{ $value->tipotramite->descripcion }}</td>
                 <td class="padding-left">{{ ($value->representante) ? $value->representante : '-' }}</td>
                 <td class="padding-left">{{ ($value->razonsocial) ? $value->razonsocial : '-'  }}</td>
-                <td class="padding-left">{{ $value->inspector }}</td>
+                <td class="padding-left">{{ $value->inspector->apellidopaterno . ' ' . $value->inspector->apellidomaterno . ' ' . $value->inspector->nombres }}</td>
             </tr>
         @endforeach
         </tbody>

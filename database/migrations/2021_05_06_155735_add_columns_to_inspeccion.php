@@ -19,14 +19,11 @@ class AddColumnsToInspeccion extends Migration
             $table->string('conclusion2')->nullable();
             $table->string('estado')->nullable();
             $table->double('area' , 8 , 2)->nullable();
-            $table->integer('solicitud_id')->unsigned()->nullable();
-            $table->foreign('solicitud_id')->references('id')->on('solicitud')->onUpdate('restrict')->onDelete('restrict');
-            $table->string('inspector')->nullable();
          
         });
     }
 
-    /**
+    /**sss
      * Reverse the migrations.
      *
      * @return void
@@ -37,8 +34,6 @@ class AddColumnsToInspeccion extends Migration
             $table->dropColumn('localidad');
             $table->dropColumn('area');
             $table->dropColumn('estado');
-            $table->dropColumn('solicitud_id');
-            $table->dropColumn('inspector');
             $table->dropColumn('observacion2');
             $table->dropColumn('conclusion2');
         });

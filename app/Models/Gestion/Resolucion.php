@@ -2,6 +2,7 @@
 
 namespace App\Models\Gestion;
 
+use App\Models\Control\Subtipotramitenodoc;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +40,13 @@ class Resolucion extends Model
 		'nroexpediente',
 		'viapublica',
 		'nombrecomercial',
-		'nrocertificado'
+		'nrocertificado',
+		'tramiteref_id',
+		'subtipo_id',
+		'vigencia',
+		'claseanuncio',
+		'ubicacionanuncio',
+		'leyenda'
     ];
     public function ordenpago()
     {
@@ -49,10 +56,18 @@ class Resolucion extends Model
     {
         return $this->belongsTo(Tipotramitenodoc::class, 'tipo_id');
     }
+	public function subtipo()
+	{
+		return $this->belongsTo(Subtipotramitenodoc::class, 'subtipo_id');
+	}
     public function inspeccion()
     {
         return $this->belongsTo(Inspeccion::class, 'inspeccion_id');
     }
+	public function tramite()
+	{
+		return $this->belongsTo(Tramite::class, 'tramiteref_id');
+	}
     public function scopelistar($query, $numero, $fecinicio, $fecfin, $contribuyente, $tipo)
 	{
 		return $query
@@ -90,6 +105,19 @@ class Resolucion extends Model
 				->where(function ($subquery) use ($tipo) {
 					if (!is_null($tipo) && strlen($tipo) > 0) {
 						$subquery->where('tipo_id', $tipo);
+					}
+				})->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,1,8),SIGNED  integer) END)*1) AS maximo"))->first();
+		
+        return str_pad($rs->maximo + 1, 8, '0', STR_PAD_LEFT);
+	}
+
+	//para la generacion de certificado de licencias y autoriazciones de subtipo 1 = Licencias de Funcionamiento
+	public function scopeNumeroSigueCertificadoLicencias($query , $subtipo)
+	{
+			$rs = $query
+				->where(function ($subquery) use ($subtipo) {
+					if (!is_null($subtipo) && strlen($subtipo) > 0) {
+						$subquery->where('subtipo_id', $subtipo);
 					}
 				})->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,1,8),SIGNED  integer) END)*1) AS maximo"))->first();
 		

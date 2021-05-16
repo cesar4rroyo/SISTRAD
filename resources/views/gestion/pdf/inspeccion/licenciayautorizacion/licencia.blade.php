@@ -38,7 +38,7 @@
     </table>
     <hr>
     <div class=" text-center">
-        <h1 style="color: black; font-size:1rem; text-decoration: underline;">ACTA DE INSPECCION N° {{$data->numero}}-2021-MDJLO-OLyA/M.O.D.C.</h1>
+        <h1 style="color: black; font-size:1rem; text-decoration: underline;">ACTA DE INSPECCION N° {{$data->numero}}-{{\Carbon\Carbon::now()->year}}-MDJLO-OLyA/M.O.D.C.</h1>
     </div>
     <div>
         <p style="font-size: .8rem; text-indent:18px">
@@ -176,7 +176,7 @@
                     <strong>NOMBRE HUELLA Y FIRMA DEL INSPECTOR </strong>
                 </td>
                 <td>
-                    {{' '}}
+                    {{strtoupper($data->inspector->nombres . ' ' . $data->inspector->apellidopaterno . ' ' . $data->inspector->apellidomaterno)}}
                 </td>
                
             </tr>  

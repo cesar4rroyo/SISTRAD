@@ -2,6 +2,7 @@
 
 namespace App\Models\Gestion;
 
+use App\Models\Admin\Personal;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,11 @@ class Inspeccion extends Model
 	public function resolucion()
 	{
 		return $this->hasOne(Resolucion::class, 'resolucion_id');
+	}
+
+	public function inspector()
+	{
+		return $this->belongsTo(Personal::class, 'inspector_id');
 	}
 
 	public function getFullInspeccionAttribute()

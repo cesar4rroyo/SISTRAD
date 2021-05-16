@@ -110,15 +110,13 @@ class CartaController extends Controller
         if($request->id_inspeccion){
             $inspeccion = Inspeccion::find($request->id_inspeccion);
             $toggletipo = $inspeccion->tipo_id;
-            if($request->entidad){
-                $entidad2='carta';
-            }else{
+            
                 $entidad2='inspeccion';
-            }
+            
         }else{
             $toggletipo = null;
             $inspeccion=null;
-            $entidad2=null;
+            $entidad2='carta';
         }
         $entidad  = 'carta';
         $carta = null;     
@@ -210,8 +208,10 @@ class CartaController extends Controller
                 }
             }
         });
+        $ultimo = Carta::orderBy('id', 'DESC')->first()->toArray()['id'];
 
-        return is_null($error) ? "OK" : $error;
+        return is_null($error) ? 'id=?'. $ultimo : $error;
+
     }
 
     /**

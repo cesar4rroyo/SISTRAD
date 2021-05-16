@@ -20,7 +20,11 @@
 			<td>{{ $contador }}</td>
 			<td>{{ date_format(date_create($value->fechaexpedicion), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
-			<td>{{ $value->tipotramite->descripcion }}</td>
+			@if ($value->tipo_id=='1')
+				<td>{{ $value->tipotramite->descripcion . '   (' . $value->subtipo->descripcion . ')'}}</td>
+			@else
+				<td>{{ $value->tipotramite->descripcion }}</td>
+			@endif
 			<td>{{ $value->contribuyente }}</td>
 			@if (!is_null($value->dni) && $value->dni!='')
 				<td>{{$value->dni}}</td>
@@ -32,15 +36,35 @@
             <td>
 				<div class="btn-group">
 					{!! Form::button('<div class="fas fa-edit"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}
+					@if ($value->subtipo_id=='2' || $value->subtipo_id=='3')
+					<a href="{{route('resolucion.pdfResolucion', ['id'=>$value->id, 'blanco'=>'NO', 'subtipo'=>$value->subtipo->id])}}" target="_blank">
+						<button class="btn btn-sm btn-primary" title="PDF">
+							<i class="fas fa-file-pdf"></i> 
+						</button>
+					</a>
+					@else
 					<a href="{{route('resolucion.pdfResolucion', $value->id)}}" target="_blank">
 						<button class="btn btn-sm btn-primary" title="FORMATO PDF">
 							<i class="fas fa-file-pdf"></i> 
 						</button>
 					</a>
+					@endif
 					@if ($value->tipo_id=='3')
-					<a href="{{route('resolucion.pdfResolucion', ['id'=>$value->id, 'blanco'=>'si'])}}" target="_blank">
+					<a href="{{route('resolucion.pdfResolucion', ['id'=>$value->id,  'blanco'=>'si'])}}" target="_blank">
 						<button class="btn btn-sm btn-secondary" title="FORMATO CARTILLA">
 							<i class="fas fa-file-word"></i> 
+						</button>
+					</a>
+					@endif
+					@if ($value->subtipo_id=='1')
+					<a href="{{route('resolucion.pdfResolucion', ['id'=>$value->id, 'blanco'=>'NO', 'subtipo'=>$value->subtipo->id])}}" target="_blank">
+						<button class="btn btn-sm btn-warning" title="CERTIFICADO">
+							<i class="fas fa-id-card-alt"></i> 
+						</button>
+					</a>
+					<a href="{{route('resolucion.pdfResolucion', ['id'=>$value->id, 'blanco'=>'SI', 'subtipo'=>$value->subtipo->id])}}" target="_blank">
+						<button class="btn btn-sm btn-info" title="CERTIFICADO EN BLACO">
+							<i class="fas fa-id-card"></i> 
 						</button>
 					</a>
 					@endif

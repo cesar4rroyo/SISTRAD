@@ -98,7 +98,7 @@ Atentamente;
 	</div>	
     <div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this, \''.$entidad2.'\')')) !!}
+			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'type'=>'submit')) !!}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
 	</div>
@@ -116,6 +116,47 @@ $(document).ready(function() {
 
 
 }); 
+$( IDFORMMANTENIMIENTO + '{{ $entidad }}').submit(function( event ) {
+			event.preventDefault();
+			var idformulario = IDFORMMANTENIMIENTO + '{{ $entidad }}';
+			var entidad = "{{$entidad2}}";
+			var formData = new FormData($(this)[0]);
+			var respuesta = '';
+			var listar       = 'NO';
+			if ($(idformulario + ' :input[id = "listar"]').length) {
+				var listar = $(idformulario + ' :input[id = "listar"]').val();
+			};
+			var request = $.ajax({
+			url     : $(this).attr('action'),
+			method  : "POST",
+			data    : formData,
+			processData: false,  
+			contentType: false,
+			});
+			request.done(function(msg) {
+				respuesta = msg;
+			}).fail(function(jqXHR, textStatus) {
+				respuesta = 'ERROR';
+			}).always(function(){
+				if(respuesta.trim() === 'ERROR'){
+				}else {
+					if (respuesta.includes('id=?')) {
+						cerrarModal();
+						Hotel.notificaciones("Accion realizada correctamente", "Realizado" , "success");
+						if (listar.trim() === 'SI') {							
+							buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+						}
+						var id = respuesta.trim();
+						var matches = id.match(/(\d+)/);
+						id=matches[0];
+						window.open( 'carta/pdf/'+id , '_blank');
+					} else {
+						mostrarErrores(respuesta, idformulario, entidad);
+					}
+				}
+			}); 
+    	});
+
 	function showTipo(tipo){
 		console.log(tipo);
 		switch (tipo) {

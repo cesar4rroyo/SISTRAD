@@ -9,6 +9,8 @@ use App\Http\Requests;
 use App\Models\Gestion\Inspeccion;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Personal;
+use App\Models\Control\Subtipotramitenodoc;
 use App\Models\Gestion\Carta;
 use App\Models\Gestion\Ordenpago;
 use App\Models\Gestion\Tipotramitenodoc;
@@ -116,7 +118,8 @@ class InspeccionController extends Controller
         $formData = array('inspeccion.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad,'enctype'=>'multipart/form-data', 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo'));
+        $cboInspector = [''=>'Seleccione una Opción'] + Personal::listar(null, null, null, 1)->get()->pluck('full_name','id')->all();
+        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo', 'cboInspector'));
     }
 
 
@@ -159,6 +162,7 @@ class InspeccionController extends Controller
                     'ruc' => 'required',
                     'area' => 'required',
                     'localidad' => 'required',
+                    'subtipotramite'=>'required',
                 );
                 $mensajes = array(
                     'razonsocial.required'         => 'Debe ingresar la Razón Social',
@@ -171,6 +175,7 @@ class InspeccionController extends Controller
                     'ruc.required'         => 'Debe ingresar el RUC',
                     'area.required'         => 'Debe ingresar el área',
                     'localidad.required'         => 'Debe ingresar la localidad',
+                    'subtipotramite.required' => 'Debe de especificar el subtitpo'
                 );
                 break;
             case '2':
@@ -221,11 +226,13 @@ class InspeccionController extends Controller
                     $inspeccion->direccion     = strtoupper($request->input('direccion'));
                     $inspeccion->razonsocial     = strtoupper($request->input('razonsocial'));
                     $inspeccion->girocomercial     = strtoupper($request->input('girocomercial'));
-                    $inspeccion->inspector     = strtoupper($request->input('inspector'));
+                    $inspeccion->inspector_id     = strtoupper($request->input('inspector'));
                     $inspeccion->dni     = strtoupper($request->input('dni'));
                     $inspeccion->ruc     = strtoupper($request->input('ruc'));
                     $inspeccion->localidad          = Libreria::getParam($request->input('localidad'));
                     $inspeccion->area          = Libreria::getParam($request->input('area'));
+                    $inspeccion->subtipo_id    = Libreria::getParam($request->input('subtipotramite'), null);
+
 
                     if($request->hasObservacion == 'No'){
                         $inspeccion->estado = 'ACEPTADO'; //para INSPESCCION solo hay 2 estados : Observado y Aceptado
@@ -288,7 +295,9 @@ class InspeccionController extends Controller
         $formData = array('inspeccion.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo'));
+        $subtipos =["" => 'Seleccione'] + Subtipotramitenodoc::where('tipotramitenodoc_id', $inspeccion->tipo_id)->pluck('descripcion','id')->all();
+        $cboInspector = [''=>'Seleccione una Opción'] + Personal::listar(null, null, null, 1)->get()->pluck('full_name','id')->all();
+        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo', 'subtipos', 'cboInspector'));
     }
     /**
      * Update the specified resource in storage.
@@ -508,6 +517,19 @@ class InspeccionController extends Controller
         $tipo          = $request->input('tipo');
         $numerotramite = Inspeccion::NumeroSigue($tipo);
         echo $numerotramite;
+    }
+
+    public function getInfo(Request $request)
+    {
+        $value = $request->ordenpago_id;
+        $existe = Libreria::verificarExistencia($value, 'ordenpago');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $data = Ordenpago::find($value)->toArray();
+        return $data;
+        
+
     }
   
 }

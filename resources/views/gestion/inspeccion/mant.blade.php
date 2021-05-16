@@ -12,7 +12,7 @@
 		<div class="col-6 form-group">
 			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('tipo',$tipostramite, ($inspeccion)?$inspeccion->tipo_id:null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero();')) !!}
+				{!! Form::select('tipo',$tipostramite, ($inspeccion)?$inspeccion->tipo_id:null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero(); cambiarsubtipos();')) !!}
 			</div>
 		</div>
 		
@@ -31,6 +31,23 @@
 				{!! Form::select('ordenpago_id',$cboOrdenpago , null, array('class' => 'form-control  input-xs', 'id' => 'ordenpago_id')) !!}
 			</div>
 		</div>
+	</div>
+	<div class="row">
+		@if($inspeccion)
+			<div class="col-9 form-group">
+				{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::select('subtipotramite',  $subtipos, $inspeccion->subtipo_id?$inspeccion->subtipo_id:'', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' )) !!}
+				</div>
+			</div>
+			@else
+			<div class="col-9 form-group">
+				{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::select('subtipotramite',  ['' => '--Elije un subtipo'], null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite'  )) !!}
+				</div>
+			</div>
+			@endif
 	</div>
 	<div class="d-none" id="divSalubridad">
 		<div class="row">
@@ -104,7 +121,7 @@
 		<div class="form-group col-sm">
 			{!! Form::label('inspector', 'Inspector Designado*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('inspector', null, array('class' => 'form-control  input-xs', 'id' => 'inspector')) !!}
+				{!! Form::select('inspector',$cboInspector , null, array('class' => 'form-control  input-xs', 'id' => 'inspector')) !!}
 			</div>
 		</div>
 	  	<div class="form-group col-sm">
@@ -252,6 +269,24 @@ $(document).ready(function() {
 		}
 	}
 
+	$('#ordenpago_id').on('change', function(){
+		var value = $(this).val();
+		$.ajax({
+			type: 'POST',
+			url: "{{route('inspeccion.getInfo')}}",
+			data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&ordenpago_id="+value,
+			success: function(a) {
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="direccion"]').val(a.direccion);
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="representante"]').val(a.representante);
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="dni"]').val(a.dni_ruc);
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="ruc"]').val(a.dni_ruc);
+				console.log(a.direccion);
+				console.log(a);
+			}
+
+		});
+	});
+
 }); 
 	function showTipo(tipo){
 		console.log(tipo);
@@ -312,5 +347,28 @@ $(document).ready(function() {
 				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
 			}
 		});
+	}
+
+	function cambiarsubtipos(){
+	  var tipo_id =	$('#tipo_id').val();
+	  if(tipo_id.length > 0){
+		  $.ajax({
+                url: "{{ route('ordenpago.listarsubtipos') }}",
+                type: 'GET',
+                data: { tipo_id },
+                dataType: 'json',
+                success: function (response) {
+					var areaselect = $('#subtipotramite');
+					areaselect.empty();
+                    areaselect.append('<option value="">--Elije un subtipo</option>')
+                    $.each(response.data, function (key, value) {
+                        areaselect.append("<option value='" + value.id + "'>" + value.descripcion + "</option>");
+                    });
+                },
+                error : function(){
+                    alert('Hubo un error obteniendo las areas!');
+                }
+            });
+	  }
 	}
 </script>
