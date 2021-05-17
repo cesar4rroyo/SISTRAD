@@ -1,19 +1,13 @@
 <!-- Content Header (Page header) -->
-
-
-@extends("theme.$theme.layout")
-
-@section('content')
-<div class="container">
-
+<div class="container" id="container">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">Bienvenido, {{session()->get('nombres') ?? 'Invitado'}} ({{session()->get('area')['area']['descripcion'] ?? 'Admin'}})</div>
                 
                 <div class="card-body">
+					{!! Form::open(['route' => $ruta["search"], 'method' => 'POST' ,'onsubmit' => 'return false;', 'class' => 'w-100 d-md-flex d-lg-flex d-sm-inline-block mt-3', 'role' => 'form', 'autocomplete' => 'off', 'id' => 'formBusqueda'.$entidad]) !!}
                     <div class="row">
-                        {!! Form::open(['route' => $ruta["search"], 'method' => 'POST' ,'onsubmit' => 'return false;', 'class' => 'w-100 d-md-flex d-lg-flex d-sm-inline-block mt-3', 'role' => 'form', 'autocomplete' => 'off', 'id' => 'formBusqueda'.$entidad]) !!}
                         {!! Form::hidden('page', 1, array('id' => 'page')) !!}
                         {!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
                         
@@ -35,22 +29,20 @@
 						</div>						
                       </div>
 					  <div class="row">
-						<div class="row w-100">
 							<div class="col-lg-4 col-md-4  form-group">
-								{!! Form::label('nombresearch', 'Remitente:') !!}
-								{!! Form::text('nombresearch', '', array('class'=>'form-control', 'id'=>'nombresearch', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+								{!! Form::label('remisor', 'Remitente:') !!}
+								{!! Form::text('remisor', '', array('class'=>'form-control', 'id'=>'remisor', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
 							<div class="col-lg-4 col-md-4  form-group">
 								{!! Form::label('tipos', 'Tipo de Trámite') !!}
 								{!! Form::select('tipos', $cboTipoTramite, "",array('class' => 'form-control form-control input-xs', 'id' => 'tipos', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
 							<div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
-								{!! Form::label('nombre', 'Filas a mostrar') !!}
+								{!! Form::label('filas', 'Filas a mostrar') !!}
 								{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-xs', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
-						</div>
-						{!! Form::close() !!}
 					  </div>
+						{!! Form::close() !!}
                    
                       <div class="row mt-2" >
 						<div class="col-md-12">
@@ -81,13 +73,11 @@
         </div>
     </div>
 </div>
-@endsection
-
 <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+    $(document).ready(function () {
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[name="nombresearch"]').keyup(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[name="remisor"]').keyup(function (e) {
 			var key = window.event ? e.keyCode : e.which;
 			console.log(key);
 			if (key == '13') {

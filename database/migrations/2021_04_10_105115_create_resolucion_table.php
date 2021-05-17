@@ -28,12 +28,20 @@ class CreateResolucionTable extends Migration
             $table->string('dni' , 20)->nullable();
             $table->string('ruc' , 20)->nullable();
             $table->string('observaciones' , 300)->nullable();
+            $table->string('claseanuncio' , 300)->nullable();
+            $table->string('ubicacionanuncio' , 300)->nullable();
+            $table->string('vigencia' , 300)->nullable();
+            $table->string('leyenda' , 300)->nullable();
             $table->integer('inspeccion_id')->unsigned()->nullable();
             $table->integer('ordenpago_id')->unsigned()->nullable();
             $table->foreign('inspeccion_id')->references('id')->on('inspeccion')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('ordenpago_id')->references('id')->on('ordenpago')->onDelete('restrict')->onUpdate('restrict');
             $table->integer('tipo_id')->unsigned()->nullable();
             $table->foreign('tipo_id')->references('id')->on('tipotramitenodoc')->onUpdate('restrict')->onDelete('restrict');
+            $table->integer('subtipo_id')->unsigned()->nullable();
+            $table->foreign('subtipo_id')->references('id')->on('subtipotramitenodoc')->onUpdate('restrict')->onDelete('restrict');
+            $table->integer('tramiteref_id')->unsigned()->nullable();
+            $table->foreign('tramiteref_id')->references('id')->on('tramite')->onUpdate('restrict')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();
 

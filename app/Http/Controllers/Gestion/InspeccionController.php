@@ -9,6 +9,9 @@ use App\Http\Requests;
 use App\Models\Gestion\Inspeccion;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Personal;
+use App\Models\Control\Subtipotramitenodoc;
+use App\Models\Gestion\Carta;
 use App\Models\Gestion\Ordenpago;
 use App\Models\Gestion\Tipotramitenodoc;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +28,7 @@ class InspeccionController extends Controller
             'edit'   => 'inspeccion.edit', 
             'delete' => 'inspeccion.eliminar',
             'search' => 'inspeccion.buscar',
+            'carta' => 'inspeccion.carta',
             'index'  => 'anio.index',
         );
 
@@ -62,10 +66,9 @@ class InspeccionController extends Controller
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
-
         $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Archivo', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
        
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -115,8 +118,11 @@ class InspeccionController extends Controller
         $formData = array('inspeccion.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad,'enctype'=>'multipart/form-data', 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo'));
+        $cboInspector = [''=>'Seleccione una Opción'] + Personal::listar(null, null, null, 1)->get()->pluck('full_name','id')->all();
+        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo', 'cboInspector'));
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -130,10 +136,12 @@ class InspeccionController extends Controller
         $reglas     = array(
             'numero' => 'required',
             'tipo' => 'required',
-            'fecha' => 'required'
+            'fecha' => 'required',
+            'inspector'=>'required',
         );
         $mensajes = array(
-            'numero.required'         => 'Debe ingresar el numero'
+            'numero.required'         => 'Debe ingresar el numero',
+            'inspector.required' => 'Debe ingresar el Nombre del Inspector a cargo'
             );
             
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
@@ -147,7 +155,6 @@ class InspeccionController extends Controller
                     'razonsocial' => 'required',
                     'girocomercial' => 'required',
                     'direccion' => 'required',
-                    'observacion' => 'required',
                     'conclusiones' => 'required',
                     'descripcion' => 'required',
                     'representante' => 'required',
@@ -155,12 +162,12 @@ class InspeccionController extends Controller
                     'ruc' => 'required',
                     'area' => 'required',
                     'localidad' => 'required',
+                    'subtipotramite'=>'required',
                 );
                 $mensajes = array(
                     'razonsocial.required'         => 'Debe ingresar la Razón Social',
                     'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
                     'direccion.required'         => 'Debe ingresar una dirección',
-                    'observacion.required'         => 'Debe ingresar una observación',
                     'conclusiones.required'         => 'Debe ingresar las conclusiones',
                     'descripcion.required'         => 'Debe ingresar una descripción',
                     'representante.required'         => 'Debe ingresar el representante',
@@ -168,6 +175,7 @@ class InspeccionController extends Controller
                     'ruc.required'         => 'Debe ingresar el RUC',
                     'area.required'         => 'Debe ingresar el área',
                     'localidad.required'         => 'Debe ingresar la localidad',
+                    'subtipotramite.required' => 'Debe de especificar el subtitpo'
                 );
                 break;
             case '2':
@@ -177,7 +185,7 @@ class InspeccionController extends Controller
                     'razonsocial' => 'required',
                     'girocomercial' => 'required',
                     'direccion' => 'required',
-                    'observacion' => 'required',
+                    //'observacion' => 'required',
                     'conclusiones' => 'required',
                     'descripcion' => 'required',
                     'representante' => 'required',
@@ -188,7 +196,7 @@ class InspeccionController extends Controller
                     'razonsocial.required'         => 'Debe ingresar la Razón Social',
                     'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
                     'direccion.required'         => 'Debe ingresar una dirección',
-                    'observacion.required'         => 'Debe ingresar una observación',
+                    //'observacion.required'         => 'Debe ingresar una observación',
                     'conclusiones.required'         => 'Debe ingresar las conclusiones',
                     'descripcion.required'         => 'Debe ingresar una descripción',
                     'representante.required'         => 'Debe ingresar el representante',
@@ -218,10 +226,19 @@ class InspeccionController extends Controller
                     $inspeccion->direccion     = strtoupper($request->input('direccion'));
                     $inspeccion->razonsocial     = strtoupper($request->input('razonsocial'));
                     $inspeccion->girocomercial     = strtoupper($request->input('girocomercial'));
+                    $inspeccion->inspector_id     = strtoupper($request->input('inspector'));
                     $inspeccion->dni     = strtoupper($request->input('dni'));
                     $inspeccion->ruc     = strtoupper($request->input('ruc'));
                     $inspeccion->localidad          = Libreria::getParam($request->input('localidad'));
                     $inspeccion->area          = Libreria::getParam($request->input('area'));
+                    $inspeccion->subtipo_id    = Libreria::getParam($request->input('subtipotramite'), null);
+
+
+                    if($request->hasObservacion == 'No'){
+                        $inspeccion->estado = 'ACEPTADO'; //para INSPESCCION solo hay 2 estados : Observado y Aceptado
+                    }else{
+                        $inspeccion->estado = 'OBSERVADO'; //para INSPESCCION solo hay 2 estados : Observado y Aceptado
+                    }
 
                     if($request->hasFile('file')){
                         $file = $request->file('file');
@@ -260,6 +277,15 @@ class InspeccionController extends Controller
         if ($existe !== true) {
             return $existe;
         }
+        if($request->observacion=='SI'){
+            $listar   = Libreria::getParam($request->input('listar'), 'NO');
+            $inspeccion = Inspeccion::find($id);
+            $entidad  = 'inspeccion';
+            $formData = array('inspeccion.update', $id);
+            $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+            $boton    = 'Modificar';
+            return view($this->folderview.'.observaciones')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar'));
+        }
         $tipostramite = ['' => 'Seleccione'] + Tipotramitenodoc::pluck('descripcion', 'id')->all();
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
@@ -269,9 +295,10 @@ class InspeccionController extends Controller
         $formData = array('inspeccion.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo'));
+        $subtipos =["" => 'Seleccione'] + Subtipotramitenodoc::where('tipotramitenodoc_id', $inspeccion->tipo_id)->pluck('descripcion','id')->all();
+        $cboInspector = [''=>'Seleccione una Opción'] + Personal::listar(null, null, null, 1)->get()->pluck('full_name','id')->all();
+        return view($this->folderview.'.mant')->with(compact('inspeccion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboOrdenpago', 'toggletipo', 'subtipos', 'cboInspector'));
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -286,17 +313,127 @@ class InspeccionController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $reglas     = array('descripcion' => 'required');
+
+
+        $reglas     = array(
+            'numero' => 'required',
+            'inspector'=>'required',
+        );
         $mensajes = array(
-            'descripcion.required'         => 'Debe ingresar una descripcion'
+            'numero.required'         => 'Debe ingresar el numero',
+           'inspector.required' => 'Debe ingresar el Nombre del Inspector a cargo'
             );
+            
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
+
+        switch ($request->tipo) {
+            case '1':
+                $reglas     = array(
+                    'razonsocial' => 'required',
+                    'girocomercial' => 'required',
+                    'direccion' => 'required',
+                    'conclusiones' => 'required',
+                    'descripcion' => 'required',
+                    'representante' => 'required',
+                    'dni' => 'required',
+                    'ruc' => 'required',
+                    'area' => 'required',
+                    'localidad' => 'required',
+                );
+                $mensajes = array(
+                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
+                    'direccion.required'         => 'Debe ingresar una dirección',
+                    'conclusiones.required'         => 'Debe ingresar las conclusiones',
+                    'descripcion.required'         => 'Debe ingresar una descripción',
+                    'representante.required'         => 'Debe ingresar el representante',
+                    'dni.required'         => 'Debe ingresar el DNI',
+                    'ruc.required'         => 'Debe ingresar el RUC',
+                    'area.required'         => 'Debe ingresar el área',
+                    'localidad.required'         => 'Debe ingresar la localidad',
+                );
+                break;
+            case '2':
+                break;
+            case '3':
+                $reglas     = array(
+                    'razonsocial' => 'required',
+                    'girocomercial' => 'required',
+                    'direccion' => 'required',
+                    //'observacion' => 'required',
+                    'conclusiones' => 'required',
+                    'descripcion' => 'required',
+                    'representante' => 'required',
+                    'dni' => 'required',
+                    'ruc' => 'required',
+                );
+                $mensajes = array(
+                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
+                    'direccion.required'         => 'Debe ingresar una dirección',
+                    //'observacion.required'         => 'Debe ingresar una observación',
+                    'conclusiones.required'         => 'Debe ingresar las conclusiones',
+                    'descripcion.required'         => 'Debe ingresar una descripción',
+                    'representante.required'         => 'Debe ingresar el representante',
+                    'dni.required'         => 'Debe ingresar el DNI',
+                    'ruc.required'         => 'Debe ingresar el RUC',
+                );
+                
+                break;
+            case '4':
+                break;
+            case 'observacion':
+                break;
+        }
+
+        $validacion = Validator::make($request->all(), $reglas, $mensajes);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        }
         $error = DB::transaction(function() use($request, $id){
             $inspeccion = Inspeccion::find($id);
-            $inspeccion->descripcion = strtoupper($request->input('descripcion'));
+            $inspeccion->numero          = Libreria::getParam($request->input('numero'));
+            if($request->tipo!='observacion'){
+                $inspeccion->tipo_id            = strtoupper(Libreria::getParam($request->input('tipo')));
+                $inspeccion->ordenpago_id    = Libreria::getParam($request->input('ordenpago_id'), null);
+                $inspeccion->fecha                 = date("Y-m-d H:i:s");
+                $inspeccion->observacion     = strtoupper($request->input('observacion'));
+                $inspeccion->conclusiones     = strtoupper($request->input('conclusiones'));
+                $inspeccion->descripcion     = strtoupper($request->input('descripcion'));
+                $inspeccion->representante     = strtoupper($request->input('representante'));
+                $inspeccion->direccion     = strtoupper($request->input('direccion'));
+                $inspeccion->razonsocial     = strtoupper($request->input('razonsocial'));
+                $inspeccion->girocomercial     = strtoupper($request->input('girocomercial'));
+                $inspeccion->inspector     = strtoupper($request->input('inspector'));
+                $inspeccion->dni     = strtoupper($request->input('dni'));
+                $inspeccion->ruc     = strtoupper($request->input('ruc'));
+                $inspeccion->localidad          = Libreria::getParam($request->input('localidad'));
+                $inspeccion->area          = Libreria::getParam($request->input('area'));
+                
+                if($request->hasFile('file')){
+                    $file = $request->file('file');
+                    $extension = $request->file('file')->getClientOriginalExtension();
+                    $nombre =  time().'.'.$extension;
+                    \Storage::disk('local')->put('public/archivos2/'.$nombre,  \File::get($file));
+                    // $archivo = $request->file('file')->storeAs('public/archivos2', time() .  '.' .$extension);
+                    $inspeccion->archivo = $nombre;
+                }
+            }
+            
+            $inspeccion->observacion2 = ($request->observacion2) ? $request->observacion2 : null;
+            $inspeccion->conclusion2 = ($request->conclusion2) ? $request->conclusion2 : null;
+            
+            if($request->hasObservacion2 == 'No'){
+                $inspeccion->estado = 'ACEPTADO'; //para INSPESCCION solo hay 2 estados : Observado y Aceptado
+            }else if($request->hasObservacion2 == 'Si'){
+                //se rechaza pq ha sido observado por 2da vez
+                $inspeccion->estado = 'RECHAZADO'; //para INSPESCCION solo hay 2 estados : Observado y Aceptado
+            }
+            
+
             $inspeccion->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -347,11 +484,13 @@ class InspeccionController extends Controller
                 $pdf = PDF::loadView('gestion.pdf.inspeccion.licenciayautorizacion.licencia', compact('data'))->setPaper('a4', 'portrait');
                 break;
             case '2':
+                $pdf = PDF::loadView('gestion.pdf.inspeccion.edificaciones.edificaciones', compact('data'))->setPaper('a4', 'portrait');
                 break;
             case '3':
                 $pdf = PDF::loadView('gestion.pdf.inspeccion.salubridad.salubridad', compact('data'))->setPaper('a4', 'portrait');
                 break;
             case '4':
+                $pdf = PDF::loadView('gestion.pdf.inspeccion.defensacivil.defensa', compact('data'))->setPaper('a4', 'portrait');
                 break;
         }
         $nombre = 'inspeccion:' . $inspeccion->numero . '-' . $inspeccion->fecha . '.pdf';
@@ -379,4 +518,18 @@ class InspeccionController extends Controller
         $numerotramite = Inspeccion::NumeroSigue($tipo);
         echo $numerotramite;
     }
+
+    public function getInfo(Request $request)
+    {
+        $value = $request->ordenpago_id;
+        $existe = Libreria::verificarExistencia($value, 'ordenpago');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $data = Ordenpago::find($value)->toArray();
+        return $data;
+        
+
+    }
+  
 }

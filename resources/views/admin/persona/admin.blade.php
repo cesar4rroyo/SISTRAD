@@ -1,15 +1,9 @@
 <!-- Content Header (Page header) -->
-
-
-@extends("theme.$theme.layout")
-
-@section('content')
-<div class="container">
-
+<div class="container" id="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col">
             <div class="card">
-                <div class="card-header">Persoal</div>
+                <div class="card-header">Personal</div>
                 
                 <div class="card-body">
                     <div class="row">
@@ -40,7 +34,6 @@
                         {!! Form::close() !!}
                       </div>
 					</div>
-                   
                       <div class="row mt-2" >
 						<div class="col-md-12">
 						  <div class="card">
@@ -64,10 +57,8 @@
         </div>
     </div>
 </div>
-@endsection
-
 <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+   $(document).ready(function () {
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
 		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="nombres"]').keyup(function (e) {

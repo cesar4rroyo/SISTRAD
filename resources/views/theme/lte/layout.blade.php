@@ -24,9 +24,8 @@
         @include("theme/$theme/aside")
         <div class="content-wrapper">
             <section class="content p-3">
-                <div class="container-fluid">
-                    @yield('content')
-                </div>
+                    {{-- @yield('content') --}}
+                    @include("theme/$theme/home")
             </section>
         </div>
         {{-- @include("theme/$theme/footer") --}}

@@ -12,11 +12,16 @@ class CargoSeeder extends Seeder
      */
     public function run()
     {
+        //no borrar este cargo id=1 Inpesectos
         DB::table('cargo')->insert([
-            'descripcion' => 'Cargo 1',            
+            'descripcion' => 'Inspector',            
         ]);
         DB::table('cargo')->insert([
-            'descripcion' => 'Cargo 2',
+            'descripcion' => 'Cargo 2',            
         ]);
+        DB::table('cargo')->insert([
+            'descripcion' => 'Cargo 3',
+        ]);
+
     }
 }

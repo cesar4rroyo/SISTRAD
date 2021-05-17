@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Gestion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Librerias\Libreria;
+use App\Models\Control\Subtipotramitenodoc;
 use App\Models\Gestion\Inspeccion;
 use App\Models\Gestion\Ordenpago;
 use App\Models\Gestion\Resolucion;
 use App\Models\Gestion\Tipotramitenodoc;
+use App\Models\Gestion\Tramite;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
 
@@ -19,7 +22,7 @@ class ResolucionController extends Controller
 {
     protected $folderview      = 'gestion.resolucion';
     protected $tituloAdmin     = 'Resolución';
-    protected $tituloRegistrar = 'Registrar Resolución';
+    protected $tituloRegistrar = 'Registrar Resolución y/o Certificado';
     protected $tituloModificar = 'Modificar Resolución';
     protected $tituloEliminar  = 'Eliminar Resolución';
     protected $rutas           = array(
@@ -114,7 +117,8 @@ class ResolucionController extends Controller
         $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar';
-        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
+        $subtipos=null;
+        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboInspeccion', 'cboOrdenpago', 'toggletipo', 'subtipos'));
     }
 
     /**
@@ -125,7 +129,6 @@ class ResolucionController extends Controller
      */
     public function store(Request $request)
     {
-        
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
             'numero' => 'required',
@@ -148,19 +151,70 @@ class ResolucionController extends Controller
         switch ($request->tipo) {
             case '1':
                 $reglas     = array(
-                    'funcionamiento' => 'required',
-                    'nombrecomercial' => 'required',
-                    'nroexpediente' => 'required',
-                    'viapublica' => 'required',
-                    'arearesolucion' => 'required',
+                    'subtipotramite' => 'required',
                 );
                 $mensajes = array(
-                    'nroexpediente.required'         => 'Debe ingresar el Nro. de Expediente',
-                    'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
-                    'viapublica.required'         => 'Debe especificar si usa la vía pública',
-                    'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
-                    'arearesolucion.required'         => 'Debe ingresar el área',
+                    'subtipotramite.required'         => 'Debe ingresar el Subtipo de Trámite',
                 );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                switch ($request->subtipotramite) {
+                    case '1': //licencias de funcionamiento
+                        $reglas     = array(
+                            'funcionamiento' => 'required',
+                            'nombrecomercial' => 'required',
+                            'viapublica' => 'required',
+                            'arearesolucion' => 'required',
+                            'arearesolucion' => 'required',
+                            'girocomercial'=>'required',
+                        );
+                        $mensajes = array(
+                            'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                            'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                            'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                            'arearesolucion.required'         => 'Debe ingresar el área',
+                            'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                            'girocomercial.required'         => 'Debe ingresar el Giro del negocio ',
+                        );
+                        break;
+                    case '2': //anuncios publicitarios
+                        $reglas     = array(
+                            'claseanuncio' => 'required',
+                            'vigencia' => 'required',
+                            'ubicacionanuncio' => 'required',
+                            'leyenda' => 'required',
+                            'arearesolucion' => 'required',
+                            'tramiteref'         => 'required',
+                        );
+                        $mensajes = array(
+                            'ubicacionanuncio.required'         => 'Debe ingresar la ubicacion del anuncio',
+                            'vigencia.required'         => 'Debe ingresar la vigencia',
+                            'leyenda.required'         => 'Debe ingresar la leyenda',
+                            'claseanuncio.required'         => 'Debe ingresar la clase de anuncio',
+                            'arearesolucion.required'         => 'Debe ingresar el área',
+                            'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                        );
+                        break;
+                    case '3': //bodegas
+                        $reglas     = array(
+                            'funcionamiento' => 'required',
+                            'nombrecomercial2' => 'required',
+                            'viapublica' => 'required',
+                            'arearesolucion' => 'required',
+                            'tramiteref'         => 'required',
+                        );
+                        $mensajes = array(
+                            'nombrecomercial2.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                            'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                            'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                            'arearesolucion.required'         => 'Debe ingresar el área',
+                            'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                        );
+                        break;
+                    
+                }
                 $validacion = Validator::make($request->all(), $reglas, $mensajes);
                 if ($validacion->fails()) {
                     return $validacion->messages()->toJson();
@@ -179,13 +233,19 @@ class ResolucionController extends Controller
                         'ordenpago_id' => $request->input('ordenpago_id'),       
                         'inspeccion_id' => $request->input('inspeccion_id'), 
                         'tipo_id'=>$request->input('tipo'),     
+                        'subtipo_id'=>$request->input('subtipotramite'),     
                         'area' => $request->input('arearesolucion'),           
                         'numero'=>$request->input('numero'),     
-                        'nroexpediente'=>strtoupper($request->input('nroexpediente')),     
+                        'tramiteref_id'=>strtoupper($request->input('tramiteref')),     
                         'nrocertificado'=>strtoupper($request->input('nrocertificado')),     
-                        'nombrecomercial'=>strtoupper($request->input('nombrecomercial')),     
+                        'nombrecomercial'=>strtoupper(($request->input('nombrecomercial')? $request->input('nombrecomercial') : $request->input('nombrecomercial2') )),     
                         'viapublica'=>strtoupper($request->input('viapublica')),     
-                        'funcionamiento'=>strtoupper($request->input('funcionamiento')),     
+                        'funcionamiento'=>strtoupper($request->input('funcionamiento')),   
+                        'claseanuncio'=>strtoupper($request->input('claseanuncio')),     
+                        'ubicacionanuncio'=>strtoupper($request->input('ubicacionanuncio')),    
+                        'vigencia'=>strtoupper($request->input('vigencia')),  
+                        'leyenda'=>strtoupper($request->input('leyenda')),  
+                        'subtipo_id' => $request->input('subtipotramite'),     
                     ]);
                     
                 });
@@ -345,7 +405,9 @@ class ResolucionController extends Controller
         $formData = array('resolucion.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboInspeccion', 'cboOrdenpago', 'toggletipo'));
+        $subtipos =["" => 'Seleccione'] + Subtipotramitenodoc::where('tipotramitenodoc_id', $resolucion->tipo_id)->pluck('descripcion','id')->all();
+        $tramites =["" => 'Seleccione'] + Tramite::pluck('numero','id')->all();
+        return view($this->folderview . '.mant')->with(compact('resolucion', 'formData', 'entidad', 'boton', 'listar', 'tipostramite', 'cboInspeccion', 'cboOrdenpago', 'toggletipo', 'subtipos', 'tramites'));
     }
 
      /**
@@ -381,22 +443,75 @@ class ResolucionController extends Controller
         }
         $resolucion = Resolucion::find($id);
 
+        
+
         switch ($request->tipo) {
             case '1':
                 $reglas     = array(
-                    'funcionamiento' => 'required',
-                    'nombrecomercial' => 'required',
-                    'nroexpediente' => 'required',
-                    'viapublica' => 'required',
-                    'arearesolucion' => 'required',
+                    'subtipotramite' => 'required',
                 );
                 $mensajes = array(
-                    'nroexpediente.required'         => 'Debe ingresar el Nro. de Expediente',
-                    'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
-                    'viapublica.required'         => 'Debe especificar si usa la vía pública',
-                    'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
-                    'arearesolucion.required'         => 'Debe ingresar el área',
+                    'subtipotramite.required'         => 'Debe ingresar el Subtipo de Trámite',
                 );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }
+                switch ($request->subtipotramite) {
+                    case '1':
+                        $reglas     = array(
+                            'funcionamiento' => 'required',
+                            'nombrecomercial' => 'required',
+                            'viapublica' => 'required',
+                            'arearesolucion' => 'required',
+                            'arearesolucion' => 'required',
+                            'girocomercial'=>'required',
+                        );
+                        $mensajes = array(
+                            'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                            'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                            'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                            'arearesolucion.required'         => 'Debe ingresar el área',
+                            'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                            'girocomercial.required'         => 'Debe ingresar el Giro del negocio ',
+                        );
+                        break;
+                    case '2':
+                        $reglas     = array(
+                            'claseanuncio' => 'required',
+                            'vigencia' => 'required',
+                            'ubicacionanuncio' => 'required',
+                            'arearesolucion' => 'required',
+                            'tramiteref'         => 'required',
+                        );
+                        $mensajes = array(
+                            'ubicacionanuncio.required'         => 'Debe ingresar la ubicacion del anuncio',
+                            'vigencia.required'         => 'Debe ingresar la vigencia',
+                            'claseanuncio.required'         => 'Debe ingresar la clase de anuncio',
+                            'arearesolucion.required'         => 'Debe ingresar el área',
+                            'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                        );
+                        break;
+                    case '3':
+                        $reglas     = array(
+                            'funcionamiento' => 'required',
+                            'nombrecomercial' => 'required',
+                            'viapublica' => 'required',
+                            'arearesolucion' => 'required',
+                            'tramiteref'         => 'required',
+                        );
+                        $mensajes = array(
+                            'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                            'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                            'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                            'arearesolucion.required'         => 'Debe ingresar el área',
+                            'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                        );
+                        break;
+                    
+                }
+                
+                
                 $validacion = Validator::make($request->all(), $reglas, $mensajes);
                 if ($validacion->fails()) {
                     return $validacion->messages()->toJson();
@@ -422,6 +537,12 @@ class ResolucionController extends Controller
                         'nombrecomercial'=>strtoupper($request->input('nombrecomercial')),     
                         'viapublica'=>strtoupper($request->input('viapublica')),     
                         'funcionamiento'=>strtoupper($request->input('funcionamiento')),     
+                        'claseanuncio'=>strtoupper($request->input('claseanuncio')),     
+                        'ubicacionanuncio'=>strtoupper($request->input('ubicacionanuncio')),    
+                        'vigencia'=>strtoupper($request->input('vigencia')),  
+                        'subtipo_id' => $request->input('subtipotramite'),       
+
+
                     ]);
                     
                 });
@@ -431,7 +552,7 @@ class ResolucionController extends Controller
                 $reglas     = array(
                     'proyecto' => 'required',
                     'uso' => 'required',
-                    'zona' => 'required',
+                    'zonificacion' => 'required',
                     'altura' => 'required',
                     'area' => 'required',
                     'valor' => 'required',
@@ -440,7 +561,7 @@ class ResolucionController extends Controller
                 );
                 $mensajes = array(
                     'uso.required'         => 'Debe ingresar un uso',
-                    'zona.required'         => 'Debe ingresar el nombre de la Zonificación',
+                    'zonificacion.required'         => 'Debe ingresar el nombre de la Zonificación',
                     'proyecto.required'         => 'Debe ingresar la proyecto',
                     'altura.required'         => 'Debe ingresar la altura',
                     'area.required'         => 'Debe ingresar el área',
@@ -462,7 +583,7 @@ class ResolucionController extends Controller
                         //'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
                         //'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
                         //'localidad' => strtoupper(Libreria::getParam($request->input('localidad'))),                
-                        'zona' => strtoupper(Libreria::getParam($request->input('zona'))),                
+                        'zona' => strtoupper(Libreria::getParam($request->input('zonificacion'))),                
                         'altura' => strtoupper(Libreria::getParam($request->input('altura'))),                
                         'uso' => strtoupper(Libreria::getParam($request->input('uso'))),                
                         'proyecto' => strtoupper(Libreria::getParam($request->input('proyecto'))),                
@@ -584,19 +705,57 @@ class ResolucionController extends Controller
     }
 
 
-    public function pdfResolucion($id){
+    public function pdfResolucion($id, $blanco=null, $subtipo=null){
         $resolucion = Resolucion::with('ordenpago', 'inspeccion')->find($id);
         $tipo = $resolucion->tipo_id;
         $data = $resolucion;
         switch ($tipo) {
             case '1':
-                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.licencia', compact('data'))->setPaper('a4', 'portrait');
+                if (!is_null($subtipo)) {
+                    switch ($subtipo) {
+                        case '1':
+                            if ($blanco=='NO') {
+                                $codigoQR = QrCode::format('png')->size(25)->generate($data->nrocertificado);
+                                $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate($data->nrocertificado));
+                                
+                                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.normal', compact('data', 'codigoQR'))->setPaper('a4', 'landscape');
+                                $pdf->getDomPDF()->setHttpContext(
+                                    stream_context_create([
+                                        'ssl' => [
+                                            'allow_self_signed'=> TRUE,
+                                            'verify_peer' => FALSE,
+                                            'verify_peer_name' => FALSE,
+                                        ]
+                                    ])
+                                );
+                                $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+                               
+                                
+                            }else{
+                                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.blanco', compact('data'))->setPaper('a4', 'landscape');
+                            }
+                            break;
+                        case '2':
+                            $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.autorizacion1', compact('data'))->setPaper('a4', 'portrait');
+                            # code...
+                            break;
+                        case '3':
+                            $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.bodega', compact('data'))->setPaper('a4', 'portrait');
+                            break;
+                    }
+                }else{
+                    $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.licencia', compact('data'))->setPaper('a4', 'portrait');
+                }
                 break;
             case '2':
                 $pdf = PDF::loadView('gestion.pdf.resolucion.edificaciones.edificaciones', compact('data'))->setPaper('a4', 'portrait');
                 break;
             case '3':
-                $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
+                if(!is_null($blanco)){
+                    $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad2', compact('data'))->setPaper('a4', 'landscape');
+                }else{
+                    $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
+                }
                 break;
             case '4':
                 $pdf = PDF::loadView('gestion.pdf.resolucion.defensacivil.defensa', compact('data'))->setPaper('a4', 'portrait');
@@ -641,6 +800,12 @@ class ResolucionController extends Controller
     {
         $tipo          = $request->input('tipo');
         $numerotramite = Resolucion::NumeroSigue($tipo);
+        echo $numerotramite;
+    }
+    public function generarNumero2(Request $request)
+    {
+        $tipo          = $request->input('subtipotramite');
+        $numerotramite = Resolucion::NumeroSigueCertificadoLicencias($tipo);
         echo $numerotramite;
     }
 }

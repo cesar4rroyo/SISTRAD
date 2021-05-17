@@ -19,7 +19,7 @@
   </li> --}}
 </ul>  
 <script>   
-   document.addEventListener("DOMContentLoaded", function(event) {
+   $(document).ready(function ()  {
     $('#acciones_entrada').hide();
 		$('#myTab a').on('click', function(e){
             e.preventDefault();  

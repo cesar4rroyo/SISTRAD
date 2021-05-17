@@ -2,6 +2,7 @@
 
 namespace App\Models\Gestion;
 
+use App\Models\Admin\Personal;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +12,9 @@ class Inspeccion extends Model
 	use SoftDeletes;
     protected $table = 'inspeccion';
     protected $dates = ['deleted_at'];
-
+	protected $fillable = [
+        'estado',
+    ];
 	public function tipotramite()
     {
         return $this->belongsTo(Tipotramitenodoc::class, 'tipo_id');
@@ -25,6 +28,21 @@ class Inspeccion extends Model
 	public function resolucion()
 	{
 		return $this->hasOne(Resolucion::class, 'resolucion_id');
+	}
+
+	public function inspector()
+	{
+		return $this->belongsTo(Personal::class, 'inspector_id');
+	}
+
+	public function getFullInspeccionAttribute()
+	{
+		return $this->tipotramite->descripcion . ' - ' . $this->numero;
+	}
+
+	public function carta()
+	{
+		return $this->hasMany(Carta::class);
 	}
 
     public function scopelistar($query, $numero, $fecinicio, $fecfin, $contribuyente, $tipo)

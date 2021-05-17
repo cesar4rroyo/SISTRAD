@@ -1,11 +1,5 @@
 <!-- Content Header (Page header) -->
-
-
-@extends("theme.$theme.layout")
-
-@section('content')
-<div class="container">
-
+<div class="container" id="container">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -71,14 +65,13 @@
         </div>
     </div>
 </div>
-@endsection
 <style>
 	.select2-container--default .select2-selection--single{
 		height: fit-content !important;
 	}
 </style>
 <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+     $(document).ready(function () {
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
 		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="numerosearch"]').keyup(function (e) {

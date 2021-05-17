@@ -44,7 +44,11 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware'=>['auth'
 //aca las demas rutas
 Route::group(['middleware' => ['auth', 'acceso']], function () {
     /*Dashboard Principal*/
-    Route::get('dashboard', 'Gestion\TramiteController@index')->name('dashboard');
+    Route::get('dashboard', function(){
+        return view('theme.lte.layout');
+    })->name('dashboard');
+    //Route::get('dashboard', 'Gestion\TramiteController@index')->name('dashboard');
+    
 
     /* Rutas Perfil & Cambio Contraseña */
     Route::get('persona/perfil', 'Admin\UsuarioController@perfil')->name('usuario.perfil');
@@ -109,9 +113,15 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     
     Route::get('tramite/ticket/pdf', 'Gestion\TramiteController@generarTicket')->name('tramite.ticket');
 
-
+    //tramite reportes
     Route::resource('reportetramite', 'Reportes\ReportetramiteController', array('except' => array('show')));
     Route::get('reportetramite/pdftramites', 'Reportes\ReportetramiteController@pdfTramites')->name('reportetramite.pdftramites');
+    //inspeccion reporte
+    Route::resource('reporteInspeccion', 'Reportes\ReporteInspeccionController', array('except' => array('show')));
+    Route::get('reporteInspeccion/pdfInspeccion', 'Reportes\ReporteInspeccionController@pdfInspeccion')->name('reporteinspeccion.pdfInspeccion');
+    //resolucion reporte
+    Route::resource('reporteResolucion', 'Reportes\ReporteResolucionController', array('except' => array('show')));
+    Route::get('reporteResolucion/pdfResolucion', 'Reportes\ReporteResolucionController@pdfResolucion')->name('reporteresolucion.pdfResolucion');
 
 //SEGUNDA PARTE 
 
@@ -137,6 +147,9 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('inspeccion/pdf/{id}', 'Gestion\InspeccionController@pdfInspeccion')->name('inspeccion.pdfInspeccion');
     Route::get("inspeccion/archivo/{nombre}",'Gestion\InspeccionController@descargar')->name('inspeccion.descargar');
     Route::post('inspeccion/generarNumero', 'Gestion\InspeccionController@generarNumero')->name('inspeccion.generarnumero');
+    Route::post('inspeccion/getInfo', 'Gestion\InspeccionController@getInfo')->name('inspeccion.getInfo');
+    Route::put('inspeccion/observaciones', 'Gestion\InspeccionController@levantarObservaciones')->name('inspeccion.levantarObservaciones');
+
     //FIN INSPECCION
 
     /* RESOLUCIÓN*/
@@ -145,8 +158,9 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::resource('resolucion', 'Gestion\ResolucionController', array('except' => array('show')));
     Route::get('resolucion/listarInspeccion', 'Gestion\ResolucionController@listarInspeccion')->name('resolucion.listarInspeccion');
     Route::get('resolucion/listarOrdenpago', 'Gestion\ResolucionController@listarOrdenpago')->name('resolucion.listarOrdenpago');
-    Route::get('resolucion/pdf/{id}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
+    Route::get('resolucion/pdf/{id}/{blanco?}/{subtipo?}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
     Route::post('resolucion/generarNumero', 'Gestion\ResolucionController@generarNumero')->name('resolucion.generarnumero');
+    Route::post('resolucion/generarNumero2', 'Gestion\ResolucionController@generarNumero2')->name('resolucion.generarnumero2');
 
     //Tipo tramite
     Route::post('tipotramitenodoc/buscar', 'Control\TipotramitenodocController@buscar')->name('tipotramitenodoc.buscar');
@@ -165,6 +179,15 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('solicitud/generarNumero', 'Gestion\SolicitudController@generarNumero')->name('solicitud.generarnumero');
 
     //FIN SOLICITUD
+
+    //CARTA
+    Route::post('carta/buscar', 'Gestion\CartaController@buscar')->name('carta.buscar');
+    Route::get('carta/eliminar/{id}/{listarluego}', 'Gestion\CartaController@eliminar')->name('carta.eliminar');
+    Route::resource('carta', 'Gestion\CartaController', array('except' => array('show')));  
+    Route::get('carta/pdf/{id}', 'Gestion\CartaController@pdf')->name('carta.pdf');
+    Route::post('carta/generarNumero', 'Gestion\CartaController@generarNumero')->name('carta.generarnumero');
+
+    //FIN CARTA
 
 //FIN SEGUNDA PARTE
 });

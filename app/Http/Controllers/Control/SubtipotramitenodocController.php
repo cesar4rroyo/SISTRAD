@@ -251,7 +251,7 @@ class SubtipotramitenodocController extends Controller
 
     public function listarSubtipos(Request $request){
         try {    
-            $tipotramite_id = $request->input('tipotramite_id');
+            $tipotramite_id = $request->input('tipo_id');
             $subtipos = Subtipotramitenodoc::where('tipotramitenodoc_id', $tipotramite_id)->get();
             $response = ['data' => $subtipos];
         } catch (\Exception $exception) {

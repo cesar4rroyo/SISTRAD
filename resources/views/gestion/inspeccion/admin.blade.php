@@ -1,11 +1,5 @@
 <!-- Content Header (Page header) -->
-
-
-@extends("theme.$theme.layout")
-
-@section('content')
-<div class="container">
-
+<div class="container" id="container">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -52,7 +46,29 @@
 							<div class="card-header">
 							  <div class="card-tools">
 								{!! Form::button(' <i class="fa fa-plus fa-fw"></i> Agregar', array('class' => 'btn  btn-outline-primary', 'id' => 'btnNuevo', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
+		   					</div>
+							<span class="badge badge-success">ACEPTADO</span>
+								<span class="badge badge-danger">RECHAZADO</span>
+								<span class="badge badge-primary">NOTIFICADO</span>
+								<span class="badge badge-warning">OBSERVADO</span>
+								{{-- <span class="badge badge-secondary">SIN RESPUESTA</span> --}}
 							</div>
+							<div class="btn-group">
+								<span class="btn btn-warning btn-sm">
+									<i class="fas fa-edit"></i> Editar
+								</span>
+								<span class="btn btn-primary btn-sm">
+									<i class="fas fa-file-pdf"></i> PDF
+								</span>
+								<span class="btn btn-danger btn-sm">
+									<i class="fas fas fa-trash"></i> Eliminar
+								</span>
+								<span class="btn btn-info btn-sm">
+									<i class="fas fa-envelope"></i> Notificar
+								</span>
+								<span class="btn btn-secondary btn-sm">
+									<i class="fas fa-check-double"></i> Levantar observaciones
+								</span>
 							</div>
 							<!-- /.card-header -->
 							<div class="card-body table-responsive px-3">
@@ -69,13 +85,11 @@
         </div>
     </div>
 </div>
-@endsection
-
 <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+    $(document).ready(function () {
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="numero"]').keyup(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="numero_search"]').keyup(function (e) {
 			var key = window.event ? e.keyCode : e.which;
 			if (key == '13') {
 				buscar('{{ $entidad }}');

@@ -1,6 +1,5 @@
-@extends("theme.$theme.layout")
-@section('content')
-<div class="container">
+<!-- Content Header (Page header) -->
+<div class="container" id="container">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -51,4 +50,34 @@
         </div>
     </div>
 </div>
-@endsection
+<script>
+    $(document).ready(function ()  {
+        $('.acceso').on('change', function () {
+            var data = {
+                opcionmenu_id: $(this).data('opcionid'),
+                tipousuario_id: $(this).val(),
+                _token: $('input[name=_token]').val()
+            };
+            if ($(this).is(':checked')) {
+                data.estado = 1
+            } else {
+                data.estado = 0
+            }
+            ajaxRequest('admin/acceso', data);
+        });
+	});
+    function ajaxRequest(url, data) {
+        $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function (respuesta) {
+                    Hotel.notificaciones(respuesta.respuesta, 'Sistema', 'success');
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+
+        });
+    }
+</script>
