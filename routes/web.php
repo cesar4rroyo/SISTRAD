@@ -122,6 +122,11 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('ordenpago/pdf/{id}', 'Gestion\OrdenpagoController@pdf')->name('ordenpago.pdf');
     Route::post('ordenpago/generarNumero', 'Gestion\OrdenpagoController@generarNumero')->name('ordenpago.generarnumero');
     Route::get('ordenpago/listarsubtipostramite', 'Control\SubtipotramitenodocController@listarSubtipos')->name('ordenpago.listarsubtipos');
+    Route::post('ordenpago/buscarDNI', 'Gestion\OrdenpagoController@buscarDNI')->name('ordenpago.buscarDNI');
+    Route::post('ordenpago/buscarRUC', 'Gestion\OrdenpagoController@buscarRUC')->name('ordenpago.buscarRUC');
+
+    Route::resource('reporteordenpago', 'Reportes\ReporteordenpagoController', array('except' => array('show')));
+    Route::get('reporteordenpago/pdfordenespago', 'Reportes\ReporteordenpagoController@pdfordenespago')->name('reporteordenpago.pdfordenespago');
     //FIN ORDEN PAGO
 
     //INSPECCION

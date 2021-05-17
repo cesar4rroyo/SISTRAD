@@ -15,6 +15,8 @@ use App\Models\Gestion\Tipotramitenodoc;
 use App\Models\Gestion\Tramite;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
+use GuzzleHttp\Client;
+
 
 class OrdenpagoController extends Controller
 {
@@ -57,15 +59,19 @@ class OrdenpagoController extends Controller
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $contribuyente    = Libreria::getParam($request->input('contribuyente'));
         $tipo             = Libreria::getParam($request->input('tipo'));
-        $resultado        = Ordenpago::listar($numero, $fecinicio, $fecfin, $contribuyente, $tipo);
+        $subtipo             = Libreria::getParam($request->input('subtipo'));
+        $estado             = Libreria::getParam($request->input('estado'));
+        $resultado        = Ordenpago::listar($numero, $fecinicio, $fecfin, $contribuyente, $tipo , $subtipo , $estado);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Subtipo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'DNI/RUC', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Monto', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Archivo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
@@ -97,7 +103,8 @@ class OrdenpagoController extends Controller
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
         $tipostramite     = ["" => 'Todos' ] + Tipotramitenodoc::pluck('descripcion' , 'id')->all();
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta' , 'tipostramite'));
+        $subtipostramite     = ["" => 'Todos' ] + Subtipotramitenodoc::pluck('descripcion' , 'id')->all();
+        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta' , 'tipostramite' , 'subtipostramite'));
     }
 
     /**
@@ -137,7 +144,7 @@ class OrdenpagoController extends Controller
             'estado' => 'required',
             'numerooperacion' => 'required_if:estado,==,confirmado',
             'fechaoperacion' => 'required_if:estado,==,confirmado',
-            'tramiteref' => 'required_if:estado,==,confirmado',
+            // 'tramiteref' => 'required_if:estado,==,confirmado',
         );
         $mensajes = array(
             'contribuyente.required'         => 'Debe ingresar el nombre del contribuyente'
@@ -150,7 +157,8 @@ class OrdenpagoController extends Controller
         $error = DB::transaction(function() use($request){
             $ordenpago = new Ordenpago();
             $ordenpago->numero          = Libreria::getParam($request->input('numero'));
-            $ordenpago->tipo_id            = strtoupper(Libreria::getParam($request->input('tipotramite')));
+            $ordenpago->tipo_id            = Libreria::getParam($request->input('tipotramite'));
+            $ordenpago->subtipo_id          = Libreria::getParam($request->input('subtipotramite'));
             $ordenpago->dni_ruc         = Libreria::getParam($request->input('dni_ruc'));
             $ordenpago->contribuyente   = Libreria::getParam($request->input('contribuyente'));
             $ordenpago->direccion       = Libreria::getParam($request->input('direccion'));
@@ -158,11 +166,11 @@ class OrdenpagoController extends Controller
             $ordenpago->monto           = $request->input('monto');
             
             $ordenpago->representante   = strtoupper($request->input('representante'));
+            $ordenpago->descripcion     = strtoupper($request->input('descripcion'));
             $ordenpago->estado          = $request->input('estado');
             
             if($ordenpago->estado == 'confirmado'){
-                $ordenpago->descripcion     = strtoupper($request->input('descripcion'));
-                $ordenpago->tramiteref_id  = $request->input('tramiteref');
+                $ordenpago->tramiteref_id  = Libreria::getParam($request->input('tramiteref'));
                 $ordenpago->numerooperacion  = $request->input('numerooperacion');
                 $ordenpago->fechaoperacion      = $request->input('fechaoperacion');
                 $ordenpago->cuenta      = $request->input('cuenta');
@@ -240,7 +248,7 @@ class OrdenpagoController extends Controller
             'estado' => 'required',
             'numerooperacion' => 'required_if:estado,==,confirmado',
             'fechaoperacion' => 'required_if:estado,==,confirmado',
-            'tramiteref' => 'required_if:estado,==,confirmado',
+            // 'tramiteref' => 'required_if:estado,==,confirmado',
         );
         $mensajes = array(
             'contribuyente.required'         => 'Debe ingresar el nombre del contribuyente'
@@ -252,7 +260,8 @@ class OrdenpagoController extends Controller
         $error = DB::transaction(function() use($request, $id){
             $ordenpago = Ordenpago::find($id);
             $ordenpago->numero          = Libreria::getParam($request->input('numero'));
-            $ordenpago->tipo_id            = strtoupper(Libreria::getParam($request->input('tipotramite')));
+            $ordenpago->tipo_id            = Libreria::getParam($request->input('tipotramite'));
+            $ordenpago->subtipo_id          = Libreria::getParam($request->input('subtipotramite'));
             $ordenpago->dni_ruc         = Libreria::getParam($request->input('dni_ruc'));
             $ordenpago->contribuyente   = Libreria::getParam($request->input('contribuyente'));
             $ordenpago->direccion       = Libreria::getParam($request->input('direccion'));
@@ -260,11 +269,11 @@ class OrdenpagoController extends Controller
             $ordenpago->monto           = $request->input('monto');
             
             $ordenpago->representante   = strtoupper($request->input('representante'));
+            $ordenpago->descripcion     = strtoupper($request->input('descripcion'));
             $ordenpago->estado          = $request->input('estado');
             
             if($ordenpago->estado == 'confirmado'){
-                $ordenpago->descripcion     = strtoupper($request->input('descripcion'));
-                $ordenpago->tramiteref_id  = $request->input('tramiteref');
+                $ordenpago->tramiteref_id  = Libreria::getParam($request->input('tramiteref'));
                 $ordenpago->numerooperacion  = $request->input('numerooperacion');
                 $ordenpago->fechaoperacion      = $request->input('fechaoperacion');
                 $ordenpago->cuenta      = $request->input('cuenta');
@@ -338,11 +347,35 @@ class OrdenpagoController extends Controller
 
     public function generarNumero(Request $request)
     {
-        $tipo          = $request->input('tipo');
+        $tipo          = $request->input('tipotramite');
 
         $numerotramite = Ordenpago::NumeroSigue($tipo);
         echo $numerotramite;
     }
 
-    
+    public function buscarDNI(Request $request)
+    {
+        $respuesta = array();
+        $dni = $request->input('dni');
+        $client = new Client();
+        $res = $client->get('http://facturae-garzasoft.com/facturacion/buscaCliente/BuscaCliente2.php?' . 'dni=' . $dni . '&fe=N&token=qusEj_w7aHEpX');
+        if ($res->getStatusCode() == 200) { // 200 OK
+            $response_data = $res->getBody()->getContents();
+            $respuesta = json_decode($response_data);
+        }
+        return json_encode($respuesta);
+    }
+
+    public function buscarRUC(Request $request)
+    {
+        $respuesta = array();
+        $ruc = $request->input('ruc');
+        $client = new Client();
+        $res = $client->get('http://157.245.85.164/facturacion/buscaCliente/BuscaClienteRuc.php?fe=N&token=qusEj_w7aHEpX&' . 'ruc=' . $ruc);
+        if ($res->getStatusCode() == 200) { // 200 OK
+            $response_data = $res->getBody()->getContents();
+            $respuesta = json_decode($response_data);
+        }
+        return json_encode($respuesta);
+    }
 }

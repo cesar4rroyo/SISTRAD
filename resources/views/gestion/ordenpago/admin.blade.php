@@ -19,27 +19,35 @@
                         
 
 						<div class="row w-100">
-							<div class="col-lg-4 col-md-4  form-group">
-								{!! Form::label('numero', 'Numero') !!}
-								{!! Form::text('numero', '', array('class' => 'form-control ', 'id' => 'numero')) !!}
-							</div>
-							<div class="col-lg-4 col-md-4  form-group">
+							<div class="col-lg-3 col-md-3  form-group">
 								{!! Form::label('fechainicio', 'Fecha inicio') !!}
 								{!! Form::date('fechainicio', date('Y-m-d'), array('class' => 'form-control input-xs', 'id' => 'fechainicio' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
-							<div class="col-lg-4 col-md-4  form-group">
+							<div class="col-lg-3 col-md-3  form-group">
 								{!! Form::label('fechafin', 'Fecha fin') !!}
 								{!! Form::date('fechafin', '', array('class' => 'form-control input-xs', 'id' => 'fechafin' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
-							</div>							
+							</div>	
+							<div class="col-lg-3 col-md-3  form-group">
+								{!! Form::label('numero', 'Numero') !!}
+								{!! Form::text('numero', '', array('class' => 'form-control ', 'id' => 'numero')) !!}
+							</div>
+							<div class="col-lg-3 col-md-3  form-group">
+								{!! Form::label('estado', 'Estado') !!}
+								{!! Form::select('estado',["" => 'Todos' , 'pendiente' => 'Pendiente', 'confirmado' => 'Confirmado'],'', array('class' => 'form-control ', 'id' => 'estado' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+							</div>						
 						</div>
 						<div class="row w-100">
-							<div class="col-lg-4 col-md-4  form-group">
+							<div class="col-lg-3 col-md-3  form-group">
 								{!! Form::label('contribuyente', 'Contribuyente') !!}
 								{!! Form::text('contribuyente', '', array('class' => 'form-control ', 'id' => 'contribuyente')) !!}
 							</div>
-							<div class="col-lg-4 col-md-4  form-group">
+							<div class="col-lg-3 col-md-3  form-group">
 								{!! Form::label('tipo', 'Tipo') !!}
 								{!! Form::select('tipo', $tipostramite,'', array('class' => 'form-control ', 'id' => 'tipo' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+							</div>
+							<div class="col-lg-3 col-md-3  form-group">
+								{!! Form::label('subtipo', 'Subtipo') !!}
+								{!! Form::select('subtipo', $subtipostramite,'', array('class' => 'form-control ', 'id' => 'subtipo' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
 							<div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
 								{!! Form::label('nombre', 'Filas a mostrar') !!}

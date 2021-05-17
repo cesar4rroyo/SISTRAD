@@ -21,8 +21,16 @@
 			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
 			<td>{{ $value->tipotramite->descripcion }}</td>
+			<td>{{ $value->subtipotramite ? $value->subtipotramite->descripcion : '-' }}</td>
 			<td>{{ $value->dni_ruc }}</td>
 			<td>{{ $value->monto }}</td>
+			<td>
+				@if ($value->imagen)
+					<a href="{{asset('storage\archivos2\\'.$value->imagen)}}"  target="_blank" >{{ $value->imagen }}</a>
+				@else
+					-
+				@endif
+			</td>
 			<td class="{{$value->estado=='pendiente' ? 'bg-warning' : 'bg-success'}}">{{ strtoupper($value->estado )}}</td>
             <td>{!! Form::button('<div class="fas fa-file-pdf"></div> Pdf', array('onclick' =>'pdf(\''.$value->id.'\')', 'class' => 'btn btn-sm btn-primary')) !!}</td>
             <td>{!! Form::button('<div class="fas fa-edit"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}</td>

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class ReportetramiteController extends Controller
 {
-    protected $folderview      = 'reportes';
+    protected $folderview      = 'reportes.tramites';
    
 
      /**
@@ -69,13 +69,13 @@ class ReportetramiteController extends Controller
                 
         $lista1            = $resultado->get();
        
-        $pdf = PDF::loadView('reportes.pdftramites', compact('lista1' , 'fecinicio' , 'fecfin'))->setPaper('a4','landscape');
+        $pdf = PDF::loadView($this->folderview.'.pdftramites', compact('lista1' , 'fecinicio' , 'fecfin'))->setPaper('a4','landscape');
         //$guia = $request->input('guia');
 
         //HOJA HORIZONTAL ->setPaper('a4', 'landscape')
     //descargar
        // return $pdf->download('F'.$cotizacion->documento->correlativo.'.pdf');  
     //Ver
-       return $pdf->stream('reporteclientes.pdf');
+       return $pdf->stream('reportetramites.pdf');
     }
 }

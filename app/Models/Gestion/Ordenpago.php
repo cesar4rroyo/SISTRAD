@@ -16,8 +16,12 @@ class Ordenpago extends Model
     {
         return $this->belongsTo(Tipotramitenodoc::class, 'tipo_id');
     }
+	public function subtipotramite()
+    {
+        return $this->belongsTo(Subtipotramitenodoc::class, 'subtipo_id');
+    }
 
-    public function scopelistar($query, $numero, $fecinicio, $fecfin, $contribuyente, $tipo)
+    public function scopelistar($query, $numero, $fecinicio, $fecfin, $contribuyente, $tipo , $subtipo ,$estado)
 	{
 		return $query
             ->where(function ($subquery) use ($numero) {
@@ -38,6 +42,16 @@ class Ordenpago extends Model
 			->where(function ($subquery) use ($tipo) {
 				if (!is_null($tipo) && strlen($tipo) > 0) {
 					$subquery->where('tipo_id', $tipo);
+				}
+			})
+			->where(function ($subquery) use ($subtipo) {
+				if (!is_null($subtipo) && strlen($subtipo) > 0) {
+					$subquery->where('subtipo_id', $subtipo);
+				}
+			})
+			->where(function ($subquery) use ($estado) {
+				if (!is_null($estado) && strlen($estado) > 0) {
+					$subquery->where('estado', $estado);
 				}
 			})
 			->where(function ($subquery) use ($contribuyente) {

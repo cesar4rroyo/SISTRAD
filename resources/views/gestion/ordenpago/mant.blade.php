@@ -63,13 +63,28 @@
 				
 			</div>
 			<div class="row">
-				<div class="col-4 form-group">
+				{{-- <div class="col-4 form-group">
 					{!! Form::label('dni_ruc', 'DNI/RUC*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::text('dni_ruc', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'dni_ruc' , 'maxlength' => '11' )) !!}
+						{!! Form::text('dni_ruc', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'dni_ruc' , 'maxlength' => '11' ,'onkeypress'=>'return filterFloat(event,this)' )) !!}
+						<span class="input-group-btn">
+							{!! Form::button('<i class="fa fa-check" id="ibtnConsultar"></i>', array('style'=>'background:#00a8cc; color:white;','class'
+							=> 'btn  waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnConsultar', 'onclick'
+							=> 'consultaRUC()')) !!}
+						</span>
+					</div>
+
+				</div> --}}
+				<div class=" col-6 form-group">
+					{!! Form::label('dni_ruc', 'DNI/RUC*', array('class' => 'col-sm-3 col-xs-12 control-label input-sm','id'=>'lbldniruc', 'style'=>'')) !!}
+					<div class="input-group" style="padding-left:10px;">
+						{!! Form::text('dni_ruc', null, array('class' => 'form-control form-control-sm input-sm ', 'id' => 'dni_ruc','maxlength' => '11' , 'onkeypress'=>'return filterFloat(event,this)')) !!}
+						<span class="input-group-btn">
+							{!! Form::button('<i class="fa fa-search" id="ibtnConsultar"></i>', array('style'=>'background:#00a8cc; color:white; height:30px;','class'=> 'btn  waves-effect waves-light  btn-sm', 'id' => 'btnConsultar')) !!}
+						</span>
 					</div>
 				</div>
-				<div class="col-8 form-group">
+				<div class="col-6 form-group">
 					{!! Form::label('contribuyente', 'Contribuyente*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::text('contribuyente', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'contribuyente')) !!}
@@ -90,7 +105,12 @@
 			</div>
 			
 			
-			
+			<div class="form-group">
+				{!! Form::label('descripcion', 'Descripción', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::textarea('descripcion', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'descripcion','rows'=>2 , 'style' =>'resize:none;')) !!}
+				</div>
+			</div>
 		
 			<div class="row">
 				<label class="ml-3">Estado</label>	
@@ -171,12 +191,7 @@
 					{!! Form::file('file', null, array('class' => 'form-control-file  input-xs', 'id' => 'file' )) !!}
 				</div>
 		</div>
-		<div class="form-group">
-			{!! Form::label('descripcion', 'Descripción', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::textarea('descripcion', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'descripcion','rows'=>2 , 'style' =>'resize:none;')) !!}
-			</div>
-		</div>
+		
 		</div>
 	</div>
     <div class="form-group">
@@ -190,24 +205,26 @@
 $(document).ready(function() {
 	@if ($ordenpago)
 		@if ($ordenpago->estado == 'pendiente')
-		configurarAnchoModal('700');	
+		configurarAnchoModal('800');	
 		@else
 		configurarAnchoModal('1000');
 		tramitesSelect2();
 		@endif
+	@else
+		configurarAnchoModal('800');	
 	@endif
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 
 	$('#monto').inputmask('decimal', { rightAlign: false , digits:2  });
 
-	$("input#dni_ruc").bind('keypress', function(event) {
-		var regex = new RegExp("^[0-9]+$");
-		var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-			if (!regex.test(key)) {
-				event.preventDefault();
-				return false;
-			}
-	});
+	// $("input#dni_ruc").bind('keypress', function(event) {
+	// 	var regex = new RegExp("^[0-9]+$");
+	// 	var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+	// 		if (!regex.test(key)) {
+	// 			event.preventDefault();
+	// 			return false;
+	// 		}
+	// });
 	
 	
 
@@ -290,7 +307,7 @@ function generarNumero(){
     $.ajax({
         type: "POST",
         url: "{{route('ordenpago.generarnumero')}}",
-        data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&tipo=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="tipo"]').val(),
+        data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&tipotramite=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="tipotramite"]').val(),
         success: function(a) {
             $(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
         }
@@ -314,5 +331,49 @@ function tramitesSelect2(){
 			}
 		});
 	}
+
+	$('#btnConsultar').on('click', function(){
+			let valor = $('#dni_ruc').val();
+					if(valor.length == 8){
+						consultarDNI();
+					}else if (valor.length == 11){
+						consultaRUC();
+					}else{
+						alert('Ingrese un documento válido');
+					}
+		});
+
+
+		
+	function consultarDNI(){
+		// 
+			$.ajax({
+				type: "POST",
+				url: "{{route('ordenpago.buscarDNI')}}",
+				data: "dni="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni_ruc"]').val()+"&_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
+				success: function(a) {
+					datos=JSON.parse(a);
+						$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="contribuyente"]').val(datos.nombres+' '+datos.apepat+' '+datos.apemat);
+				}
+			});
+}
+
+function consultaRUC(){
+        $.ajax({
+            type: "POST",
+            url: "{{route('ordenpago.buscarRUC')}}",
+            data: "ruc="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni_ruc"]').val()+"&_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
+            success: function(a) {
+                datos=JSON.parse(a);
+				if(datos.length == 0){
+					toastr.error('El DNI o RUC ingresado es incorrecto', 'Error');
+				}else{
+					$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="contribuyente"]').val(datos.RazonSocial);
+					$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="direccion"]').val(datos.Direccion);
+				}
+            }
+        });
+   
+}
 </script>
 
