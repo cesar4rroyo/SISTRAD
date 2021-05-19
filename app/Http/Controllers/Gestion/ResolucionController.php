@@ -715,7 +715,7 @@ class ResolucionController extends Controller
                     switch ($subtipo) {
                         case '1':
                             if ($blanco=='NO') {
-                                $codigoQR = QrCode::format('png')->size(25)->generate($data->nrocertificado);
+                                $codigoQR = QrCode::format('png')->size(100)->generate($data->nrocertificado);
                                 $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate($data->nrocertificado));
                                 
                                 $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.normal', compact('data', 'codigoQR'))->setPaper('a4', 'landscape');

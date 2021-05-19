@@ -36,7 +36,7 @@
     <table width="100%">
         <tr>
             <td valign="top">
-                <img src="{{asset('imagenes/logo.jpeg')}}" alt="" width="80"/>
+                <img src="{{asset('imagenes/logo.jpeg')}}" alt="" width="65"/>
             </td>
             <td align="center">
                 <h1 style="color: red; font-size:1.4rem; font-family:Arial, Helvetica, sans-serif">MUNICIPALIDAD DISTRITAL DE JOSÉ LEONARDO ORTIZ</h1>
@@ -143,8 +143,6 @@
            </strong>
         </p>
     </div>
-    <br>
-    <br>
     <div class="ml-5">
         <table class="table2 tabledatos">
             <tr><td></td></tr>

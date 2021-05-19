@@ -6,10 +6,10 @@
 		<div class="col-4 form-group">
 			{!! Form::label('fechaexpedicion', 'Fecha de Expedición*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::date('fechaexpedicion', ($resolucion) ? date_create($resolucion->fechaexpedicion) : date('Y-m-d'), array('class' => 'form-control  input-xs', 'id' => 'fechaexpedicion' , 'readonly' => true)) !!}
+				{!! Form::date('fechaexpedicion', ($resolucion) ? date_create($resolucion->fechaexpedicion) : date('Y-m-d'), array('class' => 'form-control  input-xs', 'id' => 'fechaexpedicion')) !!}
 			</div>
 		</div>
-		<div class="col-4 form-group">
+		<div class="col-4 form-group" id="divFechaVencimiento">
 			{!! Form::label('fechavencimiento', 'Fecha de Vencimiento*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::date('fechavencimiento', ($resolucion) ? date_create($resolucion->fechavencimiento) : null, array('class' => 'form-control  input-xs', 'id' => 'fechavencimiento')) !!}
@@ -305,6 +305,16 @@ $(document).ready(function() {
 	$('#botonBuscarRuc').on('click', function(){
 		buscarRUC();
 	});
+
+	$("input[name=funcionamiento]").change(function () {	
+		var valor = $(this).val(); 
+		if(valor==='Temporal'){
+			$('#divFechaVencimiento').removeClass('d-none');
+		}else{
+			$('#divFechaVencimiento').addClass('d-none');
+		}
+	});
+
 
 	function buscarRUC(){
 		var reg = new RegExp('^[0-9]+$');
