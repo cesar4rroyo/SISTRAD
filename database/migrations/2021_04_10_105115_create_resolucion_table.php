@@ -16,7 +16,8 @@ class CreateResolucionTable extends Migration
         Schema::create('resolucion', function (Blueprint $table) {
             $table->increments('id');
             $table->dateTime('fechaexpedicion');
-            $table->dateTime('fechavencimiento');
+            $table->dateTime('fechavencimiento')->nullable();
+            $table->dateTime('fechaentrega')->nullable();
             $table->string('numero' , 30)->nullable();
             $table->string('contribuyente' , 200)->nullable();
             $table->string('direccion' , 100)->nullable();
@@ -30,6 +31,8 @@ class CreateResolucionTable extends Migration
             $table->string('observaciones' , 300)->nullable();
             $table->string('claseanuncio' , 300)->nullable();
             $table->string('ubicacionanuncio' , 300)->nullable();
+            $table->string('estado' , 300)->nullable();
+            $table->string('tipopersona' , 300)->nullable();
             $table->string('vigencia' , 300)->nullable();
             $table->string('leyenda' , 300)->nullable();
             $table->integer('inspeccion_id')->unsigned()->nullable();

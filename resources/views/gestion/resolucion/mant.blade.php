@@ -178,32 +178,93 @@
 					{!! Form::text('nombrecomercial', null, array('class' => 'form-control  input-xs', 'id' => 'nombrecomercial')) !!}
 				</div>
 			</div>
+			@if ($resolucion)
 			<div class="form-group col-sm">
 				{!! Form::label('funcionamiento', 'Tipo de Funcionamiento*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 				<div class="row  form-group ml-2">
 					<div class="form-check form-check-inline">
-						{{Form::radio('funcionamiento', 'Temporal', true , array("class"=>"form-check-input"))}}
+						{{Form::radio('funcionamiento', 'TEMPORAL', $resolucion->funcionamiento=='TEMPORAL' ? true : false, array("class"=>"form-check-input"))}}
 						<label class="form-check-label" for="Temporal">Temporal</label>
 					</div>
 					<div class="form-check form-check-inline">
-						{{Form::radio('funcionamiento', 'Definitivo',false , array("class"=>"form-check-input"))}}
+						{{Form::radio('funcionamiento', 'DEFINITIVO',$resolucion->funcionamiento=='DEFINITIVO' ? true : false , array("class"=>"form-check-input"))}}
 						<label class="form-check-label" for="Definitivo">Definitivo</label>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm form-group">
-				{!! Form::label('viapublica', 'Uso de Vía Pública*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			@else
+			<div class="form-group col-sm">
+				{!! Form::label('funcionamiento', 'Tipo de Funcionamiento*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 				<div class="row  form-group ml-2">
 					<div class="form-check form-check-inline">
-						{{Form::radio('viapublica', 'Si', false , array("class"=>"form-check-input"))}}
-						<label class="form-check-label" for="Si">Sí</label>
+						{{Form::radio('funcionamiento', 'TEMPORAL', true , array("class"=>"form-check-input"))}}
+						<label class="form-check-label" for="Temporal">Temporal</label>
 					</div>
 					<div class="form-check form-check-inline">
-						{{Form::radio('viapublica', 'No',true , array("class"=>"form-check-input"))}}
-						<label class="form-check-label" for="No">No</label>
+						{{Form::radio('funcionamiento', 'DEFINITIVO',false , array("class"=>"form-check-input"))}}
+						<label class="form-check-label" for="Definitivo">Definitivo</label>
 					</div>
 				</div>
 			</div>
+			@endif
+			@if ($resolucion)
+				<div class="col-sm form-group">
+					{!! Form::label('viapublica', 'Uso de Vía Pública*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					<div class="row  form-group ml-2">
+						<div class="form-check form-check-inline">
+							{{Form::radio('viapublica', 'SI', $resolucion->viapublica=='SI' ? true : false , array("class"=>"form-check-input"))}}
+							<label class="form-check-label" for="Si">Sí</label>
+						</div>
+						<div class="form-check form-check-inline">
+							{{Form::radio('viapublica', 'NO',$resolucion->viapublica=='NO' ? true : false , array("class"=>"form-check-input"))}}
+							<label class="form-check-label" for="No">No</label>
+						</div>
+					</div>
+				</div>
+			@else
+				<div class="col-sm form-group">
+					{!! Form::label('viapublica', 'Uso de Vía Pública*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					<div class="row  form-group ml-2">
+						<div class="form-check form-check-inline">
+							{{Form::radio('viapublica', 'Si', false , array("class"=>"form-check-input"))}}
+							<label class="form-check-label" for="Si">Sí</label>
+						</div>
+						<div class="form-check form-check-inline">
+							{{Form::radio('viapublica', 'No',true , array("class"=>"form-check-input"))}}
+							<label class="form-check-label" for="No">No</label>
+						</div>
+					</div>
+				</div>
+			@endif
+			@if ($resolucion)
+				<div class="col-sm form-group">
+					{!! Form::label('tipopersona', 'Tipo de persona*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					<div class="row  form-group ml-2">
+						<div class="form-check form-check-inline">
+							{{Form::radio('tipopersona', 'P/NAT', $resolucion->tipopersona=='P/NAT' ? true : false , array("class"=>"form-check-input"))}}
+							<label class="form-check-label" for="P/NAT">P/NAT</label>
+						</div>
+						<div class="form-check form-check-inline">
+							{{Form::radio('tipopersona', 'JUR',$resolucion->tipopersona=='JUR' ? true : false , array("class"=>"form-check-input"))}}
+							<label class="form-check-label" for="JUR">JUR</label>
+						</div>
+					</div>
+				</div>
+			@else
+				<div class="col-sm form-group">
+					{!! Form::label('tipopersona', 'Tipo de persona*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					<div class="row  form-group ml-2">
+						<div class="form-check form-check-inline">
+							{{Form::radio('tipopersona', 'P/NAT', false , array("class"=>"form-check-input"))}}
+							<label class="form-check-label" for="P/NAT">P/NAT</label>
+						</div>
+						<div class="form-check form-check-inline">
+							{{Form::radio('tipopersona', 'JUR',true , array("class"=>"form-check-input"))}}
+							<label class="form-check-label" for="JUR">JUR</label>
+						</div>
+					</div>
+				</div>
+			@endif
 		</div>
 		<div class="row">
 			<div class="col-sm form-group" id="certificadoGroup">
@@ -266,9 +327,29 @@
 		</div>	
 	</div>
 	<div class="form-group">
-		{!! Form::label('direccion', 'Dirección*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lbldireccion')) !!}
+		{!! Form::label('direccion', 'Dirección Completa*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lbldireccion')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
 			{!! Form::text('direccion', null, array('class' => 'form-control  input-xs', 'id' => 'direccion')) !!}
+		</div>
+	</div>
+	<div class="row">
+		<div class="form-group col-sm">
+			{!! Form::label('jurisdicion', 'Calle o Avenida*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lbljurisdicion')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('jurisdicion', $resolucion ? explode('-', $resolucion->direccion)[0] : null, array('class' => 'form-control  input-xs', 'id' => 'jurisdicion', 'placeholder'=>'Ej. Calle Proceres')) !!}
+			</div>
+		</div>
+		<div class="form-group col-sm">
+			{!! Form::label('numerocalle', 'Número*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnumerocalle')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::number('numerocalle', $resolucion ? (int)explode('-', $resolucion->direccion)[1] : null, array('class' => 'form-control  input-xs', 'id' => 'numerocalle', 'placeholder'=>'Ej. 154')) !!}
+			</div>
+		</div>
+		<div class="form-group col-sm">
+			{!! Form::label('urbanizacion22', 'Urbanización*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblurbanizacion22')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('urbanizacion22', $resolucion ? explode('-', $resolucion->direccion)[2] : null, array('class' => 'form-control  input-xs', 'id' => 'urbanizacion22', 'placeholder'=>'Ej. Urb. Latina')) !!}
+			</div>
 		</div>
 	</div>
 	<div class="form-group">
@@ -313,6 +394,24 @@ $(document).ready(function() {
 		}else{
 			$('#divFechaVencimiento').addClass('d-none');
 		}
+	});
+
+	$('#ordenpago_id').on('change', function(){
+		var value = $(this).val();
+		$.ajax({
+			type: 'POST',
+			url: "{{route('inspeccion.getInfo')}}",
+			data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&ordenpago_id="+value,
+			success: function(a) {
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="direccion"]').val(a.direccion);
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="contribuyente"]').val(a.representante);
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="dni"]').val(a.dni_ruc);
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="ruc"]').val(a.dni_ruc);
+				console.log(a.direccion);
+				console.log(a);
+			}
+
+		});
 	});
 
 
@@ -381,7 +480,7 @@ function showTipo(tipo){
 				$('#inforuc').removeClass('d-none');
 				$('#divLicenciasAutorizaciones').removeClass('d-none');
 				$('#lblcontribuyente').text('Contribuyente*');
-				$('#lbldireccion').text('Dirección*');
+				$('#lbldireccion').text('Dirección Completa*');
 				$('#lblnrodocumento').text('Nro. de Resolucion');
 
 

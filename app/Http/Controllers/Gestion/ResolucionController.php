@@ -31,6 +31,8 @@ class ResolucionController extends Controller
         'delete' => 'resolucion.eliminar',
         'search' => 'resolucion.buscar',
         'index'  => 'resolucion.index',
+        'estado' => 'resolucion.estado',
+        'confirmarEstado'=>'resolucion.updateEstado'
     );
      /**
      * Create a new controller instance.
@@ -134,14 +136,14 @@ class ResolucionController extends Controller
             'numero' => 'required',
             'contribuyente' => 'required',
             'tipo' => 'required',
-            'fechavencimiento'         => 'required',
+            //'fechavencimiento'         => 'required',
             'direccion'         => 'required',
         );
         $mensajes = array(
             'numero.required'         => 'Debe ingresar un numero',
             'contribuyente.required'         => 'Debe ingresar el nombre del Propietario',
             'tipo.required'         => 'Debe ingresar el tipo',
-            'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+            //'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
             'direccion.required'         => 'Debe ingresar una direccion/ubicación',
         );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
@@ -162,22 +164,60 @@ class ResolucionController extends Controller
                 }
                 switch ($request->subtipotramite) {
                     case '1': //licencias de funcionamiento
-                        $reglas     = array(
-                            'funcionamiento' => 'required',
-                            'nombrecomercial' => 'required',
-                            'viapublica' => 'required',
-                            'arearesolucion' => 'required',
-                            'arearesolucion' => 'required',
-                            'girocomercial'=>'required',
-                        );
-                        $mensajes = array(
-                            'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
-                            'viapublica.required'         => 'Debe especificar si usa la vía pública',
-                            'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
-                            'arearesolucion.required'         => 'Debe ingresar el área',
-                            'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
-                            'girocomercial.required'         => 'Debe ingresar el Giro del negocio ',
-                        );
+                        if($request->funcionamiento == 'Temporal'){
+                            $reglas     = array(
+                                'funcionamiento' => 'required',
+                                'nombrecomercial' => 'required',
+                                'viapublica' => 'required',
+                                'arearesolucion' => 'required',
+                                'arearesolucion' => 'required',
+                                'girocomercial'=>'required',
+                                'fechavencimiento' => 'required',
+                                'jurisdicion'=>'required',
+                                'numerocalle'=>'required',
+                                'urbanizacion22'=>'required',
+                                'tipopersona'=>'required',
+
+                            );
+                            $mensajes = array(
+                                'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                                'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                                'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                                'arearesolucion.required'         => 'Debe ingresar el área',
+                                'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                                'girocomercial.required'         => 'Debe ingresar el Giro del negocio ',
+                                'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+                                'jurisdicion.required'=>'Debe Ingresar el nombre de la calle o avenidad',
+                                'numerocalle.required'=>'Debe de ingresar el numero de la calle',
+                                'urbanizacion22.required'=>'Debe ingresar el nombre de la urbanizacion',
+                                'tipopersona.required'=>'Debe ingresar el tipo de personas'
+                            );
+                        }else{
+                            $reglas     = array(
+                                'funcionamiento' => 'required',
+                                'nombrecomercial' => 'required',
+                                'viapublica' => 'required',
+                                'arearesolucion' => 'required',
+                                'arearesolucion' => 'required',
+                                'girocomercial'=>'required',
+                                'jurisdicion'=>'required',
+                                'numerocalle'=>'required',
+                                'urbanizacion22'=>'required',
+                                'tipopersona'=>'required',
+                            );
+                            $mensajes = array(
+                                'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                                'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                                'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                                'arearesolucion.required'         => 'Debe ingresar el área',
+                                'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                                'girocomercial.required'         => 'Debe ingresar el Giro del negocio ',
+                                'jurisdicion.required'=>'Debe Ingresar el nombre de la calle o avenidad',
+                                'numerocalle.required'=>'Debe de ingresar el numero de la calle',
+                                'urbanizacion22.required'=>'Debe ingresar el nombre de la urbanizacion',
+                                'tipopersona.required'=>'Debe ingresar el tipo de personas'
+                            );
+                        }
                         break;
                     case '2': //anuncios publicitarios
                         $reglas     = array(
@@ -187,6 +227,8 @@ class ResolucionController extends Controller
                             'leyenda' => 'required',
                             'arearesolucion' => 'required',
                             'tramiteref'         => 'required',
+                            'fechavencimiento' => 'required',
+
                         );
                         $mensajes = array(
                             'ubicacionanuncio.required'         => 'Debe ingresar la ubicacion del anuncio',
@@ -195,6 +237,8 @@ class ResolucionController extends Controller
                             'claseanuncio.required'         => 'Debe ingresar la clase de anuncio',
                             'arearesolucion.required'         => 'Debe ingresar el área',
                             'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                            'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+
                         );
                         break;
                     case '3': //bodegas
@@ -204,6 +248,8 @@ class ResolucionController extends Controller
                             'viapublica' => 'required',
                             'arearesolucion' => 'required',
                             'tramiteref'         => 'required',
+                            'fechavencimiento' => 'required',
+
                         );
                         $mensajes = array(
                             'nombrecomercial2.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
@@ -211,6 +257,8 @@ class ResolucionController extends Controller
                             'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
                             'arearesolucion.required'         => 'Debe ingresar el área',
                             'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                            'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+
                         );
                         break;
                     
@@ -224,12 +272,13 @@ class ResolucionController extends Controller
                         'fechaexpedicion' => $request->input('fechaexpedicion'),           
                         'fechavencimiento' => $request->input('fechavencimiento'),           
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
-                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccion' => ($request->subtipotramite=='1') ? (strtoupper($request->jurisdicion) . ' - ' .  strtoupper($request->numerocalle) . ' - ' . strtoupper($request->urbanizacion22) ): strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
                         'dni' => Libreria::getParam($request->input('dni')),           
-                        'ruc' => Libreria::getParam($request->input('ruc')),           
+                        'ruc' => Libreria::getParam($request->input('ruc')),
+                        'estado'=>'REGISTRADO',           
                         'ordenpago_id' => $request->input('ordenpago_id'),       
                         'inspeccion_id' => $request->input('inspeccion_id'), 
                         'tipo_id'=>$request->input('tipo'),     
@@ -245,7 +294,9 @@ class ResolucionController extends Controller
                         'ubicacionanuncio'=>strtoupper($request->input('ubicacionanuncio')),    
                         'vigencia'=>strtoupper($request->input('vigencia')),  
                         'leyenda'=>strtoupper($request->input('leyenda')),  
-                        'subtipo_id' => $request->input('subtipotramite'),     
+                        'subtipo_id' => $request->input('subtipotramite'), 
+                        'tipopersona' => strtoupper(Libreria::getParam($request->input('tipopersona'))),                
+
                     ]);
                     
                 });
@@ -260,7 +311,9 @@ class ResolucionController extends Controller
                     'area' => 'required',
                     'valor' => 'required',
                     'responsableobra' => 'required',
-                    'ordenpago_id'=>'required'
+                    'ordenpago_id'=>'required',
+                    'fechavencimiento' => 'required',
+
                 );
                 $mensajes = array(
                     'uso.required'         => 'Debe ingresar un uso',
@@ -270,7 +323,9 @@ class ResolucionController extends Controller
                     'area.required'         => 'Debe ingresar el área',
                     'valor.required'         => 'Debe ingresar el Valor de la Obra',
                     'responsableobra.required'         => 'Debe ingresar el Nombre del Responsable de la Obra',
-                    'ordenpago_id.required' => 'Debe Ingresar el Nro. de Orden de Pago'
+                    'ordenpago_id.required' => 'Debe Ingresar el Nro. de Orden de Pago',
+                    'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+
                 );
                 $validacion = Validator::make($request->all(), $reglas, $mensajes);
                 if ($validacion->fails()) {
@@ -308,6 +363,8 @@ class ResolucionController extends Controller
                     'zona' => 'required',
                     'razonsocial' => 'required',
                     'girocomercial' => 'required',
+                    'fechavencimiento' => 'required',
+
                 );
                 $mensajes = array(
                     'categoria.required'         => 'Debe ingresar una categoria',
@@ -315,6 +372,8 @@ class ResolucionController extends Controller
                     'localidad.required'         => 'Debe ingresar la localidad',
                     'razonsocial.required'         => 'Debe ingresar la Razón Social',
                     'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
+                    'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+
                 );
                 $validacion = Validator::make($request->all(), $reglas, $mensajes);
                 if ($validacion->fails()) {
@@ -427,14 +486,14 @@ class ResolucionController extends Controller
             'numero' => 'required',
             'contribuyente' => 'required',
             'tipo' => 'required',
-            'fechavencimiento'         => 'required',
+           // 'fechavencimiento'         => 'required',
             'direccion'         => 'required',
         );
         $mensajes = array(
             'numero.required'         => 'Debe ingresar un numero',
             'contribuyente.required'         => 'Debe ingresar el nombre del Propietario',
             'tipo.required'         => 'Debe ingresar el tipo',
-            'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+           // 'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
             'direccion.required'         => 'Debe ingresar una direccion/ubicación',
         );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
@@ -459,22 +518,51 @@ class ResolucionController extends Controller
                 }
                 switch ($request->subtipotramite) {
                     case '1':
-                        $reglas     = array(
-                            'funcionamiento' => 'required',
-                            'nombrecomercial' => 'required',
-                            'viapublica' => 'required',
-                            'arearesolucion' => 'required',
-                            'arearesolucion' => 'required',
-                            'girocomercial'=>'required',
-                        );
-                        $mensajes = array(
-                            'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
-                            'viapublica.required'         => 'Debe especificar si usa la vía pública',
-                            'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
-                            'arearesolucion.required'         => 'Debe ingresar el área',
-                            'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
-                            'girocomercial.required'         => 'Debe ingresar el Giro del negocio ',
-                        );
+                        if($request->funcionamiento == 'Temporal'){
+                            $reglas     = array(
+                                'funcionamiento' => 'required',
+                                'nombrecomercial' => 'required',
+                                'viapublica' => 'required',
+                                'arearesolucion' => 'required',
+                                'arearesolucion' => 'required',
+                                'girocomercial'=>'required',
+                                'fechavencimiento' => 'required',
+                                'jurisdicion'=>'required',
+                                'numerocalle'=>'required',
+                                'urbanizacion'=>'required',
+
+                            );
+                            $mensajes = array(
+                                'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                                'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                                'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                                'arearesolucion.required'         => 'Debe ingresar el área',
+                                'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                                'girocomercial.required'         => 'Debe ingresar el Giro del negocio ',
+                                'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+                                'jurisdicion.required'=>'Debe Ingresar el nombre de la calle o avenidad',
+                                'numerocalle.required'=>'Debe de ingresar el numero de la calle',
+                                'urbanizacion.required'=>'Debe ingresar el nombre de la urbanizacion',
+                            );
+                        }else{
+                            $reglas     = array(
+                                'funcionamiento' => 'required',
+                                'nombrecomercial' => 'required',
+                                'viapublica' => 'required',
+                                'arearesolucion' => 'required',
+                                'arearesolucion' => 'required',
+                                'girocomercial'=>'required',
+                            );
+                            $mensajes = array(
+                                'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
+                                'viapublica.required'         => 'Debe especificar si usa la vía pública',
+                                'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
+                                'arearesolucion.required'         => 'Debe ingresar el área',
+                                'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                                'girocomercial.required'         => 'Debe ingresar el Giro del negocio ',
+                            );
+                        }
+                        
                         break;
                     case '2':
                         $reglas     = array(
@@ -483,6 +571,9 @@ class ResolucionController extends Controller
                             'ubicacionanuncio' => 'required',
                             'arearesolucion' => 'required',
                             'tramiteref'         => 'required',
+                            'fechavencimiento'         => 'required',
+
+
                         );
                         $mensajes = array(
                             'ubicacionanuncio.required'         => 'Debe ingresar la ubicacion del anuncio',
@@ -490,6 +581,7 @@ class ResolucionController extends Controller
                             'claseanuncio.required'         => 'Debe ingresar la clase de anuncio',
                             'arearesolucion.required'         => 'Debe ingresar el área',
                             'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                            'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
                         );
                         break;
                     case '3':
@@ -499,6 +591,8 @@ class ResolucionController extends Controller
                             'viapublica' => 'required',
                             'arearesolucion' => 'required',
                             'tramiteref'         => 'required',
+                            'fechavencimiento'         => 'required',
+
                         );
                         $mensajes = array(
                             'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
@@ -506,6 +600,7 @@ class ResolucionController extends Controller
                             'funcionamiento.required'         => 'Debe ingresar el tipo de funcionamiento',
                             'arearesolucion.required'         => 'Debe ingresar el área',
                             'tramiteref.required'         => 'Debe ingresar el trámite de referencia ',
+                            'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
                         );
                         break;
                     
@@ -521,10 +616,11 @@ class ResolucionController extends Controller
                         'fechaexpedicion' => $request->input('fechaexpedicion'),           
                         'fechavencimiento' => $request->input('fechavencimiento'),           
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
-                        'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccion' => ($request->subtipotramite=='1') ? (strtoupper($request->jurisdicion) . ' ? ' .  strtoupper($request->numerocalle) . ' ? ' . strtoupper($request->urbanizacion22) ): strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
+                        'tipopersona' => strtoupper(Libreria::getParam($request->input('tipopersona'))),                
                         'dni' => Libreria::getParam($request->input('dni')),           
                         'ruc' => Libreria::getParam($request->input('ruc')),           
                         'ordenpago_id' => $request->input('ordenpago_id'),       
@@ -557,7 +653,8 @@ class ResolucionController extends Controller
                     'area' => 'required',
                     'valor' => 'required',
                     'responsableobra' => 'required',
-                    'ordenpago_id'=>'required'
+                    'ordenpago_id'=>'required',
+                    'fechavencimiento'         => 'required',
                 );
                 $mensajes = array(
                     'uso.required'         => 'Debe ingresar un uso',
@@ -567,7 +664,8 @@ class ResolucionController extends Controller
                     'area.required'         => 'Debe ingresar el área',
                     'valor.required'         => 'Debe ingresar el Valor de la Obra',
                     'responsableobra.required'         => 'Debe ingresar el Nombre del Responsable de la Obra',
-                    'ordenpago_id.required' => 'Debe Ingresar el Nro. de Orden de Pago'
+                    'ordenpago_id.required' => 'Debe Ingresar el Nro. de Orden de Pago',
+                    'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
                 );
                 $validacion = Validator::make($request->all(), $reglas, $mensajes);
                 if ($validacion->fails()) {
@@ -609,6 +707,8 @@ class ResolucionController extends Controller
                     'zona' => 'required',
                     'razonsocial' => 'required',
                     'girocomercial' => 'required',
+                    'fechavencimiento'         => 'required',
+
                 );
                 $mensajes = array(
                     'categoria.required'         => 'Debe ingresar una categoria',
@@ -616,6 +716,8 @@ class ResolucionController extends Controller
                     'localidad.required'         => 'Debe ingresar la localidad',
                     'razonsocial.required'         => 'Debe ingresar la Razón Social',
                     'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
+                    'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+
                 );
                 $validacion = Validator::make($request->all(), $reglas, $mensajes);
                 if ($validacion->fails()) {
@@ -703,6 +805,38 @@ class ResolucionController extends Controller
         $boton    = 'Eliminar';
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
+    public function estado($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'resolucion');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Resolucion::find($id);
+        $entidad  = 'resolucion';
+        $formData = array('route' => array('resolucion.updateEstado', $id), 'method' => 'GET', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Actualizar';
+        return view('reusable.confirmarEstado')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+    public function confirmarEstado(Request $request, $id){
+        $existe = Libreria::verificarExistencia($id, 'resolucion');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $error = DB::transaction(function () use ($id) {
+            $resolucion = Resolucion::find($id);
+            $resolucion->update([
+                'estado'=>'ENTREGADO',
+                'fechaentrega'=>date("Y-m-d H:i:s"),
+            ]);
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
 
 
     public function pdfResolucion($id, $blanco=null, $subtipo=null){
@@ -732,7 +866,8 @@ class ResolucionController extends Controller
                                
                                 
                             }else{
-                                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.blanco', compact('data'))->setPaper('a4', 'landscape');
+                                $direccion = explode('-', $data->direccion);
+                                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.blanco', compact('data', 'direccion'))->setPaper('a4', 'landscape');
                             }
                             break;
                         case '2':
@@ -808,4 +943,5 @@ class ResolucionController extends Controller
         $numerotramite = Resolucion::NumeroSigueCertificadoLicencias($tipo);
         echo $numerotramite;
     }
+    
 }

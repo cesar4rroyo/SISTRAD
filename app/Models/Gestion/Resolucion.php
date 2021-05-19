@@ -46,7 +46,10 @@ class Resolucion extends Model
 		'vigencia',
 		'claseanuncio',
 		'ubicacionanuncio',
-		'leyenda'
+		'leyenda',
+		'estado',
+		'tipopersona',
+		'fechaentrega'
     ];
     public function ordenpago()
     {

@@ -49,10 +49,10 @@
         <table class="tabledatos2 tabledatos">
             <tr>
                 <td>
-                    <strong>JOSE L. ORTIZ {{ date_format(date_create($data->fechaexpedicion ), 'd/m/Y')}}</strong>
+                    <strong>JOSE L. ORTIZ {{ date_format(date_create($data->tramite->fecha ), 'd/m/Y')}}</strong>
                 </td>
                 <td>
-                    <strong>RESOLUCION N°  {{$data->numero}}</strong>
+                    <strong>RESOLUCION N°  {{$data->numero}} DE {{date_format(date_create($data->fechaexpedicion ), 'd/m/Y')}}</strong>
                 </td>
                 <td>
                     <strong>CERTIFICADO N°  {{$data->nrocertificado}}</strong>
@@ -64,6 +64,9 @@
                 </td>
                 <td>
                     <strong>AREA {{$data->area . ' M2'}}</strong>
+                </td>
+                <td>
+                    <strong>{{'X ' . $data->tipopersona}}</strong>
                 </td>
             </tr>
         </table>
