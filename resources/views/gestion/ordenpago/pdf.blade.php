@@ -53,32 +53,32 @@
                 </tr>
                 <tr>
                     <td class="b" >FECHA</td>
-                    <td >{{date_format(date_create($ordenpago->fecha) ,'d/m/Y')}}</td>
+                    <td colspan="3">{{date_format(date_create($ordenpago->fecha) ,'d/m/Y')}}</td>
                 </tr>
                 <tr>
                     <td class="b" >TIPO</td>
-                    <td>{{$ordenpago->tipotramite->descripcion}}</td>
+                    <td colspan="3">{{$ordenpago->tipotramite->descripcion}}</td>
                 </tr>
                 <tr class="height150">
                     <td class="b"  >DESCRIPCIÓN</td>
-                    <td > {{$ordenpago->descripcion}}</td>
+                    <td colspan="3"> {{$ordenpago->descripcion}}</td>
                 </tr>
                 <tr>
                     <td class="b" >CONTRIBUYENTE</td>
-                    <td>{{$ordenpago->contribuyente}}</td>
+                    <td colspan="3">{{$ordenpago->contribuyente}}</td>
                 </tr>
                 <tr>
                     <td class="b" >DIRECCION</td>
-                    <td>{{$ordenpago->direccion}}</td>
+                    <td colspan="3">{{$ordenpago->direccion}}</td>
                 </tr>
                 <tr>
                     <td class="b" >MONTO</td>
-                    <td>{{number_format($ordenpago->monto ,2)}}</td>
+                    <td colspan="3">{{number_format($ordenpago->monto ,2)}}</td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr >
-                    <td colspan="2"><b>Son:</b> {{$enletras}}</td>
+                    <td colspan="4"><b>Son:</b> {{$enletras}}</td>
                 </tr>
             </tfoot>
         </table>
