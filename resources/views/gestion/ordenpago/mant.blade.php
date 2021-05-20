@@ -15,14 +15,20 @@
 					</div>
 				</div>
 				<div class="col-6 form-group">
-					{!! Form::label('numero', 'Número*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					{!! Form::label('numero', 'Correlativo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::text('numero', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'numero')) !!}
 					</div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-12 form-group">
+				<div class="col-4 form-group">
+					{!! Form::label('codigopago', 'Código pago', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						{!! Form::text('codigopago', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'codigopago')) !!}
+					</div>
+				</div>
+				<div class="col-8 form-group">
 					{!! Form::label('tipo', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::select('tipotramite',$tipostramite, $ordenpago?$ordenpago->tipo_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'tipotramite' , 'onchange' =>'generarNumero(); cambiarsubtipos();')) !!}
@@ -272,7 +278,7 @@ function cambiarsubtipos(){
 		  $.ajax({
                 url: "{{ route('ordenpago.listarsubtipos') }}",
                 type: 'GET',
-                data: { tipotramite_id },
+                data: { tipo_id : tipotramite_id },
                 dataType: 'json',
                 success: function (response) {
 					var areaselect = $('#subtipotramite');

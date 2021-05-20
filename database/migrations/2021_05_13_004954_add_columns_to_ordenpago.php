@@ -20,6 +20,7 @@ class AddColumnsToOrdenpago extends Migration
             $table->string('numerooperacion')->nullable();
             $table->date('fechaoperacion')->nullable();
             $table->string('imagen')->nullable();
+            $table->string('codigopago')->nullable();
 
             $table->integer('subtipo_id')->unsigned()->nullable();
             $table->integer('tramiteref_id')->unsigned()->nullable();
@@ -42,6 +43,7 @@ class AddColumnsToOrdenpago extends Migration
             $table->dropColumn('numerooperacion');
             $table->dropColumn('fechaoperacion');
             $table->dropColumn('imagen');
+            $table->dropColumn('codigopago');
             $table->dropColumn('subtipo_id');
             $table->dropColumn('tramiteref_id');
         });

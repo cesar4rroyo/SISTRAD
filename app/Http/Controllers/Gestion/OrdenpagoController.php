@@ -157,6 +157,7 @@ class OrdenpagoController extends Controller
         $error = DB::transaction(function() use($request){
             $ordenpago = new Ordenpago();
             $ordenpago->numero          = Libreria::getParam($request->input('numero'));
+            $ordenpago->codigopago          = Libreria::getParam($request->input('codigopago'));
             $ordenpago->tipo_id            = Libreria::getParam($request->input('tipotramite'));
             $ordenpago->subtipo_id          = Libreria::getParam($request->input('subtipotramite'));
             $ordenpago->dni_ruc         = Libreria::getParam($request->input('dni_ruc'));
@@ -260,6 +261,7 @@ class OrdenpagoController extends Controller
         $error = DB::transaction(function() use($request, $id){
             $ordenpago = Ordenpago::find($id);
             $ordenpago->numero          = Libreria::getParam($request->input('numero'));
+            $ordenpago->codigopago          = Libreria::getParam($request->input('codigopago'));
             $ordenpago->tipo_id            = Libreria::getParam($request->input('tipotramite'));
             $ordenpago->subtipo_id          = Libreria::getParam($request->input('subtipotramite'));
             $ordenpago->dni_ruc         = Libreria::getParam($request->input('dni_ruc'));

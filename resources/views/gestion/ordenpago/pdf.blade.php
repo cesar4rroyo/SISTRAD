@@ -46,8 +46,10 @@
         <table>
             <tbody>
                 <tr>
-                    <td class="b" >CODIGO</td>
+                    <td class="b" >CORRELATIVO</td>
                     <td >{{$ordenpago->numero}}</td>
+                    <td class="b" >CÓDIGO PAGO</td>
+                    <td >{{$ordenpago->codigopago}}</td>
                 </tr>
                 <tr>
                     <td class="b" >FECHA</td>
