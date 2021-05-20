@@ -36,7 +36,7 @@
     <table width="100%">
         <tr>
             <td valign="top">
-                <img src="{{asset('imagenes/logo.jpeg')}}" alt="" width="80"/>
+                <img src="{{asset('imagenes/logo.jpeg')}}" alt="" width="65"/>
             </td>
             <td align="center">
                 <h1 style="color: red; font-size:1.4rem; font-family:Arial, Helvetica, sans-serif">MUNICIPALIDAD DISTRITAL DE JOSÉ LEONARDO ORTIZ</h1>
@@ -49,10 +49,10 @@
         <table class="tabledatos2 tabledatos">
             <tr>
                 <td>
-                    <strong>JOSE L. ORTIZ {{ date_format(date_create($data->fechaexpedicion ), 'd/m/Y')}}</strong>
+                    <strong>JOSE L. ORTIZ {{ date_format(date_create($data->tramite->fecha ), 'd/m/Y')}}</strong>
                 </td>
                 <td>
-                    <strong>RESOLUCION N°  {{$data->numero}}</strong>
+                    <strong>RESOLUCION N°  {{$data->numero}} DE {{date_format(date_create($data->fechaexpedicion ), 'd/m/Y')}}</strong>
                 </td>
                 <td>
                     <strong>CERTIFICADO N°  {{$data->nrocertificado}}</strong>
@@ -64,6 +64,9 @@
                 </td>
                 <td>
                     <strong>AREA {{$data->area . ' M2'}}</strong>
+                </td>
+                <td>
+                    <strong>{{'X ' . $data->tipopersona}}</strong>
                 </td>
             </tr>
         </table>
@@ -143,8 +146,6 @@
            </strong>
         </p>
     </div>
-    <br>
-    <br>
     <div class="ml-5">
         <table class="table2 tabledatos">
             <tr><td></td></tr>

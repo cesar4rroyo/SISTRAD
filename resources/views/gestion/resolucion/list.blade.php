@@ -68,6 +68,9 @@
 						</button>
 					</a>
 					@endif
+					@if ($value->estado=='REGISTRADO')
+					{!! Form::button('<div class="fas fa-check-double"></div>', array('onclick' => 'modal (\''.URL::route($ruta["estado"], array($value->id, 'SI')).'\', \''.'Actualizar estado'.'\', this);', 'class' => 'btn btn-sm btn-secondary')) !!}
+					@endif
 					{!! Form::button('<div class="fas fa-trash"></div>', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}
 				</div>
             <td>
