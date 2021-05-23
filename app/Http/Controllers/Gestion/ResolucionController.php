@@ -14,6 +14,7 @@ use App\Models\Gestion\Tramite;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
+use Exception;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
@@ -361,7 +362,7 @@ class ResolucionController extends Controller
                     'localidad' => 'required',
                     'categoria' => 'required',
                     'zona' => 'required',
-                    'razonsocial' => 'required',
+                    //'razonsocial' => 'required',
                     'girocomercial' => 'required',
                     'fechavencimiento' => 'required',
 
@@ -370,7 +371,7 @@ class ResolucionController extends Controller
                     'categoria.required'         => 'Debe ingresar una categoria',
                     'zona.required'         => 'Debe ingresar el nombre de la zona',
                     'localidad.required'         => 'Debe ingresar la localidad',
-                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    //'razonsocial.required'         => 'Debe ingresar la Razón Social',
                     'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
                     'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
 
@@ -887,7 +888,22 @@ class ResolucionController extends Controller
                 break;
             case '3':
                 if(!is_null($blanco)){
-                    $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad2', compact('data'))->setPaper('a4', 'landscape');
+                    $phpWord = new \PhpOffice\PhpWord\PhpWord();
+                    $section = $phpWord->addSection();
+                    $text = $section->addText($data->contribuyente);
+                    $text = $section->addText($data->direccion);
+                    $text = $section->addText($data->localidad);
+                    $text = $section->addText($data->numero);
+                    $text = $section->addText($data->categoria);
+                    $text = $section->addText($data->zona);
+                    $text = $section->addText($data->razonsocial);
+                    $text = $section->addText($data->girocomercial);
+                    $text = $section->addText(date_format(date_create($data->fechaexpedicion ), 'd/m/Y'));
+                    $text = $section->addText(date_format(date_create($data->fechavencimiento) ,'d/m/Y'));
+                    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                    $objWriter->save('salubridad.docx');
+                    return response()->download(public_path('salubridad.docx'));
+                    //$pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad2', compact('data'))->setPaper('a4', 'landscape');
                 }else{
                     $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
                 }
