@@ -122,6 +122,9 @@
 			</div>
 		</div>
 		<div class="row">
+			@php
+				
+			@endphp
 			<div class="form-group col-sm">
 				{!! Form::label('areapiso1', '1er Piso M2', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblareapiso1')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
@@ -154,12 +157,12 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="form-group col-sm">
+			{{-- <div class="form-group col-sm">
 				{!! Form::label('area', 'Área Construida(m2)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
 					{!! Form::number('area', null, array('class' => 'form-control  input-xs', 'id' => 'area', 'step'=>'0.01')) !!}
 				</div>
-			</div>
+			</div> --}}
 			<div class="form-group col-sm">
 				{!! Form::label('valor', 'Valor de la Obra(S/.)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblvalor')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
@@ -365,22 +368,33 @@
 		</div>
 	</div>
 	<div class="row">
+		@php
+			$verificar=false;
+			if($resolucion){
+				$direccion = explode('-', $resolucion->direccion);
+				if(count($direccion)>=3){
+					$verificar=true;
+				}else{
+					$verificar=false;
+				}
+			}
+		@endphp
 		<div class="form-group col-sm">
 			{!! Form::label('jurisdicion', 'Calle o Avenida*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lbljurisdicion')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('jurisdicion', $resolucion ? explode('-', $resolucion->direccion)[0] : null, array('class' => 'form-control  input-xs', 'id' => 'jurisdicion', 'placeholder'=>'Ej. Calle Proceres')) !!}
+				{!! Form::text('jurisdicion', $verificar ? explode('-', $resolucion->direccion)[0] : null, array('class' => 'form-control  input-xs', 'id' => 'jurisdicion', 'placeholder'=>'Ej. Calle Proceres')) !!}
 			</div>
 		</div>
 		<div class="form-group col-sm">
 			{!! Form::label('numerocalle', 'Número*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnumerocalle')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::number('numerocalle', $resolucion ? (int)explode('-', $resolucion->direccion)[1] : null, array('class' => 'form-control  input-xs', 'id' => 'numerocalle', 'placeholder'=>'Ej. 154')) !!}
+				{!! Form::number('numerocalle', $verificar ? (int)explode('-', $resolucion->direccion)[1] : null, array('class' => 'form-control  input-xs', 'id' => 'numerocalle', 'placeholder'=>'Ej. 154')) !!}
 			</div>
 		</div>
 		<div class="form-group col-sm">
 			{!! Form::label('urbanizacion22', 'Urbanización*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblurbanizacion22')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('urbanizacion22', $resolucion ? explode('-', $resolucion->direccion)[2] : null, array('class' => 'form-control  input-xs', 'id' => 'urbanizacion22', 'placeholder'=>'Ej. Urb. Latina')) !!}
+				{!! Form::text('urbanizacion22', $verificar ? explode('-', $resolucion->direccion)[2] : null, array('class' => 'form-control  input-xs', 'id' => 'urbanizacion22', 'placeholder'=>'Ej. Urb. Latina')) !!}
 			</div>
 		</div>
 	</div>
