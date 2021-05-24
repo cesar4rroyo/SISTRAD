@@ -18,7 +18,9 @@ class CreateResolucionTable extends Migration
             $table->dateTime('fechaexpedicion');
             $table->dateTime('fechavencimiento')->nullable();
             $table->dateTime('fechaentrega')->nullable();
+            $table->integer('capacidadmaxima')->nullable();
             $table->string('numero' , 30)->nullable();
+            $table->string('edificaciones' , 30)->nullable();
             $table->string('contribuyente' , 200)->nullable();
             $table->string('direccion' , 100)->nullable();
             $table->string('localidad' , 100)->nullable();

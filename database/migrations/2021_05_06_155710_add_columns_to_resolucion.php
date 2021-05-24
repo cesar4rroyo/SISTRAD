@@ -22,8 +22,8 @@ class AddColumnsToResolucion extends Migration
             $table->string('funcionamiento')->nullable();
             $table->string('nroexpediente')->nullable();
             $table->string('nrocertificado')->nullable();
-            $table->double('area' , 8 , 2)->nullable();
-            $table->double('valor' , 8 , 2)->nullable();
+            $table->double('area' , 10 , 2)->nullable();
+            $table->double('valor' , 10 , 2)->nullable();
             $table->string('viapublica')->default('No');
           
             
