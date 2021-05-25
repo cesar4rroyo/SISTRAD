@@ -56,7 +56,7 @@
                     <td colspan="3">{{date_format(date_create($ordenpago->fecha) ,'d/m/Y')}}</td>
                 </tr>
                 <tr>
-                    <td class="b" >TIPO</td>
+                    <td class="b" >AREA</td>
                     <td colspan="3">{{$ordenpago->tipotramite->descripcion}}</td>
                 </tr>
                 <tr class="height150">

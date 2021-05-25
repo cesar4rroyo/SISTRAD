@@ -67,7 +67,7 @@ class OrdenpagoController extends Controller
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Area', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Subtipo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'DNI/RUC', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Monto', 'numero' => '1');

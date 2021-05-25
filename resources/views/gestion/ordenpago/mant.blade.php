@@ -29,7 +29,7 @@
 					</div>
 				</div>
 				<div class="col-8 form-group">
-					{!! Form::label('tipo', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					{!! Form::label('tipo', 'Area*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::select('tipotramite',$tipostramite, $ordenpago?$ordenpago->tipo_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'tipotramite' , 'onchange' =>'generarNumero(); cambiarsubtipos();')) !!}
 					</div>
@@ -40,14 +40,14 @@
 				<div class="col-9 form-group">
 					{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::select('subtipotramite',  $subtipos, $ordenpago->subtipo_id?$ordenpago->subtipo_id:'', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' )) !!}
+						{!! Form::select('subtipotramite',  $subtipos, $ordenpago->subtipo_id?$ordenpago->subtipo_id:'', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' , 'onchange' =>'Cambiosubtipo();')) !!}
 					</div>
 				</div>
 				@else
 				<div class="col-9 form-group">
 					{!! Form::label('subtipo', 'Subtipo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::select('subtipotramite',  ['' => '--Elije un subtipo'], null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' )) !!}
+						{!! Form::select('subtipotramite',  ['' => '--Elije un subtipo'], null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'subtipotramite' , 'onchange' =>'Cambiosubtipo();')) !!}
 					</div>
 				</div>
 				@endif
@@ -285,7 +285,7 @@ function cambiarsubtipos(){
 					areaselect.empty();
                     areaselect.append('<option value="">--Elije un subtipo</option>')
                     $.each(response.data, function (key, value) {
-                        areaselect.append("<option value='" + value.id + "'>" + value.descripcion + "</option>");
+                        areaselect.append("<option value='" + value.id + "' codigo='" + value.codigo + "' monto='" + value.monto + "' >" + value.descripcion + "</option>");
                     });
                 },
                 error : function(){
@@ -294,6 +294,21 @@ function cambiarsubtipos(){
             });
 	  }
 	}
+
+function Cambiosubtipo(){
+	let monto =	$('#subtipotramite option:selected').attr('monto');
+	let codigo =	$('#subtipotramite option:selected').attr('codigo');
+	if(monto && monto != 'null'){
+		$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="monto"]').val(monto);
+	}else{
+		$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="monto"]').val('0.00');
+	}
+	if(codigo && codigo != 'null'){
+		$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="codigopago"]').val(codigo);
+	}else{
+		$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="codigopago"]').val('');
+	}
+}
 
 	function verificarEstado(value){
 		console.log(value);

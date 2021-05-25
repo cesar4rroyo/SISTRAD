@@ -36,7 +36,7 @@
 								{!! Form::text('contribuyente', '', array('class' => 'form-control ', 'id' => 'contribuyente')) !!}
 							</div>
 							<div class="col-lg-3 col-md-3  form-group">
-								{!! Form::label('tipo', 'Tipo') !!}
+								{!! Form::label('tipo', 'Area') !!}
 								{!! Form::select('tipo', $tipostramite,'', array('class' => 'form-control ', 'id' => 'tipo' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 							</div>
 							<div class="col-lg-3 col-md-3  form-group">

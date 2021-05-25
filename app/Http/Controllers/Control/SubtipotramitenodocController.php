@@ -138,6 +138,9 @@ class SubtipotramitenodocController extends Controller
             $subtipotramitenodoc = new Subtipotramitenodoc();
             $subtipotramitenodoc->descripcion= strtoupper($request->input('descripcion'));
             $subtipotramitenodoc->tipotramitenodoc_id = $request->input('tipotramite');
+            $subtipotramitenodoc->codigo = Libreria::getParam($request->input('codigo'));
+            $subtipotramitenodoc->monto = Libreria::getParam($request->input('monto'), '0.00');
+
             $subtipotramitenodoc->save();
         });
 
@@ -207,6 +210,8 @@ class SubtipotramitenodocController extends Controller
             $subtipotramitenodoc = Subtipotramitenodoc::find($id);
             $subtipotramitenodoc->descripcion = strtoupper($request->input('descripcion'));
             $subtipotramitenodoc->tipotramitenodoc_id = $request->input('tipotramite');
+            $subtipotramitenodoc->codigo = Libreria::getParam($request->input('codigo'));
+            $subtipotramitenodoc->monto = Libreria::getParam($request->input('monto'));
             $subtipotramitenodoc->save();
         });
         return is_null($error) ? "OK" : $error;
