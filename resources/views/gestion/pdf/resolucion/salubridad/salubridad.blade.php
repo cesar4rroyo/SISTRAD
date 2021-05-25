@@ -128,13 +128,13 @@
                 <td>
                     <strong>FECHA DE EXPEDICION: </strong>
                     <td class="underline">
-                        {{$data->fechaexpedicion}}
+                        {{ date_format(date_create($data->fechaexpedicion ), 'd/m/Y')}}
                     </td>
                 </td>
                 <td>
                     <strong>FECHA DE VENCIMIENTO: </strong>
                     <td class="underline">
-                        {{$data->fechavencimiento}}
+                        {{ date_format(date_create($data->fechavencimiento ), 'd/m/Y')}}
                     </td>
                 </td>
             </tr>

@@ -49,7 +49,9 @@ class Resolucion extends Model
 		'leyenda',
 		'estado',
 		'tipopersona',
-		'fechaentrega'
+		'fechaentrega',
+		'capacidadmaxima',
+		'edificaciones'
     ];
     public function ordenpago()
     {

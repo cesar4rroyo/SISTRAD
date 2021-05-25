@@ -14,6 +14,7 @@ use App\Models\Gestion\Tramite;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
+use Exception;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
@@ -306,9 +307,9 @@ class ResolucionController extends Controller
                 $reglas     = array(
                     'proyecto' => 'required',
                     'uso' => 'required',
-                    'zona' => 'required',
+                    'zonificacion' => 'required',
                     'altura' => 'required',
-                    'area' => 'required',
+                   // 'area' => 'required',
                     'valor' => 'required',
                     'responsableobra' => 'required',
                     'ordenpago_id'=>'required',
@@ -317,10 +318,10 @@ class ResolucionController extends Controller
                 );
                 $mensajes = array(
                     'uso.required'         => 'Debe ingresar un uso',
-                    'zona.required'         => 'Debe ingresar el nombre de la Zonificación',
+                    'zonificacion.required'         => 'Debe ingresar el nombre de la Zonificación',
                     'proyecto.required'         => 'Debe ingresar la proyecto',
                     'altura.required'         => 'Debe ingresar la altura',
-                    'area.required'         => 'Debe ingresar el área',
+                    //'area.required'         => 'Debe ingresar el área',
                     'valor.required'         => 'Debe ingresar el Valor de la Obra',
                     'responsableobra.required'         => 'Debe ingresar el Nombre del Responsable de la Obra',
                     'ordenpago_id.required' => 'Debe Ingresar el Nro. de Orden de Pago',
@@ -331,19 +332,30 @@ class ResolucionController extends Controller
                 if ($validacion->fails()) {
                     return $validacion->messages()->toJson();
                 }
-                $error = DB::transaction(function () use ($request) {
+                $areas = [
+                    '0'=>Libreria::getParam($request->areapiso1, 0),
+                    '1'=>Libreria::getParam($request->areapiso2, 0),
+                    '2'=>Libreria::getParam($request->areapiso3, 0),
+                    '3'=>Libreria::getParam($request->areapiso4, 0),
+                    '4'=>Libreria::getParam($request->azotea, 0),
+                ];
+                $edificaciones=$areas[0] . '?' . $areas[1] . '?' . $areas[2] . '?' . $areas[3] . '?' .$areas[4];
+                $areatotal=$areas[0]+$areas[1]+$areas[2]+$areas[3]+$areas[4];
+                
+                $error = DB::transaction(function () use ($request, $edificaciones, $areatotal) {
                     $resolucion = Resolucion::create([
                         'fechaexpedicion' => $request->input('fechaexpedicion'),           
                         'fechavencimiento' => $request->input('fechavencimiento'),           
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),                
-                        'zona' => strtoupper(Libreria::getParam($request->input('zona'))),                
+                        'zona' => strtoupper(Libreria::getParam($request->input('zonificacion'))),                
                         'altura' => strtoupper(Libreria::getParam($request->input('altura'))),                
                         'uso' => strtoupper(Libreria::getParam($request->input('uso'))),                
                         'proyecto' => strtoupper(Libreria::getParam($request->input('proyecto'))),                
                         'responsableobra' => strtoupper(Libreria::getParam($request->input('responsableobra'))), 
-                        'area' => $request->input('area'),           
+                        'area' => $areatotal,           
+                        'edificaciones' => $edificaciones,           
                         'valor' => $request->input('valor'),           
                         'dni' => Libreria::getParam($request->input('dni')),           
                         'ruc' => Libreria::getParam($request->input('ruc')),           
@@ -361,7 +373,7 @@ class ResolucionController extends Controller
                     'localidad' => 'required',
                     'categoria' => 'required',
                     'zona' => 'required',
-                    'razonsocial' => 'required',
+                    //'razonsocial' => 'required',
                     'girocomercial' => 'required',
                     'fechavencimiento' => 'required',
 
@@ -370,7 +382,7 @@ class ResolucionController extends Controller
                     'categoria.required'         => 'Debe ingresar una categoria',
                     'zona.required'         => 'Debe ingresar el nombre de la zona',
                     'localidad.required'         => 'Debe ingresar la localidad',
-                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    //'razonsocial.required'         => 'Debe ingresar la Razón Social',
                     'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
                     'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
 
@@ -402,10 +414,27 @@ class ResolucionController extends Controller
                 return is_null($error) ? "OK" : $error;
                 break;
             case '4':
+                $reglas     = array(
+                    'razonsocial' => 'required',
+                    'girocomercial' => 'required',
+                    'capacidadmaxima'=>'required',
+                    'areadefensa'=>'required',
+                    'tramiteref'=>'required',
+
+                );
+                $mensajes = array(
+                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
+                    'areadefensa.required'         => 'Debe ingresar el Area',
+                    'capacidadmaxima.required'         => 'Debe ingresar la capacidad Maxima',
+                    'tramiteref.required'         => 'Debe ingresar el Nro. de Tramite',
+
+                );
                 $error = DB::transaction(function () use ($request) {
+                    $tramite = Tramite::find($request->tramiteref);
                     $resolucion = Resolucion::create([
-                        'fechaexpedicion' => $request->input('fechaexpedicion'),           
-                        'fechavencimiento' => $request->input('fechavencimiento'),           
+                        'fechaexpedicion' => $tramite->fecha,           
+                        'fechavencimiento' => date('Y-m-d', strtotime('+2 year', strtotime($tramite->fecha))),           
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observacion' => strtoupper(Libreria::getParam($request->input('observacion'))),                
@@ -413,6 +442,8 @@ class ResolucionController extends Controller
                         'ruc' => Libreria::getParam($request->input('ruc')),           
                         'ordenpago_id' => $request->input('ordenpago_id'),       
                         'inspeccion_id' => $request->input('inspeccion_id'), 
+                        'capacidadmaxima' => $request->input('capacidadmaxima'), 
+                        'area' => $request->input('areadefensa'), 
                         'tipo_id'=>$request->input('tipo'),     
                         'numero'=>$request->input('numero'),     
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
@@ -650,28 +681,37 @@ class ResolucionController extends Controller
                     'uso' => 'required',
                     'zonificacion' => 'required',
                     'altura' => 'required',
-                    'area' => 'required',
+                   // 'area' => 'required',
                     'valor' => 'required',
                     'responsableobra' => 'required',
                     'ordenpago_id'=>'required',
-                    'fechavencimiento'         => 'required',
+                   // 'fechavencimiento'         => 'required',
                 );
                 $mensajes = array(
                     'uso.required'         => 'Debe ingresar un uso',
                     'zonificacion.required'         => 'Debe ingresar el nombre de la Zonificación',
                     'proyecto.required'         => 'Debe ingresar la proyecto',
                     'altura.required'         => 'Debe ingresar la altura',
-                    'area.required'         => 'Debe ingresar el área',
+                  //  'area.required'         => 'Debe ingresar el área',
                     'valor.required'         => 'Debe ingresar el Valor de la Obra',
                     'responsableobra.required'         => 'Debe ingresar el Nombre del Responsable de la Obra',
                     'ordenpago_id.required' => 'Debe Ingresar el Nro. de Orden de Pago',
-                    'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
+                 //   'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
                 );
                 $validacion = Validator::make($request->all(), $reglas, $mensajes);
                 if ($validacion->fails()) {
                     return $validacion->messages()->toJson();
                 }
-                $error = DB::transaction(function () use ($request, $resolucion) {
+                $areas = [
+                    '0'=>Libreria::getParam($request->areapiso1, 0),
+                    '1'=>Libreria::getParam($request->areapiso2, 0),
+                    '2'=>Libreria::getParam($request->areapiso3, 0),
+                    '3'=>Libreria::getParam($request->areapiso4, 0),
+                    '4'=>Libreria::getParam($request->azotea, 0),
+                ];
+                $edificaciones=$areas[0] . '?' . $areas[1] . '?' . $areas[2] . '?' . $areas[3] . '?' .$areas[4];
+                $areatotal=$areas[0]+$areas[1]+$areas[2]+$areas[3]+$areas[4];
+                $error = DB::transaction(function () use ($request, $resolucion, $areatotal, $edificaciones) {
                     $resolucion->update([
                         'fechaexpedicion' => $request->input('fechaexpedicion'),           
                         'fechavencimiento' => $request->input('fechavencimiento'),           
@@ -686,7 +726,8 @@ class ResolucionController extends Controller
                         'uso' => strtoupper(Libreria::getParam($request->input('uso'))),                
                         'proyecto' => strtoupper(Libreria::getParam($request->input('proyecto'))),                
                         'responsableobra' => strtoupper(Libreria::getParam($request->input('responsableobra'))), 
-                        'area' => $request->input('area'),           
+                        'area' => $areatotal,    
+                        'edificaciones' => $edificaciones,           
                         'valor' => $request->input('valor'),           
                         //'categoria' => strtoupper(Libreria::getParam($request->input('categoria'))),                
                         'dni' => Libreria::getParam($request->input('dni')),           
@@ -747,8 +788,27 @@ class ResolucionController extends Controller
                 return is_null($error) ? "OK" : $error;
                 break;
             case '4':
+                $reglas     = array(
+                    'razonsocial' => 'required',
+                    'girocomercial' => 'required',
+                    'capacidadmaxima'=>'required',
+                    'areadefensa'=>'required',
+                    'tramiteref'=>'required',
+
+                );
+                $mensajes = array(
+                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
+                    'areadefensa.required'         => 'Debe ingresar el Area',
+                    'capacidadmaxima.required'         => 'Debe ingresar la capacidad Maxima',
+                    'tramiteref.required'         => 'Debe ingresar el Nro. de Tramite',
+
+                );
                 $error = DB::transaction(function () use ($request) {
+                    $tramite = Tramite::find($request->tramiteref);
                     $resolucion = Resolucion::create([
+                        'fechaexpedicion' => $tramite->fecha,           
+                        'fechavencimiento' => date('Y-m-d', strtotime('+2 year', strtotime($tramite->fecha))),           
                         'fechaexpedicion' => $request->input('fechaexpedicion'),           
                         'fechavencimiento' => $request->input('fechavencimiento'),           
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
@@ -883,11 +943,35 @@ class ResolucionController extends Controller
                 }
                 break;
             case '2':
-                $pdf = PDF::loadView('gestion.pdf.resolucion.edificaciones.edificaciones', compact('data'))->setPaper('a4', 'portrait');
+                $areas = $data->edificaciones;
+                $areas = explode('?', $areas);
+                $data2 = [
+                    '0'=>$areas[0],
+                    '1'=>$areas[1],
+                    '2'=>$areas[2],
+                    '3'=>$areas[3],
+                    '4'=>$areas[3],
+                ];
+                $pdf = PDF::loadView('gestion.pdf.resolucion.edificaciones.edificaciones', compact('data', 'data2'))->setPaper('a4', 'portrait');
                 break;
             case '3':
                 if(!is_null($blanco)){
-                    $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad2', compact('data'))->setPaper('a4', 'landscape');
+                    $phpWord = new \PhpOffice\PhpWord\PhpWord();
+                    $section = $phpWord->addSection();
+                    $text = $section->addText($data->contribuyente);
+                    $text = $section->addText($data->direccion);
+                    $text = $section->addText($data->localidad);
+                    $text = $section->addText($data->numero);
+                    $text = $section->addText($data->categoria);
+                    $text = $section->addText($data->zona);
+                    $text = $section->addText($data->razonsocial);
+                    $text = $section->addText($data->girocomercial);
+                    $text = $section->addText(date_format(date_create($data->fechaexpedicion ), 'd/m/Y'));
+                    $text = $section->addText(date_format(date_create($data->fechavencimiento) ,'d/m/Y'));
+                    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                    $objWriter->save('salubridad.docx');
+                    return response()->download(public_path('salubridad.docx'));
+                    //$pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad2', compact('data'))->setPaper('a4', 'landscape');
                 }else{
                     $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
                 }

@@ -122,12 +122,47 @@
 			</div>
 		</div>
 		<div class="row">
+			@php
+				
+			@endphp
 			<div class="form-group col-sm">
+				{!! Form::label('areapiso1', '1er Piso M2', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblareapiso1')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::number('areapiso1', null, array('class' => 'form-control  input-xs', 'id' => 'areapiso1', 'step'=>'0.01')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('areapiso2', '2do Piso M2', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblareapiso2')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::number('areapiso2', null, array('class' => 'form-control  input-xs', 'id' => 'areapiso2', 'step'=>'0.01')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('areapiso3', '3er Piso M2', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblareapiso3')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::number('areapiso3', null, array('class' => 'form-control  input-xs', 'id' => 'areapiso3', 'step'=>'0.01')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('areapiso4', '4to Piso M2', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblareapiso4')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::number('areapiso4', null, array('class' => 'form-control  input-xs', 'id' => 'areapiso4', 'step'=>'0.01')) !!}
+				</div>
+			</div>
+			<div class="form-group col-sm">
+				{!! Form::label('azotea', 'Azotea M2', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblazotea')) !!}
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					{!! Form::number('azotea', null, array('class' => 'form-control  input-xs', 'id' => 'azotea', 'step'=>'0.01')) !!}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			{{-- <div class="form-group col-sm">
 				{!! Form::label('area', 'Área Construida(m2)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblarea')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
 					{!! Form::number('area', null, array('class' => 'form-control  input-xs', 'id' => 'area', 'step'=>'0.01')) !!}
 				</div>
-			</div>
+			</div> --}}
 			<div class="form-group col-sm">
 				{!! Form::label('valor', 'Valor de la Obra(S/.)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblvalor')) !!}
 				<div class="col-lg-12 col-md-12 col-sm-12">
@@ -333,22 +368,47 @@
 		</div>
 	</div>
 	<div class="row">
+		@php
+			$verificar=false;
+			if($resolucion){
+				$direccion = explode('-', $resolucion->direccion);
+				if(count($direccion)>=3){
+					$verificar=true;
+				}else{
+					$verificar=false;
+				}
+			}
+		@endphp
 		<div class="form-group col-sm">
 			{!! Form::label('jurisdicion', 'Calle o Avenida*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lbljurisdicion')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('jurisdicion', $resolucion ? explode('-', $resolucion->direccion)[0] : null, array('class' => 'form-control  input-xs', 'id' => 'jurisdicion', 'placeholder'=>'Ej. Calle Proceres')) !!}
+				{!! Form::text('jurisdicion', $verificar ? explode('-', $resolucion->direccion)[0] : null, array('class' => 'form-control  input-xs', 'id' => 'jurisdicion', 'placeholder'=>'Ej. Calle Proceres')) !!}
 			</div>
 		</div>
 		<div class="form-group col-sm">
 			{!! Form::label('numerocalle', 'Número*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblnumerocalle')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::number('numerocalle', $resolucion ? (int)explode('-', $resolucion->direccion)[1] : null, array('class' => 'form-control  input-xs', 'id' => 'numerocalle', 'placeholder'=>'Ej. 154')) !!}
+				{!! Form::number('numerocalle', $verificar ? (int)explode('-', $resolucion->direccion)[1] : null, array('class' => 'form-control  input-xs', 'id' => 'numerocalle', 'placeholder'=>'Ej. 154')) !!}
 			</div>
 		</div>
 		<div class="form-group col-sm">
 			{!! Form::label('urbanizacion22', 'Urbanización*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblurbanizacion22')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('urbanizacion22', $resolucion ? explode('-', $resolucion->direccion)[2] : null, array('class' => 'form-control  input-xs', 'id' => 'urbanizacion22', 'placeholder'=>'Ej. Urb. Latina')) !!}
+				{!! Form::text('urbanizacion22', $verificar ? explode('-', $resolucion->direccion)[2] : null, array('class' => 'form-control  input-xs', 'id' => 'urbanizacion22', 'placeholder'=>'Ej. Urb. Latina')) !!}
+			</div>
+		</div>
+	</div>
+	<div id="divDefensaCivil" class="row d-none">
+		<div class="form-group col-sm">
+			{!! Form::label('capacidadmaxima', 'Capacidad Máxima (Personas)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblcapacidadmaxima')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::number('capacidadmaxima', $resolucion ? $resolucion->area : null, array('class' => 'form-control  input-xs', 'id' => 'capacidadmaxima')) !!}
+			</div>
+		</div>	
+		<div class="form-group col-sm">
+			{!! Form::label('areadefensa', 'Area (M2)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblareadefensa')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::number('areadefensa', $resolucion ? $resolucion->area : null, array('class' => 'form-control  input-xs', 'id' => 'areadefensa', 'placeholder'=>'Ej. 100')) !!}
 			</div>
 		</div>
 	</div>
@@ -482,6 +542,7 @@ function showTipo(tipo){
 				$('#lblcontribuyente').text('Contribuyente*');
 				$('#lbldireccion').text('Dirección Completa*');
 				$('#lblnrodocumento').text('Nro. de Resolucion');
+				$('#divDefensaCivil').addClass('d-none');
 
 
 				break;
@@ -493,6 +554,7 @@ function showTipo(tipo){
 				$('#inforuc').addClass('d-none');
 				$('#divLicenciasAutorizaciones').addClass('d-none');
 				$('#lblnrodocumento').text('Nro. de Resolución');
+				$('#divDefensaCivil').addClass('d-none');
 
 
 				break;
@@ -504,11 +566,13 @@ function showTipo(tipo){
 				$('#lbldireccion').text('Dirección*');
 				$('#divLicenciasAutorizaciones').addClass('d-none');
 				$('#lblnrodocumento').text('Nro. de Certificado');
+				$('#divDefensaCivil').addClass('d-none');
 
 
 				break;
 			case "4":
 				$('#divSalubridad').addClass('d-none');
+				$('#divDefensaCivil').removeClass('d-none');
 				$('#divEdificaciones').addClass('d-none');
 				$('#inforuc').removeClass('d-none');
 				$('#lblcontribuyente').text('Contribuyente*');
@@ -522,6 +586,8 @@ function showTipo(tipo){
 				$('#lbldireccion').text('Dirección*');
 				$('#divLicenciasAutorizaciones').addClass('d-none');
 				$('#lblnrodocumento').text('Nro. de Resolución');
+				$('#divDefensaCivil').addClass('d-none');
+
 
 				break;
 		}

@@ -182,7 +182,7 @@ class InspeccionController extends Controller
                 break;
             case '3':
                 $reglas     = array(
-                    'razonsocial' => 'required',
+                    //'razonsocial' => 'required',
                     'girocomercial' => 'required',
                     'direccion' => 'required',
                     //'observacion' => 'required',
@@ -190,10 +190,10 @@ class InspeccionController extends Controller
                     'descripcion' => 'required',
                     'representante' => 'required',
                     'dni' => 'required',
-                    'ruc' => 'required',
+                    //'ruc' => 'required',
                 );
                 $mensajes = array(
-                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    //'razonsocial.required'         => 'Debe ingresar la Razón Social',
                     'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
                     'direccion.required'         => 'Debe ingresar una dirección',
                     //'observacion.required'         => 'Debe ingresar una observación',
@@ -201,7 +201,7 @@ class InspeccionController extends Controller
                     'descripcion.required'         => 'Debe ingresar una descripción',
                     'representante.required'         => 'Debe ingresar el representante',
                     'dni.required'         => 'Debe ingresar el DNI',
-                    'ruc.required'         => 'Debe ingresar el RUC',
+                    //'ruc.required'         => 'Debe ingresar el RUC',
                 );
                 
                 break;
@@ -360,7 +360,7 @@ class InspeccionController extends Controller
                 break;
             case '3':
                 $reglas     = array(
-                    'razonsocial' => 'required',
+                    //'razonsocial' => 'required',
                     'girocomercial' => 'required',
                     'direccion' => 'required',
                     //'observacion' => 'required',
@@ -368,10 +368,10 @@ class InspeccionController extends Controller
                     'descripcion' => 'required',
                     'representante' => 'required',
                     'dni' => 'required',
-                    'ruc' => 'required',
+                    //'ruc' => 'required',
                 );
                 $mensajes = array(
-                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
+                    //'razonsocial.required'         => 'Debe ingresar la Razón Social',
                     'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
                     'direccion.required'         => 'Debe ingresar una dirección',
                     //'observacion.required'         => 'Debe ingresar una observación',
@@ -379,7 +379,7 @@ class InspeccionController extends Controller
                     'descripcion.required'         => 'Debe ingresar una descripción',
                     'representante.required'         => 'Debe ingresar el representante',
                     'dni.required'         => 'Debe ingresar el DNI',
-                    'ruc.required'         => 'Debe ingresar el RUC',
+                    //'ruc.required'         => 'Debe ingresar el RUC',
                 );
                 
                 break;

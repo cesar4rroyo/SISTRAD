@@ -88,7 +88,7 @@
         {{$data->girocomercial}}
     </div>
     <div class="fechaexpedicion">
-        {{date_format(date_create($data->fechaexpedicion) ,'d/m/Y')}}
+        {{ date_format(date_create($data->fechaexpedicion ), 'd/m/Y')}}
     </div>
     <div class="fechavencimiento">
         {{date_format(date_create($data->fechavencimiento) ,'d/m/Y')}}
