@@ -163,6 +163,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('resolucion/pdf/{id}/{blanco?}/{subtipo?}', 'Gestion\ResolucionController@pdfResolucion')->name('resolucion.pdfResolucion');
     Route::post('resolucion/generarNumero', 'Gestion\ResolucionController@generarNumero')->name('resolucion.generarnumero');
     Route::post('resolucion/generarNumero2', 'Gestion\ResolucionController@generarNumero2')->name('resolucion.generarnumero2');
+    Route::post('resolucion/generarNumero3', 'Gestion\ResolucionController@generarNumero3')->name('resolucion.generarnumero3');
 
     //Tipo tramite
     Route::post('tipotramitenodoc/buscar', 'Control\TipotramitenodocController@buscar')->name('tipotramitenodoc.buscar');

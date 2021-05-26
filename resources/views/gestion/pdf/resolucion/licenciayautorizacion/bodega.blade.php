@@ -16,7 +16,10 @@
         text-decoration: underline;
     }
     .tabledatos tr td{
-        font-size: 0.8rem;
+        font-size: 1rem;
+    }
+    .tabledatos3 tr td{
+        font-size: 0.9rem;
     }
     .tabledatos2{
         width: 100%;
@@ -46,10 +49,10 @@
     </table>
     <hr>
     <div class="ml-5">
-        <table class="tabledatos2 tabledatos">
+        <table class="tabledatos2 tabledatos3">
             <tr>
                 <td>
-                    <strong>JOSE L. ORTIZ {{ date_format(date_create($data->tramite->fecha ), 'd/m/Y')}}</strong>
+                    <strong>EXPEDIENTE N° {{$data->tramite->numero}} {{'   '}} DE: {{date_format(date_create($data->tramite->fecha ), 'd/m/Y')}} </strong>
                 </td>
                 <td>
                     <strong>RESOLUCION N°  {{$data->numero}} DE {{date_format(date_create($data->fechaexpedicion ), 'd/m/Y')}}</strong>
@@ -60,10 +63,10 @@
             </tr>
             <tr>
                 <td>
-                    <strong>EXPEDIENTE N° {{$data->tramite->numero}}</strong>
+                    <strong>AREA {{$data->area . ' M2'}}</strong>
                 </td>
                 <td>
-                    <strong>AREA {{$data->area . ' M2'}}</strong>
+                    <strong>HORARIO DE ATENCION:  {{$data->desdehora . ''}} A {{$data->hastahora}}</strong>
                 </td>
                 <td>
                     <strong>{{'X ' . $data->tipopersona}}</strong>
@@ -73,19 +76,20 @@
     </div>
     <br>
     <div class="ml-5">
-        <h3 style="color:black; font-size:0.9rem">LA MUNICIPALIDAD DISTRITAL DE JOSÉ LEONARDO ORTIZ CERTIFICA:</h3>
-    </div>
-    <div class="ml-5">
         <p style="font-size: 0.9rem;">
-            La presente Licencia se otorga en concordancia con lo establecido en la normatividad Legal Vigente y en Aplicación a lo previsto en la Ley 
-            N° 27972 Ley Orgánica de Municipalidades: Ley 28976 Ley Marco de Lic. De funcionamiento. Otorga a:
+            QUE HABIENDO CUMPLIDO CON LOS REQUISITOS EXIGIDOS PARA OBTENER LA LICENCIAN DE FUNCIONAMIENTO SEGÚN LA LEY Nº 27444
+            - LEY DE PROCEDIMIENTO ADMINISTRATIVO aprobado mediante D.S. Nº 004-2019, LEY Nº 30877 - Ley General de Bodegueros y su 
+            Reglamento.
+            <br>
+            SE CONCEDE EL PRESENTE CERTIFICADO A:
         </p>
     </div>
+    <br>
     <div class="ml-5">
         <table class="tabledatos">
             <tr>
                 <td>
-                    <strong>NOMBRE O RAZON SOCIAL: </strong>
+                    <strong>NOMBRE DEL TITULAR: </strong>
                 </td>
                 <td class="">
                     {{$data->contribuyente}}
@@ -93,82 +97,67 @@
             </tr>
             <tr>
                 <td>
-                    <strong> </strong>
+                    <strong>DIRECCION: </strong>
+                </td>
+                <td class="">
+                    {{$data->direccion}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>LOCALIDAD: </strong>
+                </td>
+                <td class="">
+                    {{explode('-', $data->direccion)[2]}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>RAZON SOCIAL</strong>
                 </td>
                 <td class="">
                     {{$data->razonsocial}}
                 </td>
             </tr>
-            
-        </table>
-        <br>
-        <p style="font-size: 0.9rem">QUIEN HABIENDO CUMPLIDO CON PRESENTAR LOS REQUISITOS CORRESPONDIENTES PARA EL FUNCIONAMIENTO DE
-        </p>
-        <table class="tabledatos">
             <tr>
                 <td>
-                    <strong>GIRO </strong>
+                    <strong>ACTIVIDAD (GIRO COMERCIAL): </strong>
                 </td>
                 <td class="">
-                    <span style="color:white">AAAAAAAAAAAAAAAA</span>
                     {{$data->girocomercial}}
                 </td>
             </tr>
-        </table>
-        <table class="tabledatos">
             
-                <tr>
-                    <td style="color:white">
-                        <strong>NOMBRE O RAZON SOCIAL: </strong>
-                    </td>
-                    <td class="">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>DIRECCION: </strong>
-                    </td>
-                    <td class="">
-                        {{$data->direccion}}
-                    </td>
-                </tr>
+            
         </table>
+        <br>
+       
     </div>
     <br>
-    <div>
-        <p style="font-size: .65rem; color:black">
-           <strong>
-            NOTA: SI REALIZA ALGUNA MODIFICACIÓN O CIERRE DE ACTIVIDAD DEBERÁ COMUNICAR O CANCELAR
-            DEFINITIVAMENTE LA AUTORIZACIÓN SEGUN LO ESTABLECE LA LEY DE MARCO DE LICENCIA. DEBE EXHIBIR EL ORIGINAL DE LA LICENCIA
-            BAJO RESPONSABLIDAD DEL ADMINISTRADO PERMITIENDO FISCALIZACIÓN DEL MISMO TAL COMO LO ESTABLECE LA LEY 2744 Y LA LEY 28976
-            PARA EVITAR SER SANCIONADO O CLAUSURADO DE DETECTARSE ALGUN DATO FRAGUADO. ESTA AUTORIZACIÓN {{$data->viapublica}} AUTORIZA 
-            EL USO DE LA VIA PUBLICA.
-           </strong>
-        </p>
-    </div>
+    <br>
     <div class="ml-5">
         <table class="table2 tabledatos">
             <tr><td></td></tr>
             <tr><td></td></tr>
             <tr>
-                <td>________________________________
-                    <span style="color:white">AAAAAAAAAA</span>
+                <td>__________________________________________________
+                    <span style="color:white">AAAA</span>
                 </td>
                 <td>
-                    <span style="color:white">AAAAAAA</span>
+                    <span style="color:white">AAA</span>
                     ___________________________________________</td>
             </tr>
             <tr>
                 <td>
                     <span style="color:white">AAAAA</span>
-                    GERENTE MUNICIPAL</td>
+                    GERENTE DESARROLLO ECONÓMICO Y SOCIAL</td>
                 <td>
                     <span style="color:white">AAAAAAAA</span>
                     OFICINA DE LICENCIAS Y AUTORIZACIONES</td>
             </tr>
         </table>
     </div>
-    <img class=" float-right" src="data:image/svg+xml;base64,{{ base64_encode($codigoQR) }}">
+    {{-- <img class=" float-right" src="data:image/svg+xml;base64,{{ base64_encode($codigoQR) }}"> --}}
     <footer class="text-center" style="font-size: .8rem">
         <p>AV. SAENZ PEÑA N°2151 - URB. LATINA. TLF. 257521-TELFAX 074253882 JOSE L. ORTIZ-CHICLAYO </p>
     </footer>

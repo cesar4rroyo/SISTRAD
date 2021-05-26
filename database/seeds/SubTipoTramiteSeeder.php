@@ -24,8 +24,18 @@ class SubTipoTramiteSeeder extends Seeder
         ]);
         //id=3
         DB::table('subtipotramitenodoc')->insert([
-            'descripcion' => 'AUTORIZACION DE FUNCIONAMIENTO DE BODEGAS',   
+            'descripcion' => 'LICENCIA DE FUNCIONAMIENTO DE BODEGAS',   
             'tipotramitenodoc_id'=>1,          
         ]);
+        // //id=4
+        // DB::table('subtipotramitenodoc')->insert([
+        //     'descripcion' => 'LICENCIA DE FUNCIONAMIENTO DE BODEGAS',   
+        //     'tipotramitenodoc_id'=>3,          
+        // ]);
+        // //id=5
+        // DB::table('subtipotramitenodoc')->insert([
+        //     'descripcion' => 'LICENCIA DE FUNCIONAMIENTO DE BODEGAS',   
+        //     'tipotramitenodoc_id'=>3,          
+        // ]);
     }
 }
