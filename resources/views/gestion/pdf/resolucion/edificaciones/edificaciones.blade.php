@@ -147,7 +147,7 @@
                     <strong>RECIBO NRO:</strong>
                 </td>
                 <td>
-                    {{$data->ordenpago->numero}}
+                    {{$data->ordenpago->numerooperacion}}
                 </td>
             </tr>
             <tr>

@@ -321,6 +321,22 @@
 				</div>
 			</div>
 		</div>
+		<p class=" font-weight-bold">Para Bodegas</p>
+	<hr>
+	<div class="row">
+		<div class="form-group col-sm">
+			{!! Form::label('desdehora', 'Hora Atención (Desde)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lbldesdehora')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::number('desdehora', $resolucion ? $resolucion->desdehora : null, array('class' => 'form-control  input-xs', 'id' => 'desdehora', 'placeholder'=>'Ejm. (Formato 24 hrs.) : 9')) !!}
+			</div>
+		</div>
+		<div class="form-group col-sm">
+			{!! Form::label('hastahora', 'Hora Atención (Hasta)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblhastahora')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::number('hastahora', $resolucion ? $resolucion->hastahora : null, array('class' => 'form-control  input-xs', 'id' => 'hastahora', 'placeholder'=>'Ejm. (Formato 24 hrs.) : 18')) !!}
+			</div>
+		</div>
+	</div>
 	</div>
 	<div class="row">		
 		<div class="col-sm form-group">
@@ -398,6 +414,7 @@
 			</div>
 		</div>
 	</div>
+	
 	<div id="divDefensaCivil" class="row d-none">
 		<div class="form-group col-sm">
 			{!! Form::label('capacidadmaxima', 'Capacidad Máxima (Personas)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblcapacidadmaxima')) !!}
@@ -449,10 +466,14 @@ $(document).ready(function() {
 
 	$("input[name=funcionamiento]").change(function () {	
 		var valor = $(this).val(); 
-		if(valor==='Temporal'){
+		if(valor==='TEMPORAL'){
 			$('#divFechaVencimiento').removeClass('d-none');
-		}else{
+			console.log('111');
+
+		}else if(valor=='DEFINITIVO'){
 			$('#divFechaVencimiento').addClass('d-none');
+			console.log('22');
+
 		}
 	});
 
@@ -507,24 +528,25 @@ function handleChangeSubtipo(){
 	var subtipo = $('#subtipotramite').val();
 	var tipo = $('#tipo_id').val();
 	if(tipo=='1'){
-		if(subtipo=='1'){
+		if(subtipo=='1' || subtipo=='3'){
 			$('#certificadoGroup').removeClass('d-none');
 			$('#lblnrodocumento').text('Nro. de Resolución');
 			$('#divAnuncios').addClass('d-none');
 			$('#divLicenciasFuncionamiento').removeClass('d-none');
 			$('#divNombreComercial').addClass('d-none');
-			generarNumero2(subtipo, tipo);
-			generarNumero3(subtipo, tipo);
-		}else if(subtipo=='2' || subtipo=='3'){
+			if(subtipo=='1'){
+				generarNumero2(subtipo, tipo);
+				generarNumero3(subtipo, tipo);
+			}else{
+				generarNumero3(subtipo, tipo);
+				generarNumero4(subtipo, tipo);
+			}
+			
+		}else if(subtipo=='2'){
 			if(subtipo=='2'){
 				$('#divAnuncios').removeClass('d-none');
 				$('#divLicenciasFuncionamiento').addClass('d-none');
 				$('#divNombreComercial').addClass('d-none');
-			}
-			if(subtipo=='3'){
-				$('#divAnuncios').addClass('d-none');
-				$('#divLicenciasFuncionamiento').addClass('d-none');
-				$('#divNombreComercial').removeClass('d-none');
 			}
 			generarNumero3(subtipo, tipo);
 			$('#certificadoGroup').addClass('d-none');
@@ -675,6 +697,18 @@ function generarNumero3(value, tipo){
 			data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&subtipotramite=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="subtipotramite"]').val(),
 			success: function(a) {
 				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
+			}
+		});
+	}
+function generarNumero4(value, tipo){
+		var subtipo = value;
+		showTipo(tipo);
+		$.ajax({
+			type: "POST",
+			url: "{{route('resolucion.generarnumero3')}}",
+			data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&subtipotramite=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="subtipotramite"]').val(),
+			success: function(a) {
+				$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="nrocertificado"]').val(a);
 			}
 		});
 	}

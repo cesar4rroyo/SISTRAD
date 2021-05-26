@@ -51,7 +51,9 @@ class Resolucion extends Model
 		'tipopersona',
 		'fechaentrega',
 		'capacidadmaxima',
-		'edificaciones'
+		'edificaciones',
+		'desdehora',
+		'hastahora',
     ];
     public function ordenpago()
     {
@@ -118,6 +120,17 @@ class Resolucion extends Model
 
 	//para la generacion de certificado de licencias y autoriazciones de subtipo 1 = Licencias de Funcionamiento
 	public function scopeNumeroSigueCertificadoLicencias($query , $subtipo)
+	{
+			$rs = $query
+				->where(function ($subquery) use ($subtipo) {
+					if (!is_null($subtipo) && strlen($subtipo) > 0) {
+						$subquery->where('subtipo_id', $subtipo);
+					}
+				})->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,1,8),SIGNED  integer) END)*1) AS maximo"))->first();
+		
+        return str_pad($rs->maximo + 1, 8, '0', STR_PAD_LEFT);
+	}
+	public function scopeNumeroSigueCertificadoBodegas($query , $subtipo)
 	{
 			$rs = $query
 				->where(function ($subquery) use ($subtipo) {
