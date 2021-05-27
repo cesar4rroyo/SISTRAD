@@ -215,14 +215,14 @@ class OpcionMenuSeeder extends Seeder
             'descripcion' => 'Reporte Inspección',
             'icono' => 'fas fa-chart-line',
             'link' => 'reporteInspeccion',
-            'orden' => 2,
+            'orden' => 3,
             'grupomenu_id' => 5
         ]);
         DB::table('opcionmenu')->insert([
             'descripcion' => 'Reporte Resolucion',
             'icono' => 'fas fa-chart-line',
             'link' => 'reporteResolucion',
-            'orden' => 3,
+            'orden' => 4,
             'grupomenu_id' => 5
         ]);
 

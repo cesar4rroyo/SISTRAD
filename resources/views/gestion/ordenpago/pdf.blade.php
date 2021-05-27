@@ -46,10 +46,10 @@
         <table>
             <tbody>
                 <tr>
-                    <td class="b" >CORRELATIVO</td>
-                    <td >{{$ordenpago->numero}}</td>
                     <td class="b" >CÓDIGO PAGO</td>
                     <td >{{$ordenpago->codigopago}}</td>
+                    <td class="b" >CORRELATIVO</td>
+                    <td >{{$ordenpago->numero}}</td>
                 </tr>
                 <tr>
                     <td class="b" >FECHA</td>
@@ -58,6 +58,10 @@
                 <tr>
                     <td class="b" >AREA</td>
                     <td colspan="3">{{$ordenpago->tipotramite->descripcion}}</td>
+                </tr>
+                <tr>
+                    <td class="b" >SUBTIPO</td>
+                    <td colspan="3">{{ $ordenpago->subtipotramite ? $ordenpago->subtipotramite->descripcion : '-' }}</td>
                 </tr>
                 <tr class="height150">
                     <td class="b"  >DESCRIPCIÓN</td>

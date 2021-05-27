@@ -1,10 +1,6 @@
 <!-- Content Header (Page header) -->
 
-
-@extends("theme.$theme.layout")
-
-@section('content')
-<div class="container">
+<div class="container" id="container">
 
     <div class="row justify-content-center">
       <div class="col-lg-8 col-md-8 col-offset-2">
@@ -50,10 +46,9 @@
         </div>
     </div>
 </div>
-@endsection
  
 <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function(event) {
+    $(document).ready(function ()  {
 		    init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
 	});
 
