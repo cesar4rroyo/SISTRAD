@@ -997,6 +997,10 @@ class ResolucionController extends Controller
                 if (!is_null($blanco)) {
                     $phpWord = new \PhpOffice\PhpWord\PhpWord();
                     $section = $phpWord->addSection();
+                    
+                    $section = $phpWord->addSection(array(
+                        'orientation' => 'landscape'
+                    ));
                     $text = $section->addText($data->contribuyente);
                     $text = $section->addText($data->direccion);
                     $text = $section->addText($data->localidad);

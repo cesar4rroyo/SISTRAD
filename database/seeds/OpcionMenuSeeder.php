@@ -127,6 +127,13 @@ class OpcionMenuSeeder extends Seeder
             'orden' => 6,
             'grupomenu_id' => 1
         ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Acta de Fiscalización',
+            'icono' => 'far fa-file-alt',
+            'link' => 'acta',
+            'orden' => 7,
+            'grupomenu_id' => 1
+        ]);
        /*  DB::table('opcionmenu')->insert([
             'descripcion' => 'Solicitud o Expediente',
             'icono' => 'far fa-file-alt',

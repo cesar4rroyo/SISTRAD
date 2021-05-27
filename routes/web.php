@@ -193,6 +193,12 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     //FIN CARTA
 
 //FIN SEGUNDA PARTE
+    //ACTA DE INSPECCION
+    Route::post('acta/buscar', 'Gestion\ActaController@buscar')->name('acta.buscar');
+    Route::get('acta/eliminar/{id}/{listarluego}', 'Gestion\ActaController@eliminar')->name('acta.eliminar');
+    Route::resource('acta', 'Gestion\ActaController', array('except' => array('show')));  
+    Route::get('acta/pdf/{id}', 'Gestion\ActaController@pdf')->name('acta.pdf');
+    Route::post('acta/generarNumero', 'Gestion\ActaController@generarNumero')->name('acta.generarnumero');
 });
 
     
