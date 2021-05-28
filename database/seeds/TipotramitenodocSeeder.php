@@ -13,7 +13,7 @@ class TipotramitenodocSeeder extends Seeder
     public function run()
     {
         DB::table('tipotramitenodoc')->insert([
-            'descripcion' => 'LICENCIAS DE FUNCIONAMIENTO Y AUTORIZACIONES',            
+            'descripcion' => 'LICENCIA Y AUTORIZACIONES',            
         ]);
         DB::table('tipotramitenodoc')->insert([
             'descripcion' => 'EDIFICACIONES URBANAS (LICENCIA DE EDIFICACIÓN O CONSTRUCCIONES)',

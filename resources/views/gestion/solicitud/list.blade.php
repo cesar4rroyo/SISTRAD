@@ -20,9 +20,9 @@
 			<td>{{ $contador }}</td>
 			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
-			<td>{{ $value->tipotramite->descripcion }}</td>
+			<td>{{ $value->nombresolicitante }}</td>
 			<td>{{ $value->dni }}</td>
-			<td>{{ $value->contribuyente }}</td>
+			<td>{{ $value->direccion }}</td>
             <td>{!! Form::button('<div class="fas fa-file-pdf"></div> Pdf', array('onclick' =>'pdf(\''.$value->id.'\')', 'class' => 'btn btn-sm btn-primary')) !!}</td>
             <td>{!! Form::button('<div class="fas fa-trash"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}</td>
 		</tr>
