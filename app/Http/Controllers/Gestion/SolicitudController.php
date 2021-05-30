@@ -339,7 +339,7 @@ class SolicitudController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $solicitud = Solicitud::with('ordenpago')->find($id);
+        $solicitud = Solicitud::find($id);
         $data = $solicitud;
         $pdf = PDF::loadView('gestion.pdf.solicitud.licencias', compact('data'))->setPaper('a4', 'portrait');
         $nombre = 'solicitud:' . $solicitud->numero . '-' . $solicitud->fecha . '.pdf';
@@ -348,7 +348,8 @@ class SolicitudController extends Controller
 
     public function generarNumero(Request $request)
     {
+        $year = date('Y');
         $numerotramite = Solicitud::NumeroSigue();
-        echo $numerotramite;
+        echo $year .'-'.$numerotramite;
     }
 }

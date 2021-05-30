@@ -327,13 +327,13 @@
 		<div class="form-group col-sm">
 			{!! Form::label('desdehora', 'Hora Atención (Desde)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lbldesdehora')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::number('desdehora', $resolucion ? $resolucion->desdehora : null, array('class' => 'form-control  input-xs', 'id' => 'desdehora', 'placeholder'=>'Ejm. (Formato 24 hrs.) : 9')) !!}
+				{!! Form::text('desdehora', $resolucion ? $resolucion->desdehora : null, array('class' => 'form-control  input-xs', 'id' => 'desdehora', 'placeholder'=>'Ejm. (Formato 24 hrs.) : 9')) !!}
 			</div>
 		</div>
 		<div class="form-group col-sm">
 			{!! Form::label('hastahora', 'Hora Atención (Hasta)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id'=>'lblhastahora')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::number('hastahora', $resolucion ? $resolucion->hastahora : null, array('class' => 'form-control  input-xs', 'id' => 'hastahora', 'placeholder'=>'Ejm. (Formato 24 hrs.) : 18')) !!}
+				{!! Form::text('hastahora', $resolucion ? $resolucion->hastahora : null, array('class' => 'form-control  input-xs', 'id' => 'hastahora', 'placeholder'=>'Ejm. (Formato 24 hrs.) : 18')) !!}
 			</div>
 		</div>
 	</div>

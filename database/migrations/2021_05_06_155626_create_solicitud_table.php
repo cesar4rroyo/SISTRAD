@@ -19,7 +19,7 @@ class CreateSolicitudTable extends Migration
             $table->decimal('area', 8,2)->nullable();
             $table->string('numero')->nullable();
             $table->string('tiposolicitud')->nullable();            
-            $table->string('tipotramitesolicitud')->nullable();
+            $table->string('tipotramitesolicitud', 4000)->nullable();
             $table->string('nombresolicitante')->nullable();
             $table->string('dni')->nullable();
             $table->string('ruc')->nullable(); //renovacion o apertura
