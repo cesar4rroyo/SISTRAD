@@ -46,8 +46,11 @@
 						<div class="col-md-12">
 						  <div class="card">
 							<div class="card-header">
+								<span class="badge badge-success">EMITIDO</span>
+								<span class="badge badge-danger">DE BAJA</span> 
 							  <div class="card-tools">
 								{!! Form::button(' <i class="fa fa-plus fa-fw"></i> Agregar', array('class' => 'btn  btn-outline-primary', 'id' => 'btnNuevo', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
+								
 							</div>
 							</div>
 							<!-- /.card-header -->

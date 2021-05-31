@@ -16,10 +16,31 @@
 		$contador = $inicio + 1;
 		?>
 		@foreach ($lista as $key => $value)
+		@switch($value->situacion)
+			@case('EMITIDO')
+				<?php
+				$color = "success";	
+				?>
+				@break
+			@case('DE BAJA')
+				<?php
+				$color = "danger";	
+				?>
+				@break
+			@default
+				<?php
+				$color = "";	
+				?>
+				@break;
+		@endswitch
         <tr>
 			<td>{{ $contador }}</td>
 			<td>{{ date_format(date_create($value->fechaexpedicion), 'd/m/Y')}}</td>
-			<td>{{ $value->numero }}</td>
+			<td>
+				<span class="{{'badge badge-' .$color}}">
+					{{ $value->numero }}
+				</span>
+			</td>
 			@if ($value->tipo_id=='1')
 				<td>{{ $value->tipotramite->descripcion . '   (' . $value->subtipo->descripcion . ')'}}</td>
 			@else

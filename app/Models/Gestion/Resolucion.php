@@ -54,6 +54,8 @@ class Resolucion extends Model
 		'edificaciones',
 		'desdehora',
 		'hastahora',
+		'duplicado',
+		'situacion',
     ];
     public function ordenpago()
     {

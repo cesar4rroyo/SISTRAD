@@ -21,6 +21,7 @@ class CreateResolucionTable extends Migration
             $table->integer('capacidadmaxima')->nullable();
             $table->string('desdehora')->nullable();
             $table->string('hastahora')->nullable();
+            $table->string('duplicado')->nullable();
             $table->string('numero' , 30)->nullable();
             $table->string('edificaciones' , 30)->nullable();
             $table->string('contribuyente' , 200)->nullable();
@@ -32,6 +33,7 @@ class CreateResolucionTable extends Migration
             $table->string('razonsocial' , 200)->nullable();
             $table->string('dni' , 20)->nullable();
             $table->string('ruc' , 20)->nullable();
+            $table->string('situacion' , 20)->nullable();
             $table->string('observaciones' , 300)->nullable();
             $table->string('claseanuncio' , 300)->nullable();
             $table->string('ubicacionanuncio' , 300)->nullable();

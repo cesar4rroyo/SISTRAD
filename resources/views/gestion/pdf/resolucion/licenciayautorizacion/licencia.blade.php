@@ -52,7 +52,9 @@
     <div>
         <p style="font-size: .8rem; text-indent:18px">
             El Expediente <strong>N° {{$data->nroexpediente}},</strong> presentado por Don (a): <strong>{{$data->contribuyente}}</strong>, mediante
-            el cual solicita <strong>LICENCIA DE FUNCIONAMIENTO {{$data->funcionamiento}}</strong>, con giro de <strong>{{$data->girocomercial}}</strong>, denominado
+            el cual solicita @if ($data->duplicado=='SI')
+                <strong>DUPLICADO DE</strong>
+            @endif <strong>LICENCIA DE FUNCIONAMIENTO {{$data->funcionamiento}}</strong>, con giro de <strong>{{$data->girocomercial}}</strong>, denominado
             <strong>{{$data->nombrecomercial}}</strong> ubicado en <strong>{{$data->direccion}}</strong>, del Distrito de José Leonardo Ortiz.
         </p>
     </div>

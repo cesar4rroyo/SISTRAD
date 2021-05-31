@@ -157,6 +157,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('resolucion/eliminar/{id}/{listarluego}', 'Gestion\ResolucionController@eliminar')->name('resolucion.eliminar');
     Route::get('resolucion/cambiarestado/{id}/{listarluego}', 'Gestion\ResolucionController@estado')->name('resolucion.estado');
     Route::get('resolucion/cambiarestado/{id}', 'Gestion\ResolucionController@confirmarEstado')->name('resolucion.updateEstado');
+    Route::post('resolucion/baja', 'Gestion\ResolucionController@darBaja')->name('resolucion.baja');
     Route::resource('resolucion', 'Gestion\ResolucionController', array('except' => array('show')));
     Route::get('resolucion/listarInspeccion', 'Gestion\ResolucionController@listarInspeccion')->name('resolucion.listarInspeccion');
     Route::get('resolucion/listarOrdenpago', 'Gestion\ResolucionController@listarOrdenpago')->name('resolucion.listarOrdenpago');
