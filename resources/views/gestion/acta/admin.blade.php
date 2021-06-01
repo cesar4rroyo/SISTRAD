@@ -3,17 +3,19 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Resolucion</div>
+                <div class="card-header">Acta de Fiscalización</div>
                 
                 <div class="card-body">
                     <div >
                         {!! Form::open(['route' => $ruta["search"], 'method' => 'POST' ,'onsubmit' => 'return false;', 'class' => 'w-100  mt-3', 'role' => 'form', 'autocomplete' => 'off', 'id' => 'formBusqueda'.$entidad]) !!}
                         {!! Form::hidden('page', 1, array('id' => 'page')) !!}
                         {!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
+                        
+
 						<div class="row w-100">
 							<div class="col-lg-4 col-md-4  form-group">
-								{!! Form::label('numerosearch', 'Numero') !!}
-								{!! Form::text('numero', '', array('class' => 'form-control ', 'id' => 'numerosearch')) !!}
+								{!! Form::label('numero', 'Numero') !!}
+								{!! Form::text('numero', '', array('class' => 'form-control ', 'id' => 'numero')) !!}
 							</div>
 							<div class="col-lg-4 col-md-4  form-group">
 								{!! Form::label('fechainicio', 'Fecha inicio') !!}
@@ -25,14 +27,7 @@
 							</div>							
 						</div>
 						<div class="row w-100">
-							<div class="col-lg-4 col-md-4  form-group">
-								{!! Form::label('contribuyentesearch', 'Contribuyente') !!}
-								{!! Form::text('contribuyente', '', array('class' => 'form-control ', 'id' => 'contribuyentesearch')) !!}
-							</div>
-							<div class="col-lg-4 col-md-4  form-group">
-								{!! Form::label('tipo', 'Tipo') !!}
-								{!! Form::select('tipo', $tipostramite, '', array('class' => 'form-control ', 'id' => 'tipo')) !!}
-							</div>
+							
 							<div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
 								{!! Form::label('nombre', 'Filas a mostrar') !!}
 								{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-xs', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
@@ -46,11 +41,8 @@
 						<div class="col-md-12">
 						  <div class="card">
 							<div class="card-header">
-								<span class="badge badge-success">EMITIDO</span>
-								<span class="badge badge-danger">DE BAJA</span> 
 							  <div class="card-tools">
 								{!! Form::button(' <i class="fa fa-plus fa-fw"></i> Agregar', array('class' => 'btn  btn-outline-primary', 'id' => 'btnNuevo', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
-								
 							</div>
 							</div>
 							<!-- /.card-header -->
@@ -68,29 +60,27 @@
         </div>
     </div>
 </div>
-<style>
-	.select2-container--default .select2-selection--single{
-		height: fit-content !important;
-	}
-</style>
 <script>
-     $(document).ready(function () {
+    $(document).ready(function () {
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="numerosearch"]').keyup(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="numero"]').keyup(function (e) {
 			var key = window.event ? e.keyCode : e.which;
 			if (key == '13') {
 				buscar('{{ $entidad }}');
 			}
 		});
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="contribuyentesearch"]').keyup(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="contribuyente"]').keyup(function (e) {
 			var key = window.event ? e.keyCode : e.which;
 			if (key == '13') {
 				buscar('{{ $entidad }}');
 			}
 		});
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="tipo"]').change(function (e) {
-			buscar('{{ $entidad }}');
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="tipo"]').keyup(function (e) {
+			var key = window.event ? e.keyCode : e.which;
+			if (key == '13') {
+				buscar('{{ $entidad }}');
+			}
 		});
 	});
 </script>

@@ -16,15 +16,26 @@
 		$contador = $inicio + 1;
 		?>
 		@foreach ($lista as $key => $value)
+		
         <tr>
 			<td>{{ $contador }}</td>
 			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
-			<td>{{ $value->nombresolicitante }}</td>
-			<td>{{ $value->dni }}</td>
-			<td>{{ $value->direccion }}</td>
-            <td>{!! Form::button('<div class="fas fa-file-pdf"></div> Pdf', array('onclick' =>'pdf(\''.$value->id.'\')', 'class' => 'btn btn-sm btn-primary')) !!}</td>
-            <td>{!! Form::button('<div class="fas fa-trash"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}</td>
+			<td>{{ $value->subgerencia }}</td>
+			<td>{{ $value->ordenanza }}</td>
+			<td>
+				@if ($value->imagen)
+					<a href="{{asset('storage\archivos2\\'.$value->imagen)}}"  target="_blank" >{{ $value->imagen }}</a>
+				@else
+					-
+				@endif
+			</td>
+			<td>
+				<div class="btn-group">
+					{!! Form::button('<div class="fas fa-file-pdf"></div> Pdf', array('onclick' =>'pdf(\''.$value->id.'\')', 'class' => 'btn btn-sm btn-primary')) !!}
+					{!! Form::button('<div class="fas fa-trash"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}
+				</div>
+			</td>
 		</tr>
 		<?php
 		$contador = $contador + 1;
@@ -44,6 +55,6 @@
 <script>
 	function pdf(id){
 		console.log(id);
-		window.open( 'solicitud/pdf/'+id , '_blank');
+		window.open( 'acta/pdf/'+id , '_blank');
 	}
 </script>

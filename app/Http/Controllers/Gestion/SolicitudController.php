@@ -61,9 +61,9 @@ class SolicitudController extends Controller
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Solicitante', 'numero' => '1');
         $cabecera[]       = array('valor' => 'DNI/RUC', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Contribuyente', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Dirección', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -127,50 +127,26 @@ class SolicitudController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
             'numero' => 'required',
-            'tipo' => 'required',
-            'fecha' => 'required',
-            'contribuyente' => 'required',
+            'tiposolicitud' => 'required',
+            'tipotramitesolicitud' => 'required',
+            'nombresolicitante' => 'required',
             'dni' => 'required',
+            'direccion' => 'required',
+            'requisitos' => 'required',
         );
         $mensajes = array(
-            'numero.required'         => 'Debe ingresar el Número de Solicitud o Expediente',
-            'contribuyente.required'         => 'Debe ingresar el Nombre del Contribuyente',
-            'dni.required'         => 'Debe ingresar el DNI',
+            'numero.required'         => 'Debe ingresar el Número de Solicitud',
+            'dni.required'         => 'Debe ingresar el Número de DNI',
+            'nombresolicitante.required'         => 'Debe ingresar el nombre del solicitante',
+            'direccion.required'         => 'Debe ingresar la direccion',
+            'requisitos.required'         => 'Debe ingresar los documentos anexos',
+            'tiposolicitud.required'         => 'Debe ingresar el tipo de solicitud Definitiva/Temporal',
+            'tipotramitesolicitud.required'         => 'Debe de ingresar el tipo de tramite que solicita',
         );
             
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
-        }
-
-        switch ($request->tipo) {
-            case '1':
-                break;
-            case '2':
-                break;
-            case '3':
-                $reglas = array(
-                    'razonsocial' => 'required',
-                    'girocomercial' => 'required',
-                    'direccion' => 'required',
-                    'representante' => 'required',
-                    'nombrenegocio' => 'required',
-                    'ruc' => 'required',
-                    'ordenpago_id'=>'required',
-                );
-                $mensajes = array(
-                    'razonsocial.required'         => 'Debe ingresar la Razón Social',
-                    'girocomercial.required'         => 'Debe ingresar el nombre del Giro Comercial',
-                    'direccion.required'         => 'Debe ingresar una dirección',
-                    'representante.required'         => 'Debe ingresar el Nombre del Representante',
-                    'nombrenegocio.required'         => 'Debe ingresar el Nombre del Negocio',
-                    'ruc.required'         => 'Debe ingresar el RUC',
-                    'ordenpago_id.required'         => 'Debe ingresar el Nro. de Orden de Pago',
-                );
-                
-                break;
-            case '4':
-                break;
         }
 
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
@@ -180,21 +156,36 @@ class SolicitudController extends Controller
                 $error = DB::transaction(function() use($request){
                     $solicitud = new Solicitud();
                     $solicitud->numero          = Libreria::getParam($request->input('numero'));
-                    $solicitud->tipo_id            = strtoupper(Libreria::getParam($request->input('tipo')));
-                    $solicitud->ordenpago_id    = Libreria::getParam($request->input('ordenpago_id'), null);
-                    $solicitud->telefono    = Libreria::getParam($request->input('telefono'), null);
-                    $solicitud->fecha                 = date("Y-m-d H:i:s");
-                    $solicitud->observacion     = strtoupper($request->input('observacion'));
-                    $solicitud->contribuyente     = strtoupper($request->input('contribuyente'));
-                    $solicitud->nombrenegocio     = strtoupper($request->input('nombrenegocio'));
-                    $solicitud->representante     = strtoupper($request->input('representante'));
-                    $solicitud->direccion     = strtoupper($request->input('direccion'));
-                    $solicitud->razonsocial     = strtoupper($request->input('razonsocial'));
-                    $solicitud->girocomercial     = strtoupper($request->input('girocomercial'));
-                    $solicitud->dni     = strtoupper($request->input('dni'));
-                    $solicitud->ruc     = strtoupper($request->input('ruc'));
-                    $solicitud->funcionario          = Libreria::getParam($request->input('funcionario'));
-                    $solicitud->solicito          = Libreria::getParam($request->input('solicito'));
+                    $solicitud->fecha          =   date("Y-m-d H:i:s");
+                    $solicitud->tiposolicitud            = strtoupper(Libreria::getParam($request->input('tiposolicitud')));
+                    $solicitud->dni            = strtoupper(Libreria::getParam($request->input('dni')));
+                    $solicitud->ruc            = strtoupper(Libreria::getParam($request->input('ruc')));
+                    $solicitud->razonsocial            = strtoupper(Libreria::getParam($request->input('razonsocial')));
+                    $solicitud->direccion            = strtoupper(Libreria::getParam($request->input('direccion')));
+                    $solicitud->numerocasa            = strtoupper(Libreria::getParam($request->input('numerocasa')));
+                    $solicitud->manzanacasa            = strtoupper(Libreria::getParam($request->input('manzanacasa')));
+                    $solicitud->lotecasa            = strtoupper(Libreria::getParam($request->input('lotecasa')));
+                    $solicitud->urbanizacion            = strtoupper(Libreria::getParam($request->input('urbanizacion')));
+                    $solicitud->representantelegal            = strtoupper(Libreria::getParam($request->input('representantelegal')));
+                    $solicitud->dnirepresentante            = strtoupper(Libreria::getParam($request->input('dnirepresentante')));
+                    $solicitud->rucrepresentante            = strtoupper(Libreria::getParam($request->input('rucrepresentante')));
+                    $solicitud->telefonorepresentante            = strtoupper(Libreria::getParam($request->input('telefonorepresentante')));
+                    $solicitud->nombrenegocio            = strtoupper(Libreria::getParam($request->input('nombrenegocio')));
+                    $solicitud->girocomercial            = strtoupper(Libreria::getParam($request->input('girocomercial')));
+                    $solicitud->area            = strtoupper(Libreria::getParam($request->input('area')));
+                    $solicitud->requisitos            = implode('-',$request->input('requisitos'));
+                    $solicitud->tipotramitesolicitud            = implode('-',$request->input('tipotramitesolicitud'));
+                    $solicitud->publicidadexterior            = strtoupper(Libreria::getParam($request->input('publicidadexterior')));
+                    $solicitud->colores            = strtoupper(Libreria::getParam($request->input('colores')));
+                    $solicitud->tipoanuncio            = strtoupper(Libreria::getParam($request->input('tipoanuncio')));
+                    $solicitud->medidas            = strtoupper(Libreria::getParam($request->input('medidas')));
+                    $solicitud->leyendas            = strtoupper(Libreria::getParam($request->input('leyendas')));
+                    $solicitud->materiales            = strtoupper(Libreria::getParam($request->input('materiales')));
+                    $solicitud->cantidadanuncios            = Libreria::getParam($request->input('cantidadanuncios'), null);
+                    $solicitud->nroexpediente            = strtoupper(Libreria::getParam($request->input('nroexpediente')));
+                    $solicitud->nrocertificado            = strtoupper(Libreria::getParam($request->input('nrocertificado')));
+                    $solicitud->nroresolucion            = strtoupper(Libreria::getParam($request->input('nroresolucion')));
+                    $solicitud->nombresolicitante    = Libreria::getParam($request->input('nombresolicitante'), null);
                     $solicitud->save();
                 });
                 return is_null($error) ? "OK" : $error;
@@ -224,14 +215,13 @@ class SolicitudController extends Controller
             return $existe;
         }
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
-        $solicitud = solicitud::find($id);
+        $solicitud = Solicitud::find($id);
         $toggletipo = $solicitud->tipo_id;
         $entidad  = 'solicitud';
         $formData = array('solicitud.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        $cboOrdenpago = ['' => 'Seleccione una opcion'] + Ordenpago::pluck('numero', 'id')->all();
-        return view($this->folderview.'.mant')->with(compact('solicitud', 'formData', 'entidad', 'boton', 'listar', 'toggletipo', 'cboOrdenpago'));
+        return view($this->folderview.'.mant')->with(compact('solicitud', 'formData', 'entidad', 'boton', 'listar', 'toggletipo'));
     }
 
     /**
@@ -248,18 +238,62 @@ class SolicitudController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $reglas     = array('descripcion' => 'required');
+        $reglas     = array(
+            'numero' => 'required',
+            'tiposolicitud' => 'required',
+            'tipotramitesolicitud' => 'required',
+            'nombresolicitante' => 'required',
+            'dni' => 'required',
+            'direccion' => 'required',
+            'requisitos' => 'required',
+        );
         $mensajes = array(
-            'descripcion.required'         => 'Debe ingresar una descripcion'
-            );
+            'numero.required'         => 'Debe ingresar el Número de Solicitud',
+            'dni.required'         => 'Debe ingresar el Número de DNI',
+            'nombresolicitante.required'         => 'Debe ingresar el nombre del solicitante',
+            'direccion.required'         => 'Debe ingresar la direccion',
+            'requisitos.required'         => 'Debe ingresar los documentos anexos',
+            'tiposolicitud.required'         => 'Debe ingresar el tipo de solicitud Definitiva/Temporal',
+            'tipotramitesolicitud.required'         => 'Debe de ingresar el tipo de tramite que solicita',
+        );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
         $error = DB::transaction(function() use($request, $id){
-            $solicitud = solicitud::find($id);
-            $solicitud->descripcion = strtoupper($request->input('descripcion'));
+            $solicitud = Solicitud::find($id);
+            $solicitud->numero          = Libreria::getParam($request->input('numero'));
+            $solicitud->dni            = strtoupper(Libreria::getParam($request->input('dni')));
+            $solicitud->tiposolicitud            = strtoupper(Libreria::getParam($request->input('tiposolicitud')));
+            $solicitud->razonsocial            = strtoupper(Libreria::getParam($request->input('razonsocial')));
+            $solicitud->ruc            = strtoupper(Libreria::getParam($request->input('ruc')));
+            $solicitud->numerocasa            = strtoupper(Libreria::getParam($request->input('numerocasa')));
+            $solicitud->direccion            = strtoupper(Libreria::getParam($request->input('direccion')));
+            $solicitud->lotecasa            = strtoupper(Libreria::getParam($request->input('lotecasa')));
+            $solicitud->manzanacasa            = strtoupper(Libreria::getParam($request->input('manzanacasa')));
+            $solicitud->representantelegal            = strtoupper(Libreria::getParam($request->input('representantelegal')));
+            $solicitud->urbanizacion            = strtoupper(Libreria::getParam($request->input('urbanizacion')));
+            $solicitud->rucrepresentante            = strtoupper(Libreria::getParam($request->input('rucrepresentante')));
+            $solicitud->dnirepresentante            = strtoupper(Libreria::getParam($request->input('dnirepresentante')));
+            $solicitud->nombrenegocio            = strtoupper(Libreria::getParam($request->input('nombrenegocio')));
+            $solicitud->telefonorepresentante            = strtoupper(Libreria::getParam($request->input('telefonorepresentante')));
+            $solicitud->girocomercial            = strtoupper(Libreria::getParam($request->input('girocomercial')));
+            $solicitud->area            = strtoupper(Libreria::getParam($request->input('area')));
+            $solicitud->requisitos            = implode('-',$request->input('requisitos'));
+            $solicitud->tipotramitesolicitud            = implode('-',$request->input('tipotramitesolicitud'));
+            $solicitud->publicidadexterior            = strtoupper(Libreria::getParam($request->input('publicidadexterior')));
+            $solicitud->colores            = strtoupper(Libreria::getParam($request->input('colores')));
+            $solicitud->tipoanuncio            = strtoupper(Libreria::getParam($request->input('tipoanuncio')));
+            $solicitud->medidas            = strtoupper(Libreria::getParam($request->input('medidas')));
+            $solicitud->leyendas            = strtoupper(Libreria::getParam($request->input('leyendas')));
+            $solicitud->materiales            = strtoupper(Libreria::getParam($request->input('materiales')));
+            $solicitud->cantidadanuncios            = strtoupper(Libreria::getParam($request->input('cantidadanuncios')));
+            $solicitud->nroexpediente            = strtoupper(Libreria::getParam($request->input('nroexpediente')));
+            $solicitud->nrocertificado            = strtoupper(Libreria::getParam($request->input('nrocertificado')));
+            $solicitud->nroresolucion            = strtoupper(Libreria::getParam($request->input('nroresolucion')));
+            $solicitud->nombresolicitante    = Libreria::getParam($request->input('nombresolicitante'), null);
             $solicitud->save();
+
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -277,7 +311,7 @@ class SolicitudController extends Controller
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $solicitud = solicitud::find($id);
+            $solicitud = Solicitud::find($id);
             $solicitud->delete();
         });
         return is_null($error) ? "OK" : $error;
@@ -293,7 +327,7 @@ class SolicitudController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = solicitud::find($id);
+        $modelo   = Solicitud::find($id);
         $entidad  = 'solicitud';
         $formData = array('route' => array('solicitud.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
@@ -305,30 +339,17 @@ class SolicitudController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $solicitud = Solicitud::with('ordenpago')->find($id);
-        $tipo = $solicitud->tipo_id;
+        $solicitud = Solicitud::find($id);
         $data = $solicitud;
-        switch ($tipo) {
-            case '1':
-                //$pdf = PDF::loadView('gestion.pdf.solicitud.licenciayautorizacion.licencia', compact('data'))->setPaper('a4', 'portrait');
-                break;
-            case '2':
-                break;
-            case '3':
-                $pdf = PDF::loadView('gestion.pdf.solicitud.salubridad', compact('data'))->setPaper('a4', 'portrait');
-                break;
-            case '4':
-                break;
-        }
+        $pdf = PDF::loadView('gestion.pdf.solicitud.licencias', compact('data'))->setPaper('a4', 'portrait');
         $nombre = 'solicitud:' . $solicitud->numero . '-' . $solicitud->fecha . '.pdf';
         return $pdf->stream($nombre);
     }
 
     public function generarNumero(Request $request)
     {
-        $tipo          = $request->input('tipo');
-
-        $numerotramite = Solicitud::NumeroSigue($tipo);
-        echo $numerotramite;
+        $year = date('Y');
+        $numerotramite = Solicitud::NumeroSigue();
+        echo $year .'-'.$numerotramite;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Gestion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Librerias\Libreria;
+use App\Models\Admin\Cargo;
 use App\Models\Control\Subtipotramitenodoc;
 use App\Models\Gestion\Inspeccion;
 use App\Models\Gestion\Ordenpago;
@@ -14,6 +15,7 @@ use App\Models\Gestion\Tramite;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Exception;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -33,7 +35,8 @@ class ResolucionController extends Controller
         'search' => 'resolucion.buscar',
         'index'  => 'resolucion.index',
         'estado' => 'resolucion.estado',
-        'confirmarEstado' => 'resolucion.updateEstado'
+        'confirmarEstado' => 'resolucion.updateEstado',
+        'darBaja' => 'resolucion.baja'
     );
     /**
      * Create a new controller instance.
@@ -151,6 +154,7 @@ class ResolucionController extends Controller
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
+        $direcionCompleta=$request->direccion;
         switch ($request->tipo) {
             case '1':
                 $reglas     = array(
@@ -166,6 +170,7 @@ class ResolucionController extends Controller
                 $fechavencimiento = $request->fechavencimiento;
                 switch ($request->subtipotramite) {
                     case '1': //licencias de funcionamiento
+                        
                         if ($request->funcionamiento == 'Temporal') {
                             $reglas     = array(
                                 'funcionamiento' => 'required',
@@ -180,6 +185,7 @@ class ResolucionController extends Controller
                                 'urbanizacion22' => 'required',
                                 'tipopersona' => 'required',
 
+
                             );
                             $mensajes = array(
                                 'nombrecomercial.required'         => 'Debe ingresar el Nombre Comercial del Negocio',
@@ -192,7 +198,8 @@ class ResolucionController extends Controller
                                 'jurisdicion.required' => 'Debe Ingresar el nombre de la calle o avenidad',
                                 'numerocalle.required' => 'Debe de ingresar el numero de la calle',
                                 'urbanizacion22.required' => 'Debe ingresar el nombre de la urbanizacion',
-                                'tipopersona.required' => 'Debe ingresar el tipo de personas'
+                                'tipopersona.required' => 'Debe ingresar el tipo de personas',
+
                             );
                         } else {
                             $reglas     = array(
@@ -219,6 +226,21 @@ class ResolucionController extends Controller
                                 'urbanizacion22.required' => 'Debe ingresar el nombre de la urbanizacion',
                                 'tipopersona.required' => 'Debe ingresar el tipo de personas'
                             );
+                        }
+                        $direcionCompleta=strtoupper($request->jurisdicion) . ' - ' .  strtoupper($request->numerocalle). ' - ' . strtoupper($request->urbanizacion22);
+                        $direccionRepetida=false;
+                        if($direcionCompleta){
+                            $today = Carbon::now();
+                            $q = Resolucion::where('direccion', 'LIKE', '%'.$direcionCompleta.'%')
+                                            ->where('funcionamiento', 'TEMPORAL')
+                                            ->where('fechavencimiento', '>', $today)->get();
+                            if(count($q)>0){
+                                $direccionRepetida=true;
+                            }
+                            
+                        }   
+                        if($direccionRepetida){
+                            return 1;
                         }
                         break;
                     case '2': //anuncios publicitarios
@@ -274,6 +296,21 @@ class ResolucionController extends Controller
                             //'fechavencimiento.required'         => 'Debe ingresar la Fecha de Vencimiento',
 
                         );
+                        $direcionCompleta=strtoupper($request->jurisdicion) . ' - ' .  strtoupper($request->numerocalle). ' - ' . strtoupper($request->urbanizacion22);
+                        $direccionRepetida=false;
+                        if($direcionCompleta){
+                            $today = Carbon::now();
+                            $q = Resolucion::where('direccion', 'LIKE', '%'.$direcionCompleta.'%')
+                                            ->where('funcionamiento', 'TEMPORAL')
+                                            ->where('fechavencimiento', '>', $today)->get();
+                            if(count($q)>0){
+                                $direccionRepetida=true;
+                            }
+                            
+                        }   
+                        if($direccionRepetida){
+                            return 1;
+                        }
                         if (is_null($request->fechavencimiento)) {
                             $fechavencimiento = date('Y-m-d', strtotime('+1 year', strtotime($request->fechaexpedicion)));
                         }
@@ -283,20 +320,22 @@ class ResolucionController extends Controller
                 if ($validacion->fails()) {
                     return $validacion->messages()->toJson();
                 }
-                $error = DB::transaction(function () use ($request, $fechavencimiento) {
+                $error = DB::transaction(function () use ($request, $fechavencimiento, $direcionCompleta) {
                     $resolucion = Resolucion::create([
                         'fechaexpedicion' => $request->input('fechaexpedicion'),
                         'fechavencimiento' => $fechavencimiento,
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
-                        'direccion' => ($request->subtipotramite == '1' ||  $request->subtipotramite == '3') ? (strtoupper($request->jurisdicion) . ' - ' .  strtoupper($request->numerocalle) . ' - ' . strtoupper($request->urbanizacion22)) : strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccion' => ($request->subtipotramite == '1' ||  $request->subtipotramite == '3') ? $direcionCompleta : strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),
-                        'desdehora' => strtoupper(Libreria::getParam($request->input('desdehora'))),
-                        'hastahora' => strtoupper(Libreria::getParam($request->input('hastahora'))),
+                        'desdehora' => strtoupper(Libreria::getParam($request->input('desdehora'), null)),
+                        'hastahora' => strtoupper(Libreria::getParam($request->input('hastahora'), null)),
                         'dni' => Libreria::getParam($request->input('dni')),
                         'ruc' => Libreria::getParam($request->input('ruc')),
                         'estado' => 'REGISTRADO',
+                        'situacion' => 'EMITIDO',
+                        'duplicado' => Libreria::getParam($request->input('duplicado'), 'NO'),
                         'ordenpago_id' => $request->input('ordenpago_id'),
                         'inspeccion_id' => $request->input('inspeccion_id'),
                         'tipo_id' => $request->input('tipo'),
@@ -372,6 +411,7 @@ class ResolucionController extends Controller
                         'responsableobra' => strtoupper(Libreria::getParam($request->input('responsableobra'))),
                         'area' => $areatotal,
                         'edificaciones' => $edificaciones,
+                        'situacion' => 'EMITIDO',
                         'valor' => $request->input('valor'),
                         'dni' => Libreria::getParam($request->input('dni')),
                         'ruc' => Libreria::getParam($request->input('ruc')),
@@ -427,6 +467,7 @@ class ResolucionController extends Controller
                         'inspeccion_id' => $request->input('inspeccion_id'),
                         'tipo_id' => $request->input('tipo'),
                         'numero' => $request->input('numero'),
+                        'situacion' => 'EMITIDO',
                     ]);
                 });
                 return is_null($error) ? "OK" : $error;
@@ -466,6 +507,7 @@ class ResolucionController extends Controller
                         'numero' => $request->input('numero'),
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),
+                        'situacion' => 'EMITIDO',
                     ]);
                 });
                 return is_null($error) ? "OK" : $error;
@@ -699,6 +741,7 @@ class ResolucionController extends Controller
                         'ordenpago_id' => $request->input('ordenpago_id'),
                         'inspeccion_id' => $request->input('inspeccion_id'),
                         'tipo_id' => $request->input('tipo'),
+                        'duplicado' => Libreria::getParam($request->input('duplicado'), 'NO'),
                         'area' => $request->input('arearesolucion'),
                         'numero' => $request->input('numero'),
                         'nroexpediente' => strtoupper($request->input('nroexpediente')),
@@ -937,6 +980,21 @@ class ResolucionController extends Controller
         return is_null($error) ? "OK" : $error;
     }
 
+    public function darBaja(Request $request){
+        $id=$request->id;
+        $existe = Libreria::verificarExistencia($id, 'resolucion');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $error = DB::transaction(function () use ($id) {
+            $resolucion = Resolucion::find($id);
+            $resolucion->update([
+                'situacion' => 'DE BAJA',
+            ]);
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
 
 
     public function pdfResolucion($id, $blanco = null, $subtipo = null)
@@ -952,8 +1010,10 @@ class ResolucionController extends Controller
                             if ($blanco == 'NO') {
                                 $codigoQR = QrCode::format('png')->size(100)->generate($data->nrocertificado);
                                 $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate($data->nrocertificado));
+                                $direccion = explode('?', $data->direccion);
+                                $direccion = implode('-', $direccion);
 
-                                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.normal', compact('data', 'codigoQR'))->setPaper('a4', 'landscape');
+                                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.normal', compact('data', 'codigoQR', 'direccion'))->setPaper('a4', 'landscape');
                                 $pdf->getDomPDF()->setHttpContext(
                                     stream_context_create([
                                         'ssl' => [
@@ -965,7 +1025,7 @@ class ResolucionController extends Controller
                                 );
                                 $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
                             } else {
-                                $direccion = explode('-', $data->direccion);
+                                $direccion = explode('?', $data->direccion);
                                 $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.blanco', compact('data', 'direccion'))->setPaper('a4', 'landscape');
                             }
                             break;
@@ -978,7 +1038,9 @@ class ResolucionController extends Controller
                             break;
                     }
                 } else {
-                    $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.licencia', compact('data'))->setPaper('a4', 'portrait');
+                    $direccion = explode('?', $data->direccion);
+                    $direccion = implode('-', $direccion);
+                    $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.licencia', compact('data', 'direccion'))->setPaper('a4', 'portrait');
                 }
                 break;
             case '2':
@@ -997,6 +1059,10 @@ class ResolucionController extends Controller
                 if (!is_null($blanco)) {
                     $phpWord = new \PhpOffice\PhpWord\PhpWord();
                     $section = $phpWord->addSection();
+                    
+                    $section = $phpWord->addSection(array(
+                        'orientation' => 'landscape'
+                    ));
                     $text = $section->addText($data->contribuyente);
                     $text = $section->addText($data->direccion);
                     $text = $section->addText($data->localidad);

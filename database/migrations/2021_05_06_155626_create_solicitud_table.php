@@ -16,28 +16,38 @@ class CreateSolicitudTable extends Migration
         Schema::create('solicitud', function (Blueprint $table) {
             $table->increments('id');
             $table->datetime('fecha')->nullable();
+            $table->decimal('area', 8,2)->nullable();
             $table->string('numero')->nullable();
-            $table->string('descripcion')->nullable();            
-            $table->string('funcionario')->nullable();
-            $table->string('telefono')->nullable();
-            $table->string('contribuyente')->nullable();
-            $table->string('solicito')->nullable(); //renovacion o apertura
-            $table->string('duracion')->nullable(); //definitivo o temporal
-            $table->string('direccion')->nullable();
-            $table->string('razonsocial')->nullable();
-            $table->string('ruc')->nullable();
+            $table->string('tiposolicitud')->nullable();            
+            $table->string('tipotramitesolicitud', 4000)->nullable();
+            $table->string('nombresolicitante')->nullable();
             $table->string('dni')->nullable();
-            $table->string('nombrenegocio')->nullable();
+            $table->string('ruc')->nullable(); //renovacion o apertura
+            $table->string('razonsocial')->nullable(); //definitivo o temporal
+            $table->string('direccion')->nullable();
             $table->string('girocomercial')->nullable();
-            $table->string('nrocertificado_nuevo')->nullable();
-            $table->string('nrocertificado_vencido')->nullable();
-            $table->string('representante')->nullable();
-            $table->string('situacion')->nullable();
-            $table->string('observacion')->nullable();
+            $table->string('numerocasa')->nullable();
+            $table->string('manzanacasa')->nullable();
+            $table->string('lotecasa')->nullable();
+            $table->string('urbanizacion')->nullable();
+            $table->string('representantelegal')->nullable();
+            $table->string('dnirepresentante')->nullable();
+            $table->string('rucrepresentante')->nullable();
+            $table->string('telefonorepresentante')->nullable();
+            $table->string('nombrenegocio')->nullable();
+            $table->string('requisitos')->nullable();
+            $table->string('publicidadexterior')->nullable();
+            $table->string('colores')->nullable();
+            $table->string('tipoanuncio')->nullable();
+            $table->string('medidas')->nullable();
+            $table->string('leyendas')->nullable();
+            $table->string('materiales')->nullable();
+            $table->integer('cantidadanuncios')->nullable();
+            $table->string('nroexpediente')->nullable();
+            $table->string('nrocertificado')->nullable();
+            $table->string('nroresolucion')->nullable();
             $table->integer('tipo_id')->unsigned()->nullable();
             $table->foreign('tipo_id')->references('id')->on('tipotramitenodoc')->onUpdate('restrict')->onDelete('restrict');
-            $table->integer('ordenpago_id')->unsigned()->nullable();
-            $table->foreign('ordenpago_id')->references('id')->on('ordenpago')->onDelete('restrict')->onUpdate('restrict')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

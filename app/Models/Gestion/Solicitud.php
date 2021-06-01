@@ -22,16 +22,17 @@ class Solicitud extends Model
         return $this->belongsTo(Ordenpago::class , 'ordenpago_id');
     }
 
-    public function scopeNumeroSigue($query , $tipo)
+	public function scopeNumeroSigue($query)
 	{
+            $año=date('Y');
 			$rs = $query
-				->where(function ($subquery) use ($tipo) {
-					if (!is_null($tipo) && strlen($tipo) > 0) {
-						$subquery->where('tipo_id', $tipo);
+				->where(function ($subquery) use ($año) {
+					if (!is_null($año) && strlen($año) > 0) {
+						$subquery->where('numero', 'LIKE', '%'.$año.'-%');
 					}
-				})->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,1,8),SIGNED  integer) END)*1) AS maximo"))->first();
+				})->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,6,11),SIGNED  integer) END)*1) AS maximo"))->first();
 		
-        return str_pad($rs->maximo + 1, 8, '0', STR_PAD_LEFT);
+        return str_pad($rs->maximo + 1, 11, '0', STR_PAD_LEFT);
 	}
 
     public function scopelistar($query, $numero, $fecinicio, $fecfin, $contribuyente, $tipo)
