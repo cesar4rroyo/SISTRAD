@@ -339,7 +339,7 @@ class OrdenpagoController extends Controller
         $obj = new Enletras();
         $enletras = $obj->ValorEnLetras($ordenpago->monto , 'soles');
 
-        $pdf = PDF::loadView($this->folderview.'.pdf' , compact('ordenpago'  , 'enletras'))->setPaper('a4','landscape');
+        $pdf = PDF::loadView($this->folderview.'.pdf' , compact('ordenpago'  , 'enletras'))->setPaper('a4');
         //HOJA HORIZONTAL ->setPaper('a4', 'landscape')
     //descargar
        // return $pdf->download('F'.$cotizacion->documento->correlativo.'.pdf');  
