@@ -55,7 +55,7 @@
             el cual solicita @if ($data->duplicado=='SI')
                 <strong>DUPLICADO DE</strong>
             @endif <strong>LICENCIA DE FUNCIONAMIENTO {{$data->funcionamiento}}</strong>, con giro de <strong>{{$data->girocomercial}}</strong>, denominado
-            <strong>{{$data->nombrecomercial}}</strong> ubicado en <strong>{{$data->direccion}}</strong>, del Distrito de José Leonardo Ortiz.
+            <strong>{{$data->nombrecomercial}}</strong> ubicado en <strong>{{$direccion}}</strong>, del Distrito de José Leonardo Ortiz.
         </p>
     </div>
     <div>
@@ -92,7 +92,7 @@
         <p align="left" style="font-size: .8rem; text-indent:18px; text-align: justify;">
             <span><strong>ARTÍCULO PRIMERO:</strong></span> <strong>CONCEDER LA LICENCIA DE FUNCIONAMIENTO DEFINITIVA</strong> recaído en su Serie de Certificado
             <strong>{{$data->nrocertificado}}</strong>, del Establecimiento Comercial con giro de  <strong>{{$data->girocomercial}}</strong>, denominado <strong>{{$data->nombrecomercial}}</strong>,
-            ubicado en <strong>{{$data->direccion}}</strong>. Representado por Don(a): <strong>{{$data->contribuyente}}</strong>
+            ubicado en <strong>{{$direccion}}</strong>. Representado por Don(a): <strong>{{$data->contribuyente}}</strong>
         </p>
         <p align="left" style="font-size: .8rem; text-indent:18px; text-align: justify;">
             <span><strong>ARTÍCULO SEGUNDO:</strong></span> Esta Licencia <strong>{{$data->viapublica}}</strong> le autoriza el <strong>USO DE VIA PÚBLICA.</strong>

@@ -1010,8 +1010,10 @@ class ResolucionController extends Controller
                             if ($blanco == 'NO') {
                                 $codigoQR = QrCode::format('png')->size(100)->generate($data->nrocertificado);
                                 $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate($data->nrocertificado));
+                                $direccion = explode('?', $data->direccion);
+                                $direccion = implode('-', $direccion);
 
-                                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.normal', compact('data', 'codigoQR'))->setPaper('a4', 'landscape');
+                                $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.normal', compact('data', 'codigoQR', 'direccion'))->setPaper('a4', 'landscape');
                                 $pdf->getDomPDF()->setHttpContext(
                                     stream_context_create([
                                         'ssl' => [
@@ -1023,7 +1025,7 @@ class ResolucionController extends Controller
                                 );
                                 $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
                             } else {
-                                $direccion = explode('-', $data->direccion);
+                                $direccion = explode('?', $data->direccion);
                                 $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.blanco', compact('data', 'direccion'))->setPaper('a4', 'landscape');
                             }
                             break;
@@ -1036,7 +1038,9 @@ class ResolucionController extends Controller
                             break;
                     }
                 } else {
-                    $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.licencia', compact('data'))->setPaper('a4', 'portrait');
+                    $direccion = explode('?', $data->direccion);
+                    $direccion = implode('-', $direccion);
+                    $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.licencia', compact('data', 'direccion'))->setPaper('a4', 'portrait');
                 }
                 break;
             case '2':

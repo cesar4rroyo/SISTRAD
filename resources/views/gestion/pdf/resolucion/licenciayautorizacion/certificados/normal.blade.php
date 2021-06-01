@@ -129,7 +129,7 @@
                         <strong>DIRECCION: </strong>
                     </td>
                     <td class="">
-                        {{$data->direccion}}
+                        {{$direccion}}
                     </td>
                 </tr>
         </table>
