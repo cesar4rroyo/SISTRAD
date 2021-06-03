@@ -84,7 +84,7 @@
                     <strong>EXPEDIENTE N°: </strong>
                 </td>
                 <td class="underline">
-                    {{$data->numero}}
+                    {{$data->tramite->numero}}
                 </td>
                 <td>
                     <strong>
