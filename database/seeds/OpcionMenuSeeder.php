@@ -147,6 +147,13 @@ class OpcionMenuSeeder extends Seeder
             'grupomenu_id' => 6
         ]);
         DB::table('opcionmenu')->insert([
+            'descripcion' => 'Notificación imp. cargo',
+            'icono' => 'far fa-file-alt',
+            'link' => 'notificacioncargo',
+            'orden' => 2,
+            'grupomenu_id' =>6
+        ]);
+        DB::table('opcionmenu')->insert([
             'descripcion' => 'Resolución de Sancion ',
             'icono' => 'far fa-file-alt',
             'link' => 'resolucionsancion',

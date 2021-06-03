@@ -37,6 +37,7 @@ class GrupoMenuSeeder extends Seeder
             'icono' => 'fas fa-chart-line',
             'orden' =>6,
         ]);    
+          
         DB::table('grupomenu')->insert([
             'descripcion' => 'Fiscalización',
             'icono' => 'far fa-file-alt',

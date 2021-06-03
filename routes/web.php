@@ -200,6 +200,11 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::resource('acta', 'Gestion\ActaController', array('except' => array('show')));  
     Route::get('acta/pdf/{id}', 'Gestion\ActaController@pdf')->name('acta.pdf');
     Route::post('acta/generarNumero', 'Gestion\ActaController@generarNumero')->name('acta.generarnumero');
+
+    //NOTIFICACION CARGO
+    Route::post('notificacioncargo/buscar', 'Gestion\NotificacioncargoController@buscar')->name('notificacioncargo.buscar');
+    Route::get('notificacioncargo/eliminar/{id}/{listarluego}', 'Gestion\NotificacioncargoController@eliminar')->name('notificacioncargo.eliminar');
+    Route::resource('notificacioncargo', 'Gestion\NotificacioncargoController', array('except' => array('show')));
 });
 
     
