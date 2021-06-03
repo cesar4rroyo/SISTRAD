@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
             // 'procedimiento',
             'rolpersonal',
             'tipotramitenodoc',
-            'subtipotramitenodoc'
+            'subtipotramitenodoc',
+            'infraccion',
         ]);
         $this->call(CargoSeeder::class);
         $this->call(AreaSeeder::class);
@@ -43,6 +44,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RolPersonaSeeder::class);
         $this->call(TipotramitenodocSeeder::class);
         $this->call(SubTipoTramiteSeeder::class);
+        $this->call(InfraccionSeeder::class);
     }
     protected function truncateTablas(array $tablas)
     {

@@ -15,6 +15,7 @@ class CreateNotificacioncargoTable extends Migration
     {
         Schema::create('notificacioncargo', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('numero');
             $table->datetime('fecha_inspeccion');
             $table->datetime('fecha_notificacion');
             
@@ -41,14 +42,15 @@ class CreateNotificacioncargoTable extends Migration
             $table->string('i_distrito')->nullable();
 
             //DETALLES INFRACCION
-            $table->string('descripcion')->nullable();
+            $table->text('descripcion')->nullable();
             $table->integer('plazo')->default(6)->nullable();
-            $table->string('i_codigo')->nullable();
-            $table->string('i_descripcion')->nullable();
             $table->double('i_monto' , 8 , 2)->nullable();
 
             $table->integer('actafiscalizacion_id')->unsigned()->nullable();
             $table->foreign('actafiscalizacion_id')->references('id')->on('actafiscalizacion')->onUpdate('restrict')->onDelete('restrict');
+            
+            $table->integer('infraccion_id')->unsigned()->nullable();
+            $table->foreign('infraccion_id')->references('id')->on('infraccion')->onUpdate('restrict')->onDelete('restrict');
             
 
 

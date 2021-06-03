@@ -9,8 +9,10 @@ use App\Http\Requests;
 use App\Models\Gestion\Notificacioncargo;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
+use App\Models\Control\Infraccion;
 use App\Models\Gestion\Acta;
 use App\Motivo;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 
 class NotificacioncargoController extends Controller
@@ -54,8 +56,15 @@ class NotificacioncargoController extends Controller
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Fecha Insp.', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Fecha Notif..', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Infractor', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Personal', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Monto ', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Acta', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Infraccion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -97,8 +106,8 @@ class NotificacioncargoController extends Controller
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $entidad  = 'notificacioncargo';
         $notificacioncargo = null;
-        $actas = ["1"=> "Seleccione"] + Acta::pluck('numero', 'id')->all();
-        $infracciones = ["1" =>"Seleccione"]; 
+        $actas = [""=> "Seleccione"] + Acta::pluck('numero', 'id')->all();
+        $infracciones = ["" =>"Seleccione"] + Infraccion::pluck('codigo' , 'id')->all(); 
         $formData = array('notificacioncargo.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
@@ -118,13 +127,14 @@ class NotificacioncargoController extends Controller
             'fecha_inspeccion' => 'required',
             'fecha_notificacion' => 'required',
             'nombre' => 'required',
+            'numero' => 'required',
             'nro_documento' => 'required',
             'p_nombre' => 'required',
             'p_nro_documento' => 'required',
             'calle' => 'required',
             'i_calle' => 'required',
             'infraccion_id' => 'required',
-            'monto' => 'required|numeric',
+            'i_monto' => 'required|numeric',
             'descripcion' => 'required',
         );
         $mensajes = array(
@@ -147,8 +157,9 @@ class NotificacioncargoController extends Controller
         }
         $error = DB::transaction(function() use($request){
             $notificacioncargo = new Notificacioncargo();
-            $notificacioncargo->fecha_inspeccion = Libreria::getParam($request->input('fecha_inspeccion'));
-            $notificacioncargo->fecha_notificacion = Libreria::getParam($request->input('fecha_notificacion'));
+            $notificacioncargo->numero = Libreria::getParam($request->input('numero'));
+            $notificacioncargo->fecha_inspeccion = Libreria::getParam($request->input('fecha_inspeccion')).' '.date('H:i:s');
+            $notificacioncargo->fecha_notificacion = Libreria::getParam($request->input('fecha_notificacion')).' '.date('H:i:s');
             $notificacioncargo->nombre = Libreria::getParam($request->input('nombre'));
             $notificacioncargo->nro_documento = Libreria::getParam($request->input('nro_documento'));
             $notificacioncargo->p_nombre = Libreria::getParam($request->input('p_nombre'));
@@ -168,7 +179,10 @@ class NotificacioncargoController extends Controller
             $notificacioncargo->i_urbanizacion = Libreria::getParam($request->input('i_urbanizacion'));
             $notificacioncargo->i_distrito = Libreria::getParam($request->input('i_distrito'));
             $notificacioncargo->i_monto = Libreria::getParam($request->input('i_monto'));
-            // $notificacioncargo->actafiscalizacion_id = Libreria::getParam($request->input('actafiscalizacion_id'));
+            if($request->input('actafiscalizacion_id') && $request->input('actafiscalizacion_id') != ''){
+                $notificacioncargo->actafiscalizacion_id = Libreria::getParam($request->input('actafiscalizacion_id'));
+            }
+            $notificacioncargo->infraccion_id = Libreria::getParam($request->input('infraccion_id'));
             $notificacioncargo->plazo = 6;
             $notificacioncargo->descripcion= Libreria::getParam($request->input('descripcion'));
             $notificacioncargo->save();
@@ -202,11 +216,13 @@ class NotificacioncargoController extends Controller
         }
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $notificacioncargo = Notificacioncargo::find($id);
+        $actas = [""=> "Seleccione"] + Acta::pluck('numero', 'id')->all();
+        $infracciones = ["" =>"Seleccione"] + Infraccion::pluck('codigo' , 'id')->all(); 
         $entidad  = 'notificacioncargo';
         $formData = array('notificacioncargo.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('notificacioncargo', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.mant')->with(compact('notificacioncargo', 'formData', 'entidad', 'boton', 'listar', 'actas','infracciones'));
     }
 
     /**
@@ -223,9 +239,34 @@ class NotificacioncargoController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $reglas     = array('descripcion' => 'required');
+        $reglas     = array(
+            'fecha_inspeccion' => 'required',
+            'fecha_notificacion' => 'required',
+            'nombre' => 'required',
+            'numero' => 'required',
+            'nro_documento' => 'required',
+            'p_nombre' => 'required',
+            'p_nro_documento' => 'required',
+            'calle' => 'required',
+            'distrito' => 'required',
+            'i_calle' => 'required',
+            'i_distrito' => 'required',
+            'infraccion_id' => 'required',
+            'i_monto' => 'required|numeric',
+            'descripcion' => 'required',
+        );
         $mensajes = array(
-            'descripcion.required'         => 'Debe ingresar una descripcion'
+            'fecha_inspeccion.required'          => 'Debe ingresar la fecha de la inspección',
+            'fecha_notificacion.required'        => 'Debe ingresar la fecha de la notificación',
+            'nombre.required'                    => 'Debe ingresar el nombre o razón social del infractor',
+            'nro_documento.required'             => 'Debe ingresar el nro de documento del infractor',
+            'p_nombre.required'                  => 'Debe ingresar el nombre de la persona a cargo',
+            'p_nro_documento.required'           => 'Debe ingresar el nro de documento de la persona a cargo',
+            'calle.required'                     => 'Debe ingresar la direccion del infractor',
+            'i_calle.required'                   => 'Debe ingresar el lugar de la infracción',
+            'infraccion_id.required'             => 'Seleccione la infracción cometida',
+            'monto.required'                     => 'Ingrese el monto',
+            'descripcion.required'               => 'Debe ingresar una descripción',
             );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
@@ -233,8 +274,34 @@ class NotificacioncargoController extends Controller
         } 
         $error = DB::transaction(function() use($request, $id){
             $notificacioncargo = Notificacioncargo::find($id);
-            $notificacioncargo->descripcion = strtoupper($request->input('descripcion'));
-            $notificacioncargo->mesadepartes= $request->input('mesadepartes')?true:false;
+            $notificacioncargo->numero = Libreria::getParam($request->input('numero'));
+            $notificacioncargo->fecha_inspeccion = Libreria::getParam($request->input('fecha_inspeccion')).' '.date('H:i:s');
+            $notificacioncargo->fecha_notificacion = Libreria::getParam($request->input('fecha_notificacion')).' '.date('H:i:s');
+            $notificacioncargo->nombre = Libreria::getParam($request->input('nombre'));
+            $notificacioncargo->nro_documento = Libreria::getParam($request->input('nro_documento'));
+            $notificacioncargo->p_nombre = Libreria::getParam($request->input('p_nombre'));
+            $notificacioncargo->p_nro_documento = Libreria::getParam($request->input('p_nro_documento'));
+            $notificacioncargo->calle = Libreria::getParam($request->input('calle'));
+            $notificacioncargo->nro = Libreria::getParam($request->input('nro'));
+            $notificacioncargo->sector = Libreria::getParam($request->input('sector'));
+            $notificacioncargo->manzana = Libreria::getParam($request->input('manzana'));
+            $notificacioncargo->lote = Libreria::getParam($request->input('lote'));
+            $notificacioncargo->urbanizacion = Libreria::getParam($request->input('urbanizacion'));
+            $notificacioncargo->distrito = Libreria::getParam($request->input('distrito'));
+            $notificacioncargo->i_calle = Libreria::getParam($request->input('i_calle'));
+            $notificacioncargo->i_nro = Libreria::getParam($request->input('i_nro'));
+            $notificacioncargo->i_sector = Libreria::getParam($request->input('i_sector'));
+            $notificacioncargo->i_manzana = Libreria::getParam($request->input('i_manzana'));
+            $notificacioncargo->i_lote = Libreria::getParam($request->input('i_lote'));
+            $notificacioncargo->i_urbanizacion = Libreria::getParam($request->input('i_urbanizacion'));
+            $notificacioncargo->i_distrito = Libreria::getParam($request->input('i_distrito'));
+            $notificacioncargo->i_monto = Libreria::getParam($request->input('i_monto'));
+            if($request->input('actafiscalizacion_id') && $request->input('actafiscalizacion_id') != ''){
+                $notificacioncargo->actafiscalizacion_id = Libreria::getParam($request->input('actafiscalizacion_id'));
+            }
+            $notificacioncargo->infraccion_id = Libreria::getParam($request->input('infraccion_id'));
+            $notificacioncargo->plazo = 6;
+            $notificacioncargo->descripcion= Libreria::getParam($request->input('descripcion'));
             $notificacioncargo->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -274,6 +341,24 @@ class NotificacioncargoController extends Controller
         $formData = array('route' => array('notificacioncargo.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+    public function pdf($id){
+        $existe = Libreria::verificarExistencia($id, 'notificacioncargo');
+        if ($existe !== true) {
+            return $existe;
+        }
+
+        $notificacioncargo = Notificacioncargo::find($id);
+        // $obj = new Enletras();
+        // $enletras = $obj->ValorEnLetras($Notificacioncargo->monto , 'soles');
+
+        $pdf = PDF::loadView($this->folderview.'.pdf' , compact('notificacioncargo' ))->setPaper('a4');
+        //HOJA HORIZONTAL ->setPaper('a4', 'landscape')
+    //descargar
+       // return $pdf->download('F'.$cotizacion->documento->correlativo.'.pdf');  
+    //Ver
+       return $pdf->stream('notificacioncargo.pdf');
     }
     
     
