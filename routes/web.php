@@ -205,6 +205,13 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('notificacioncargo/buscar', 'Gestion\NotificacioncargoController@buscar')->name('notificacioncargo.buscar');
     Route::get('notificacioncargo/eliminar/{id}/{listarluego}', 'Gestion\NotificacioncargoController@eliminar')->name('notificacioncargo.eliminar');
     Route::resource('notificacioncargo', 'Gestion\NotificacioncargoController', array('except' => array('show')));
+
+    //RESOLUCION SANCION
+    Route::post('resolucionsancion/buscar', 'Gestion\ResolucionSancionController@buscar')->name('resolucionsancion.buscar');
+    Route::get('resolucionsancion/eliminar/{id}/{listarluego}', 'Gestion\ResolucionSancionController@eliminar')->name('resolucionsancion.eliminar');
+    Route::resource('resolucionsancion', 'Gestion\ResolucionSancionController', array('except' => array('show')));
+    Route::get('resolucionsancion/pdf/{id}', 'Gestion\ResolucionSancionController@pdf')->name('acta.pdf');
+
 });
 
     

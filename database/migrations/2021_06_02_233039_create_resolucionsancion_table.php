@@ -17,6 +17,7 @@ class CreateResolucionsancionTable extends Migration
             $table->increments('id');
             $table->date('fechaemision');
             $table->string('numero');
+            $table->string('fojas');
             $table->string('estado');
             $table->string('ordenanza');
             $table->string('medidacorrectiva');
@@ -26,6 +27,8 @@ class CreateResolucionsancionTable extends Migration
             $table->decimal('monto', 10,2);
             $table->integer('actafiscalizacion_id')->unsigned()->nullable();
             $table->foreign('actafiscalizacion_id')->references('id')->on('actafiscalizacion')->onUpdate('restrict')->onDelete('restrict');
+            $table->integer('notificacioncargo_id')->unsigned()->nullable();
+            $table->foreign('notificacioncargo_id')->references('id')->on('notificacioncargo')->onUpdate('restrict')->onDelete('restrict');
             $table->softDeletes();
             $table->timestamps();
         });

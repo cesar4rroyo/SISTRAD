@@ -211,7 +211,7 @@ class ResolucionSancionController extends Controller
      */
     public function edit($id, Request $request)
     {
-        $existe = Libreria::verificarExistencia($id, 'resolucionsancionfiscalizacion');
+        $existe = Libreria::verificarExistencia($id, 'resolucionsancion');
         if ($existe !== true) {
             return $existe;
         }
@@ -233,7 +233,7 @@ class ResolucionSancionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $existe = Libreria::verificarExistencia($id, 'resolucionsancionfiscalizacion');
+        $existe = Libreria::verificarExistencia($id, 'resolucionsancion');
 
         if ($existe !== true) {
             return $existe;
@@ -262,12 +262,12 @@ class ResolucionSancionController extends Controller
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'resolucionsancionfiscalizacion');
+        $existe = Libreria::verificarExistencia($id, 'resolucionsancion');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $resolucionsancion = resolucionsancion::find($id);
+            $resolucionsancion = ResolucionSancion::find($id);
             $resolucionsancion->delete();
         });
         return is_null($error) ? "OK" : $error;
@@ -275,7 +275,7 @@ class ResolucionSancionController extends Controller
 
     public function eliminar($id, $listarLuego)
     {
-        $existe = Libreria::verificarExistencia($id, 'resolucionsancionfiscalizacion');
+        $existe = Libreria::verificarExistencia($id, 'resolucionsancion');
         if ($existe !== true) {
             return $existe;
         }
@@ -283,7 +283,7 @@ class ResolucionSancionController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = resolucionsancion::find($id);
+        $modelo   = ResolucionSancion::find($id);
         $entidad  = 'resolucionsancion';
         $formData = array('route' => array('resolucionsancion.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
@@ -291,20 +291,20 @@ class ResolucionSancionController extends Controller
     }
     
     public function pdf($id){
-        $existe = Libreria::verificarExistencia($id, 'resolucionsancionfiscalizacion');
+        $existe = Libreria::verificarExistencia($id, 'resolucionsancion');
         if ($existe !== true) {
             return $existe;
         }
 
-        $data = resolucionsancion::find($id);
-        $pdf = PDF::loadView('gestion.pdf.resolucionsancion.resolucionsancion', compact('data'))->setPaper('a4', 'portrait');
+        $data = ResolucionSancion::find($id);
+        $pdf = PDF::loadView('gestion.pdf.resolucionsancion.pdf', compact('data'))->setPaper('a4', 'portrait');
         $nombre = 'resolucionsancion:' . $data->numero . '-' . $data->fecha . '.pdf';
         return $pdf->stream($nombre);
     } 
 
     public function generarNumero(Request $request)
     {
-        $numerotramite = resolucionsancion::NumeroSigue();
+        $numerotramite = ResolucionSancion::NumeroSigue();
         echo $numerotramite;
     }
 }

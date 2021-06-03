@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Acta de Fiscalización</div>
+                <div class="card-header">Resolución de Sanción Administrativa</div>
                 
                 <div class="card-body">
                     <div >

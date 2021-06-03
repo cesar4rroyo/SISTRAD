@@ -12,6 +12,13 @@ class ResolucionSancion extends Model
     protected $table = 'resolucionsancion';
     protected $dates = ['deleted_at'];
 
+	public function notificacion(){
+		return $this->belongsTo(Notificacioncargo::class, 'notificacioncargo_id');
+	}
+	public function actafiscalizacion(){
+		return $this->belongsTo(Acta::class, 'actafiscalizacion_id');
+	}
+
     public function scopelistar($query, $numero, $fecinicio, $fecfin)
 	{
 		return $query

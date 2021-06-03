@@ -55,6 +55,6 @@
 <script>
 	function pdf(id){
 		console.log(id);
-		window.open( 'acta/pdf/'+id , '_blank');
+		window.open( 'resolucionsancion/pdf/'+id , '_blank');
 	}
 </script>
