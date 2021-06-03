@@ -3,23 +3,24 @@
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="row">
 		<div class="col-4 form-group">
+			{!! Form::label('numero', 'Número *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('numero', null, array('class' => 'form-control form-control-sm input-xs', 'id' => 'numero')) !!}
+			</div>
+		</div>
+		<div class="col-4 form-group">
 			{!! Form::label('fecha_inspeccion', 'Fecha inspeccion *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::date('fecha_inspeccion', date('Y-m-d'), array('class' => 'form-control form-control-sm  input-xs', 'id' => 'fecha_inspeccion')) !!}
+				{!! Form::date('fecha_inspeccion', $notificacioncargo?(date_format(date_create($notificacioncargo->fecha_inspeccion) , 'Y-m-d')): date('Y-m-d'), array('class' => 'form-control form-control-sm  input-xs', 'id' => 'fecha_inspeccion')) !!}
 			</div>
 		</div>
 		<div class="col-4 form-group">
 			{!! Form::label('fecha_notificacion', 'Fecha notificación *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::date('fecha_notificacion', date('Y-m-d'), array('class' => 'form-control form-control-sm  input-xs', 'id' => 'fecha_notificacion')) !!}
+				{!! Form::date('fecha_notificacion', $notificacioncargo?(date_format(date_create($notificacioncargo->fecha_notificacion ), 'Y-m-d')): date('Y-m-d'), array('class' => 'form-control form-control-sm  input-xs', 'id' => 'fecha_notificacion')) !!}
 			</div>
 		</div>
-		<div class="col-4 form-group">
-			{!! Form::label('actafiscalizacion_id', 'Acta', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('actafiscalizacion_id',$actas, ($notificacioncargo)?$notificacioncargo->actafiscalizacion_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'actafiscalizacion_id' , 'onchange' => '')) !!}
-			</div>
-		</div>
+		
 	</div>
 	<!--  DATOS INFRACTOR-->
 
@@ -139,21 +140,27 @@
 	</div>
 
 	<div class="row">
-		<div class="col-9 form-group">
+		<div class="col-5 form-group">
+			{!! Form::label('actafiscalizacion_id', 'Acta de fiscalización', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::select('actafiscalizacion_id',$actas, ($notificacioncargo)?$notificacioncargo->actafiscalizacion_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'actafiscalizacion_id' , 'onchange' => '')) !!}
+			</div>
+		</div>
+		<div class="col-5 form-group">
 			{!! Form::label('infraccion_id', 'Infracción *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('infraccion_id',$infracciones, ($notificacioncargo)?$notificacioncargo->infraccion_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'infraccion_id' , 'onchange' => 'generarNumero(); cambiarsubtipos();')) !!}
 			</div>
 		</div>
 		@if ($notificacioncargo)
-		<div class="col-3 form-group">
+		<div class="col-2 form-group">
 			{!! Form::label('i_monto', 'Monto*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('i_monto', $notificacioncargo->i_monto, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'i_monto')) !!}
 			</div>
 		</div>	
 		@else
-		<div class="col-3 form-group">
+		<div class="col-2 form-group">
 			{!! Form::label('i_monto', 'Monto*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('i_monto', '0.00', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'i_monto')) !!}
