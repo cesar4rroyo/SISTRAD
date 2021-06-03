@@ -1025,6 +1025,36 @@ class ResolucionController extends Controller
                                 );
                                 $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
                             } else {
+                                $direccion = explode('-', $data->direccion);
+                                $template = new \PhpOffice\PhpWord\TemplateProcessor(resource_path('licenciastemplate2.docx'));
+                                $template->setValue('calle', $direccion[0]);
+                                $template->setValue('nro', $direccion[1]);
+                                $template->setValue('urb', $direccion[2]);
+                                if($data->tipopersona=='P/NAT'){
+                                    $template->setValue('na', 'X');
+                                    $template->setValue('j', ' ');
+
+                                }else{
+                                    $template->setValue('j', 'X');
+                                    $template->setValue('na', ' ');
+                                }
+                                $template->setValue('numero', $data->numero);
+                                $template->setValue('exp', $data->tramite->numero);
+                                $template->setValue('area', $data->area . 'M2');
+                                $template->setValue('contribuyente', $data->contribuyente);
+                                $template->setValue('razonsocial', $data->razonsocial);
+                                $template->setValue('giro', $data->girocomercial);
+                                $template->setValue('fechatramite', date_format(date_create($data->tramite->fecha), 'd/m/Y'));
+                                $template->setValue('fechaexpedicion', date_format(date_create($data->fechaexpedicion), 'd/m/Y'));
+                                
+                                $tempfile = tempnam(sys_get_temp_dir(), 'PHPWord');
+                                $template->saveAs($tempfile);
+
+                                $headers = [
+                                    "Content-Type: application/octet-stream",
+                                ];
+                                return response()->download($tempfile, 'documento.docx', $headers)->deleteFileAfterSend($shouldDelete=true);
+                                
                                 $direccion = explode('?', $data->direccion);
                                 $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.certificados.blanco', compact('data', 'direccion'))->setPaper('a4', 'landscape');
                             }
@@ -1057,25 +1087,25 @@ class ResolucionController extends Controller
                 break;
             case '3':
                 if (!is_null($blanco)) {
-                    $phpWord = new \PhpOffice\PhpWord\PhpWord();
-                    $section = $phpWord->addSection();
+                    $template = new \PhpOffice\PhpWord\TemplateProcessor(resource_path('salubridadtemplate.docx'));
+                    $template->setValue('nombre', $data->contribuyente);
+                    $template->setValue('direccion', $data->direccion);
+                    $template->setValue('localidad', $data->localidad);
+                    $template->setValue('expediente', $data->tramite->numero);
+                    $template->setValue('categoria', $data->categoria);
+                    $template->setValue('zona', $data->zona);
+                    $template->setValue('razonsocial', $data->razonsocial);
+                    $template->setValue('giro', $data->girocomercial);
+                    $template->setValue('fechaemision', date_format(date_create($data->fechaexpedicion), 'd/m/Y'));
+                    $template->setValue('fechavencimiento', date_format(date_create($data->fechavencimiento), 'd/m/Y'));
                     
-                    $section = $phpWord->addSection(array(
-                        'orientation' => 'landscape'
-                    ));
-                    $text = $section->addText($data->contribuyente);
-                    $text = $section->addText($data->direccion);
-                    $text = $section->addText($data->localidad);
-                    $text = $section->addText($data->numero);
-                    $text = $section->addText($data->categoria);
-                    $text = $section->addText($data->zona);
-                    $text = $section->addText($data->razonsocial);
-                    $text = $section->addText($data->girocomercial);
-                    $text = $section->addText(date_format(date_create($data->fechaexpedicion), 'd/m/Y'));
-                    $text = $section->addText(date_format(date_create($data->fechavencimiento), 'd/m/Y'));
-                    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-                    $objWriter->save('salubridad.docx');
-                    return response()->download(public_path('salubridad.docx'));
+                    $tempfile = tempnam(sys_get_temp_dir(), 'PHPWord');
+                    $template->saveAs($tempfile);
+
+                    $headers = [
+                        "Content-Type: application/octet-stream",
+                    ];
+                    return response()->download($tempfile, 'documento.docx', $headers)->deleteFileAfterSend($shouldDelete=true);
                     //$pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad2', compact('data'))->setPaper('a4', 'landscape');
                 } else {
                     $pdf = PDF::loadView('gestion.pdf.resolucion.salubridad.salubridad', compact('data'))->setPaper('a4', 'landscape');
