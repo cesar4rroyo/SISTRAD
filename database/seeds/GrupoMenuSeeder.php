@@ -25,17 +25,22 @@ class GrupoMenuSeeder extends Seeder
         DB::table('grupomenu')->insert([
             'descripcion' => 'Personal',
             'icono' => 'fas fa-user-tie',
-            'orden' => 3,
+            'orden' => 4,
         ]);
         DB::table('grupomenu')->insert([
             'descripcion' => 'Usuarios',
             'icono' => 'fas fa-users',
-            'orden' => 4,
+            'orden' => 5,
         ]);    
         DB::table('grupomenu')->insert([
             'descripcion' => 'Reportes',
             'icono' => 'fas fa-chart-line',
-            'orden' => 5,
+            'orden' =>6,
+        ]);    
+        DB::table('grupomenu')->insert([
+            'descripcion' => 'Fiscalización',
+            'icono' => 'far fa-file-alt',
+            'orden' => 3,
         ]);    
     }
 }
