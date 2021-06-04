@@ -19,17 +19,12 @@
 		
         <tr>
 			<td>{{ $contador }}</td>
-			<td>{{ date_format(date_create($value->fecha ), 'd/m/Y')}}</td>
+			<td>{{ date_format(date_create($value->fechaemision ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
-			<td>{{ $value->subgerencia }}</td>
+			<td>{{ $value->estado }}</td>
 			<td>{{ $value->ordenanza }}</td>
-			<td>
-				@if ($value->imagen)
-					<a href="{{asset('storage\archivos2\\'.$value->imagen)}}"  target="_blank" >{{ $value->imagen }}</a>
-				@else
-					-
-				@endif
-			</td>
+			<td>{{ $value->actafiscalizacion->numero }}</td>
+			<td>{{ $value->notificacion->numero }}</td>
 			<td>
 				<div class="btn-group">
 					{!! Form::button('<div class="fas fa-file-pdf"></div> Pdf', array('onclick' =>'pdf(\''.$value->id.'\')', 'class' => 'btn btn-sm btn-primary')) !!}
