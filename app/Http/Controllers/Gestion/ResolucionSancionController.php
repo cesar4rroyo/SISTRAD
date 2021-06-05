@@ -135,16 +135,23 @@ class ResolucionSancionController extends Controller
             'periodo' => 'required',
             'actafiscalizacion_id' => 'required',
             'notificacioncargo_id' => 'required',
+            'nroinstruccion' => 'required',
+            'domicilioprocesal' => 'required',
+            'fechainstruccion' => 'required',
+
 
         );
         $mensajes = array(
             'fechaemision.required'         => 'Debe ingresar la fecha',
+            'fechainstruccion.required'         => 'Debe ingresar la fecha del informe de instruccion',
             'numero.required'         => 'Debe ingresar el numero',
             'ordenanza.required'         => 'Debe ingresar la Ordenanza',
             'fojas.required'         => 'Debe ingresar el numero de fojas',
             'periodo.required'         => 'Debe ingresar el periodo',
             'conclusion.required'         => 'Debe ingresar las conclusiones',
             'descargo.required'         => 'Debe ingresar el descargo',
+            'nroinstruccion.required'         => 'Debe ingresar el Nro. de Instrucción',
+            'domicilioprocesal.required'         => 'Debe ingresar el domicilio procesal',
             'actafiscalizacion_id.required'         => 'Debe ingresar la Acta de Fiscalizacion',
             'notificacioncargo_id.required'         => 'Debe ingresar la Notificacion de Cargo',
         );
@@ -157,10 +164,13 @@ class ResolucionSancionController extends Controller
         $error = DB::transaction(function() use($request){
             $resolucionsancion = new ResolucionSancion();
             $resolucionsancion->fechaemision                 = $request->fechaemision;
+            $resolucionsancion->fechainstruccion                 = $request->fechainstruccion;
             $resolucionsancion->estado = 'REGISTRADO';
             $resolucionsancion->monto=0; //modifciar despues XD tengo examen :v
             $resolucionsancion->ordenanza            = strtoupper(Libreria::getParam($request->input('ordenanza')));
             $resolucionsancion->numero            = strtoupper(Libreria::getParam($request->input('numero')));
+            $resolucionsancion->nroinstruccion            = strtoupper(Libreria::getParam($request->input('nroinstruccion')));
+            $resolucionsancion->domicilioprocesal            = strtoupper(Libreria::getParam($request->input('domicilioprocesal')));
             $resolucionsancion->fojas            = strtoupper(Libreria::getParam($request->input('fojas')));
             $resolucionsancion->descargo            = strtoupper(Libreria::getParam($request->input('descargo')));
             $resolucionsancion->conclusion            = strtoupper(Libreria::getParam($request->input('conclusion')));
@@ -204,9 +214,11 @@ class ResolucionSancionController extends Controller
         $resolucionsancion = resolucionsancion::find($id);
         $entidad  = 'resolucionsancion';
         $formData = array('resolucionsancion.update', $id);
+        $actas = [""=> "Seleccione"] + Acta::pluck('numero', 'id')->all();
+        $notificacion = [""=> "Seleccione"] + Notificacioncargo::pluck('numero', 'id')->all();
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('resolucionsancion', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.mant')->with(compact('resolucionsancion', 'formData', 'entidad', 'boton', 'listar', 'actas', 'notificacion'));
     }
 
     /**
@@ -223,17 +235,52 @@ class ResolucionSancionController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $reglas     = array('descripcion' => 'required');
+        $reglas     = array(
+            'fechaemision' => 'required',
+            'numero' => 'required',
+            'ordenanza' => 'required',
+            'descargo' => 'required',
+            'conclusion' => 'required',
+            'fojas' => 'required',
+            'periodo' => 'required',
+            'actafiscalizacion_id' => 'required',
+            'notificacioncargo_id' => 'required',
+            'nroinstruccion' => 'required',
+            'domicilioprocesal' => 'required',
+
+        );
         $mensajes = array(
-            'descripcion.required'         => 'Debe ingresar una descripcion'
-            );
+            'fechaemision.required'         => 'Debe ingresar la fecha',
+            'numero.required'         => 'Debe ingresar el numero',
+            'ordenanza.required'         => 'Debe ingresar la Ordenanza',
+            'fojas.required'         => 'Debe ingresar el numero de fojas',
+            'periodo.required'         => 'Debe ingresar el periodo',
+            'conclusion.required'         => 'Debe ingresar las conclusiones',
+            'descargo.required'         => 'Debe ingresar el descargo',
+            'nroinstruccion.required'         => 'Debe ingresar el Nro. de Instrucción',
+            'domicilioprocesal.required'         => 'Debe ingresar el domicilio procesal',
+            'actafiscalizacion_id.required'         => 'Debe ingresar la Acta de Fiscalizacion',
+            'notificacioncargo_id.required'         => 'Debe ingresar la Notificacion de Cargo',
+        );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
         $error = DB::transaction(function() use($request, $id){
-            $resolucionsancion = resolucionsancion::find($id);
-            $resolucionsancion->descripcion = strtoupper($request->input('descripcion'));
+            $resolucionsancion = ResolucionSancion::find($id);
+            $resolucionsancion->fechaemision                 = $request->fechaemision;
+            $resolucionsancion->fechainstruccion                 = $request->fechainstruccion;
+            $resolucionsancion->ordenanza            = strtoupper(Libreria::getParam($request->input('ordenanza')));
+            $resolucionsancion->numero            = strtoupper(Libreria::getParam($request->input('numero')));
+            $resolucionsancion->nroinstruccion            = strtoupper(Libreria::getParam($request->input('nroinstruccion')));
+            $resolucionsancion->domicilioprocesal            = strtoupper(Libreria::getParam($request->input('domicilioprocesal')));
+            $resolucionsancion->fojas            = strtoupper(Libreria::getParam($request->input('fojas')));
+            $resolucionsancion->descargo            = strtoupper(Libreria::getParam($request->input('descargo')));
+            $resolucionsancion->conclusion            = strtoupper(Libreria::getParam($request->input('conclusion')));
+            $resolucionsancion->medidacorrectiva            = strtoupper(Libreria::getParam($request->input('medidacorrectiva')));
+            $resolucionsancion->periodo            = strtoupper(Libreria::getParam($request->input('periodo')));
+            $resolucionsancion->actafiscalizacion_id            = strtoupper(Libreria::getParam($request->input('actafiscalizacion_id')));
+            $resolucionsancion->notificacioncargo_id            = strtoupper(Libreria::getParam($request->input('notificacioncargo_id')));
             $resolucionsancion->save();
         });
         return is_null($error) ? "OK" : $error;

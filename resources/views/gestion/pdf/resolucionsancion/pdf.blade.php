@@ -98,7 +98,7 @@
             <strong>VISTO</strong>
         </p>
         <p style="font-size: .8rem;">
-            El Informe Final de Instrucción Nº ....... de fecha: ..........;
+            El Informe Final de Instrucción Nº {{$data->nroinstruccion}} de fecha: {{$data->fechainstruccion}};
         </p>
         <p style="font-size: .8rem;">
             <strong>CONSIDERANDO:</strong>

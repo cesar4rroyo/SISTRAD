@@ -29,6 +29,18 @@
 	</div>
 	<div class="row">
 		<div class="col-sm form-group">
+			{!! Form::label('nroinstruccion', 'Informe Instrucción Nro.*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::number('nroinstruccion', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'nroinstruccion')) !!}
+			</div>
+		</div>	
+		<div class="col-sm form-group">
+			{!! Form::label('fechainstruccion', 'Fecha de Instrucción *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::date('fechainstruccion', date('Y-m-d'), array('class' => 'form-control form-control-sm  input-xs', 'id' => 'fechainstruccion')) !!}
+			</div>
+		</div>
+		<div class="col-sm form-group">
 			{!! Form::label('actafiscalizacion_id', 'Acta de fiscalización', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('actafiscalizacion_id',$actas, ($resolucionsancion)?$resolucionsancion->actafiscalizacion_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'actafiscalizacion_id' , 'onchange' => '')) !!}
@@ -55,7 +67,12 @@
 			</div>
 		</div>	
 	</div>
-	
+	<div class="form-group">
+		{!! Form::label('domicilioprocesal', 'Domicilio Procesal*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::text('domicilioprocesal', null, array('class' => 'form-control  input-xs', 'id' => 'domicilioprocesal')) !!}
+		</div>
+	</div>
 	<div class="form-group">
 		{!! Form::label('descargo', 'Descargo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
