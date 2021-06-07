@@ -61,7 +61,7 @@
 			</div>
 		</div>	
 		<div class="col-sm form-group">
-			{!! Form::label('periodo', 'Período*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			{!! Form::label('periodo', 'Período(días)*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::number('periodo', null, array('class' => 'form-control  input-xs', 'id' => 'periodo')) !!}
 			</div>

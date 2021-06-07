@@ -16,8 +16,15 @@
 		$contador = $inicio + 1;
 		?>
 		@foreach ($lista as $key => $value)
+		@php
+			if((date('d/m/Y')>=date_format(date_create($value->fechaemision ), 'd/m/Y'))){
+				$color = 'bg-warning';
+			}else{
+				$color = null;
+			}
+		@endphp
 		
-        <tr>
+        <tr class="{{($color) ? $color : ''}}">
 			<td>{{ $contador }}</td>
 			<td>{{ date_format(date_create($value->fechaemision ), 'd/m/Y')}}</td>
 			<td>{{ $value->numero }}</td>
@@ -28,8 +35,10 @@
 			<td>
 				<div class="btn-group">
 					{!! Form::button('<div class="fas fa-edit"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}
-					{!! Form::button('<div class="fas fa-file-pdf"></div> Pdf', array('onclick' =>'pdf(\''.$value->id.'\')', 'class' => 'btn btn-sm btn-primary')) !!}
+					{!! Form::button('<div class="fas fa-file-pdf"></div> PDF', array('onclick' =>'pdf(\''.$value->id.'\')', 'class' => 'btn btn-sm btn-primary')) !!}
 					{!! Form::button('<div class="fas fa-trash"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}
+					{!! Form::button('<div class="fas fa-pencil-alt"></div>Comentar ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'comentar')).'\', \''."Comentar".'\', this);', 'class' => 'btn btn-sm btn-info', 'title' => 'Comentar')) !!} 
+					{!! Form::button('<div class="fas fa-route"> </div>Avance', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'seguimiento')).'\', \''.'Seguimiento del trámite'.'\', this);', 'class' => 'btn btn-sm btn-secondary', 'title' => 'Ver Seguimiento')) !!}
 				</div>
 			</td>
 		</tr>

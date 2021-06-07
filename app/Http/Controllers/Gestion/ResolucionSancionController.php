@@ -12,6 +12,9 @@ use App\Models\Gestion\ResolucionSancion;
 use App\Librerias\EnLetras;
 use App\Models\Gestion\Acta;
 use App\Models\Gestion\Notificacioncargo;
+use App\Models\Gestion\Resolucion;
+use App\Models\Gestion\Seguimiento;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class ResolucionSancionController extends Controller
 {
@@ -25,6 +28,10 @@ class ResolucionSancionController extends Controller
             'edit'   => 'resolucionsancion.edit', 
             'delete' => 'resolucionsancion.eliminar',
             'search' => 'resolucionsancion.buscar',
+            'confirmacion'=>'resolucionsancion.confirmacion',
+            'accion'=>'resolucionsancion.accion',
+
+
         );
 
 
@@ -162,6 +169,7 @@ class ResolucionSancionController extends Controller
         }
 
         $error = DB::transaction(function() use($request){
+            $usuario = session()->get('personal');
             $resolucionsancion = new ResolucionSancion();
             $resolucionsancion->fechaemision                 = $request->fechaemision;
             $resolucionsancion->fechainstruccion                 = $request->fechainstruccion;
@@ -180,6 +188,17 @@ class ResolucionSancionController extends Controller
             $resolucionsancion->notificacioncargo_id            = strtoupper(Libreria::getParam($request->input('notificacioncargo_id')));
             $resolucionsancion->save();
 
+            $seguimiento = new Seguimiento();
+            $seguimiento->fecha=date("Y-m-d H:i:s");
+            $seguimiento->accion='REGISTRAR';
+            $seguimiento->correlativo = 1;
+            $seguimiento->correlativo_anterior = 0;
+            $seguimiento->resolucionsancion_id = $resolucionsancion->id;
+            $seguimiento->area=$usuario['area'] ? $usuario['area']['descripcion'] : null;
+            $seguimiento->cargo=$usuario['cargo'] ? $usuario['cargo']['descripcion'] : null;
+            $seguimiento->personal_id=$usuario['id'];
+            $seguimiento->persona=$usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'];
+            $seguimiento->save();
         });
         $ultimo = resolucionsancion::orderBy('id', 'DESC')->first()->toArray()['id'];
 
@@ -282,6 +301,72 @@ class ResolucionSancionController extends Controller
             $resolucionsancion->actafiscalizacion_id            = strtoupper(Libreria::getParam($request->input('actafiscalizacion_id')));
             $resolucionsancion->notificacioncargo_id            = strtoupper(Libreria::getParam($request->input('notificacioncargo_id')));
             $resolucionsancion->save();
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
+    public function confirmacion($id, $listarLuego, $accion){
+        $existe = Libreria::verificarExistencia($id, 'resolucionsancion');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = ResolucionSancion::with('seguimientos.personal', 'seguimientos.areas')->find($id);
+        $entidad  = 'resolucionsancion';
+        $formData = array('route' => array('resolucionsancion.accion', $id, $accion), 'method' => 'POST', 'enctype'=>'multipart/form-data','class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Aceptar';
+        $usuario = session()->get('personal');      
+        $area_actual = $usuario['area_id'];
+        return view('reusable.confirmarResolucionsancion')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar', 'accion', 'area_actual'));
+    }
+
+    public function accion(Request $request, $id, $accion)
+    {
+        $existe = Libreria::verificarExistencia($id, 'resolucionsancion');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $error = DB::transaction(function() use($id, $accion, $request){
+            $usuario = session()->get('personal');
+            $tramite = ResolucionSancion::find($id);
+            switch ($accion) {
+                case 'seguimiento':
+                    break;
+                case 'comentar':
+                    $reglas     = array('observacion'=>'required');
+                    $mensajes = array(
+                        'observacion.required' => 'Debe ingresar un observacion sobre el archivo',
+                    );
+                    $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                    if ($validacion->fails()) {
+                        return $validacion->messages()->toJson();
+                    }                   
+                    $ultimo_seguimiento = Seguimiento::where('resolucionsancion_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'COMENTAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'resolucionsancion_id' => $id,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                        'observacion'=> Libreria::getParam($request->input('observacion')),
+                    ]);
+                    break;
+                case 'archivar':
+                    
+                    break;
+
+            }
+            
         });
         return is_null($error) ? "OK" : $error;
     }

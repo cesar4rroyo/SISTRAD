@@ -31,6 +31,7 @@ class Seguimiento extends Model
         'area_id',
         'motivocourier_id',
         'motivorechazo_id',
+        'resolucionsancion_id',
         'cargo_id'        
     ];
 

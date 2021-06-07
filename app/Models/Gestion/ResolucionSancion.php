@@ -19,6 +19,29 @@ class ResolucionSancion extends Model
 		return $this->belongsTo(Acta::class, 'actafiscalizacion_id');
 	}
 
+	public function seguimientos()
+    {
+        return $this->hasMany(Seguimiento::class, 'resolucionsancion_id');
+    }
+
+	public function ultimo()
+    {
+        return $this->join('seguimiento as s','s.resolucionsancion_id', 'resolucionsancion.id')
+        ->where('resolucionsancion.id',$this->id)
+        ->whereNull('s.deleted_at')
+        ->orderBy('s.correlativo', 'DESC')
+        ->first();   
+    }
+    
+    public function latestSeguimiento()
+    {
+        return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'desc')->latest();
+    }
+    public function firstSeguimiento()
+    {
+        return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'asc')->latest();
+    }
+
     public function scopelistar($query, $numero, $fecinicio, $fecfin)
 	{
 		return $query

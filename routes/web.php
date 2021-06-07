@@ -213,6 +213,8 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::resource('resolucionsancion', 'Gestion\ResolucionSancionController', array('except' => array('show')));
     Route::get('resolucionsancion/pdf/{id}', 'Gestion\ResolucionSancionController@pdf')->name('resolucionsancion.pdf');
     Route::post('resolucionsancion/generarNumero', 'Gestion\ResolucionSancionController@generarNumero')->name('resolucionsancion.generarnumero');
+    Route::get('resolucionsancion/confirmacion/{id}/{listarluego}/{accion}', 'Gestion\ResolucionSancionController@confirmacion')->name('resolucionsancion.confirmacion');
+    Route::post('resolucionsancion/accion/{id}/{accion}', 'Gestion\ResolucionSancionController@accion')->name('resolucionsancion.accion');
 
 
 });
