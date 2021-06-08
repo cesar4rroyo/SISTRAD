@@ -34,6 +34,13 @@
         text-align: center;
         line-height: 35px;
     }
+
+    .cuadro{
+        position: absolute;
+        top: 2;
+        right: -75;
+    }
+
 </style>
 
 <body>
@@ -44,14 +51,17 @@
             </td>
             <td align="center">
                 <h3 style="font-size: 1rem;">MUNICIPALIDAD DISTRITAL DE JOSE LEONARDO ORTIZ CHICLAYO LAMBAYEQUE</h3>
-                <h4 style="font-size: .8rem">PALACIO MUNICIPAL. AV. SAENZ PEÑA N° 2151 - URB. LATINA</h4>
+                {{-- <h4 style="font-size: .8rem">PALACIO MUNICIPAL. AV. SAENZ PEÑA N° 2151 - URB. LATINA</h4> --}}
                 <h4 style="font-size: .8rem">www.munijlo.gob.pe</h4>
                 <h5 style="font-size: .8rem">OFICINA DE LICENCIAS Y AUTORIZACIONES</h5>
             </td>
         </tr>
     </table>
+    <div class="cuadro">
+        <img src="http://assets.stickpng.com/images/58afdac9829958a978a4a691.png" alt="" height="300">
+    </div>
     <hr>
-    <div class=" float-right">
+    <div class="">
         <h1 style="font-size:.8rem;">José L. Ortiz, {{ date_format(date_create($data->fecha ), 'd/m/Y')}}</h1>
     </div>
     <br>
@@ -68,7 +78,7 @@
         <p class=" font-weight-bold" style="font-size: .8rem; text-indent:18px; line-height:50%; text-decoration:underline">
         II.- IDENTIFICACIÓN DEL SOLICITANTE:
         </p>
-        <div style="font-size: .8rem; text-indent:18px; line-height:80%">
+        <div style="font-size: .8rem; margin-left:18px; line-height:120%">
             <p><strong>APELLIDOS Y NOMBRES:</strong> {{$data->nombresolicitante}}</p>
             <p><strong>DNI:</strong> {{$data->dni}}</p>
             <p><strong>RUC:</strong> {{$data->ruc}}</p>
@@ -96,30 +106,42 @@
         <p class=" font-weight-bold" style="font-size: .8rem; text-indent:18px; line-height:50%; text-decoration:underline">
         V.- REQUISITOS Y/O DOCUMENTOS QUE SE ANEXAN A ESTA SOLICITUD:
         </p>
-        <div style="font-size: .8rem; text-indent:18px; line-height:80%">
-            @foreach (explode('-', $data->requisitos) as $item)
-                <p>- {{$item}}</p>
+        <div style="font-size: .8rem; margin-left:18px; line-height:80%">
+            @foreach (explode('===', $data->requisitos) as $item)
+                @if ($item!='')
+                    <p>- {{$item}}</p>
+                @endif
             @endforeach
         </div>
-        <p class=" font-weight-bold" style="font-size: .8rem; text-indent:18px; line-height:50%; text-decoration:underline">
-        VI.- TRÁMITES ADICIONALES SOBRE ANUNCIOS PUBLICITARIOS:
-        </p>
-        <div style="font-size: .8rem; text-indent:18px; line-height:80%">
-            <p><strong>Solicito publicidad exterior de aviso adosado a fachada: </strong> {{$data->publicidadexterior}}</p>
-            <p><strong>Colores del Anuncio</strong> {{$data->colores}}</p>
-            <p><strong>Tipo de Anuncio</strong> {{$data->tipoanuncio}}</p>
-            <p><strong>Medidas del Anuncio</strong> {{$data->medidad}}</p>
-            <p><strong>Leyenda del Anuncio</strong> {{$data->leyendas}}</p>
-            <p><strong>Materiales del Anuncio</strong> {{$data->materiales}}</p>
-            <p><strong>Cantidad de Anuncios</strong> {{$data->cantidadanuncios}}</p>
-        </div>
-        <p class=" font-weight-bold" style="font-size: .8rem; text-indent:18px; line-height:50%; text-decoration:underline">
-        VII.- DUPLICADO DE LICENCIA DE FUNCIONAMIENTO
-        </p>
-        <div style="font-size: .8rem; text-indent:18px; line-height:80%">
-            <p><strong>Nro. De Expediente</strong> {{$data->nroexpediente}}</p>
-            <p><strong>Nro. De Cartón</strong> {{$data->nrocertificado}}</p>
-            <p><strong>Nro. De Resolución</strong> {{$data->nroresolucion}}</p>
+        @if ($data->tipoanuncio!='' || $data->tipoanuncio!=null)
+            <p class=" font-weight-bold" style="font-size: .8rem; text-indent:18px; line-height:50%; text-decoration:underline">
+            VI.- TRÁMITES ADICIONALES SOBRE ANUNCIOS PUBLICITARIOS:
+            </p>
+            <div style="font-size: .8rem; text-indent:18px; line-height:80%">
+                <p><strong>Solicito publicidad exterior de aviso adosado a fachada: </strong> {{$data->publicidadexterior}}</p>
+                <p><strong>Colores del Anuncio</strong> {{$data->colores}}</p>
+                <p><strong>Tipo de Anuncio</strong> {{$data->tipoanuncio}}</p>
+                <p><strong>Medidas del Anuncio</strong> {{$data->medidad}}</p>
+                <p><strong>Leyenda del Anuncio</strong> {{$data->leyendas}}</p>
+                <p><strong>Materiales del Anuncio</strong> {{$data->materiales}}</p>
+                <p><strong>Cantidad de Anuncios</strong> {{$data->cantidadanuncios}}</p>
+            </div>
+        @endif
+        @if ($data->nroexpediente!='' || $data->nroexpediente!=null)
+            <p class=" font-weight-bold" style="font-size: .8rem; text-indent:18px; line-height:50%; text-decoration:underline">
+            VII.- DUPLICADO DE LICENCIA DE FUNCIONAMIENTO
+            </p>
+            <div style="font-size: .8rem; text-indent:18px; line-height:80%">
+                <p><strong>Nro. De Expediente</strong> {{$data->nroexpediente}}</p>
+                <p><strong>Nro. De Cartón</strong> {{$data->nrocertificado}}</p>
+                <p><strong>Nro. De Resolución</strong> {{$data->nroresolucion}}</p>
+            </div>
+        @endif
+        <br>
+        <br>
+        <br>
+        <div class="row float-right">
+            ______________________________________
         </div>
         
     <footer>
