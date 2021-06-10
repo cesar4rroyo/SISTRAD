@@ -122,6 +122,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     //resolucion reporte
     Route::resource('reporteResolucion', 'Reportes\ReporteResolucionController', array('except' => array('show')));
     Route::get('reporteResolucion/pdfResolucion', 'Reportes\ReporteResolucionController@pdfResolucion')->name('reporteresolucion.pdfResolucion');
+    Route::get('reporteResolucion/excelResolucion', 'Reportes\ReporteResolucionController@excel')->name('reporteresolucion.excel');
 
 //SEGUNDA PARTE 
 

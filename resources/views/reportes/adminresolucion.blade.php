@@ -31,6 +31,7 @@
                         </div>
                           <div class="col-lg-12 col-md-12 form-group text-center pt-4">
                             {!! Form::button('GENERAR REPORTE <i class="fa fa-file ml-2"></i> ', array('class' => 'btn btn-primary   ', 'id' => 'btnDetalle', 'onclick' => 'imprimirpdf();' ,'style'=>'width:60%;')) !!}   
+                            {!! Form::button('GENERAR EXCEL <i class="fas fa-file-excel ml-2"></i> ', array('class' => 'btn btn-primary mt-2   ', 'id' => 'btnDetalleExcel', 'onclick' => 'excel();' ,'style'=>'width:60%;')) !!}   
                           </div>
                         {!! Form::close() !!}
                     </div>
@@ -48,4 +49,8 @@
         function imprimirpdf(){
             window.open("reporteResolucion/pdfResolucion?tipo="+$("#tipo").val()+"&fechainicio="+$("#fechainicio").val()+"&fechafin="+$("#fechafin").val()+"&subtipo="+$("#subtitpo").val(),"_blank");
         }
+        function excel(){
+            window.open("reporteResolucion/excelResolucion?tipo="+$("#tipo").val()+"&fechainicio="+$("#fechainicio").val()+"&fechafin="+$("#fechafin").val()+"&subtipo="+$("#subtitpo").val(),"_blank");
+        }
+        
 </script>
