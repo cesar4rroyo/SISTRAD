@@ -26,7 +26,7 @@
 						</div>
 						<div class="row w-100">
 							<div class="col-lg-4 col-md-4  form-group">
-								{!! Form::label('contribuyentesearch', 'Contribuyente') !!}
+								{!! Form::label('contribuyentesearch', 'Contribuyente/DNI/RUC/Raz. Social') !!}
 								{!! Form::text('contribuyente', '', array('class' => 'form-control ', 'id' => 'contribuyentesearch')) !!}
 							</div>
 							<div class="col-lg-4 col-md-4  form-group">
