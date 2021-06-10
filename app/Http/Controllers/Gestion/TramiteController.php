@@ -66,11 +66,11 @@ class TramiteController extends Controller
         $pagina           = $request->input('page');
         $filas            = ($request->filas) ? $request->filas : 10;
         $entidad          = 'tramite';
-        $modo             = Libreria::getParam($request->input('modo'));
+        $modo             = Libreria::getParam($request->input('modo'), 'general');
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
         $numero           = Libreria::getParam($request->input('numero'));
-        $remitente           = Libreria::getParam($request->input('remisor'));
+        $remitente        = Libreria::getParam($request->input('remisor'));
         $resultado        = Tramite::with('seguimientos', 'procedimiento.rutas.areainicio', 'procedimiento.rutas.areafin', 'latestSeguimiento')->listar2($numero , $fecinicio, $fecfin, $modo, $area_id, $personal_id, $tipo, $remitente);
         $lista            = $resultado->get();
         $cabecera         = array();

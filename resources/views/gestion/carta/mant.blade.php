@@ -9,14 +9,14 @@
 				{!! Form::date('fechainicial', date('Y-m-d'), array('class' => 'form-control  input-xs', 'id' => 'fechainicial' , 'readonly' => true)) !!}
 			</div>
 		</div>
-		<div class="col-sm form-group">
+		{{-- <div class="col-sm form-group">
 			{!! Form::label('fechalimite', 'Fecha Límite', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::date('fechalimite',null, array('class' => 'form-control  input-xs', 'id' => 'fechalimite')) !!}
 			</div>
-		</div>
+		</div> --}}
 		<div class="col-sm form-group">
-			{!! Form::label('tipo_id', 'Tipo*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			{!! Form::label('tipo_id', 'Área*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('tipo_id',$tipostramite, $inspeccion ? $inspeccion->tipo_id : null, array('class' => 'form-control  input-xs', 'id' => 'tipo_id' , 'onchange' => 'generarNumero();')) !!}
 			</div>
@@ -59,7 +59,7 @@
 		@if (!is_null($inspeccion))
 		{!! Form::hidden('inspeccion_id', $inspeccion->id, array('id'=>'inspeccion_id')) !!}
 		@else
-		<div class="col-sm form-group">
+		<div class="col-6 form-group">
 			{!! Form::label('inspeccion_idSelect', 'Nro.* Documento de Referencia', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('inspeccion_idSelect', $cboInspecciones, array('class' => 'form-control  input-xs', 'id' => 'inspeccion_idSelect')) !!}

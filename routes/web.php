@@ -190,6 +190,8 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::resource('carta', 'Gestion\CartaController', array('except' => array('show')));  
     Route::get('carta/pdf/{id}', 'Gestion\CartaController@pdf')->name('carta.pdf');
     Route::post('carta/generarNumero', 'Gestion\CartaController@generarNumero')->name('carta.generarnumero');
+    Route::get('carta/cambiarestado/{id}/{listarluego}', 'Gestion\CartaController@estado')->name('carta.estado');
+    Route::get('carta/cambiarestado/{id}', 'Gestion\CartaController@confirmarEstado')->name('carta.updateEstado');
 
     //FIN CARTA
 

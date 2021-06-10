@@ -31,20 +31,21 @@
 		{!! Form::label('tipotramitesolicitud', 'Tipo de trámite que solicita', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="row">
 			<div class="col-sm">
+				<input type="checkbox" name="tipotramitesolicitud[]" value="Licencia de Funcionamiento para Bodegas"> Licencia de Funcionamiento para Bodegas <br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Licencia de Funcionamiento, establecimiento hasta 100M2 con ITSE BASICA EX POST"> Licencia de Funcionamiento, establecimiento hasta 100M2 con ITSE BASICA EX POST <br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Licencia de Funcionamiento, establecimiento mas de 100M2 hasta 500 M2 con ITSE BASICA EX ANTES"> Licencia de Funcionamiento, establecimiento mas de 100M2 hasta 500 M2 con ITSE BASICA EX ANTES<br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Licencia de Funcionamiento, establecimiento mas de 500M2 que requieren de una ITSE de detalle o multidisciplinaria"> Licencia de Funcionamiento, establecimiento mas de 500M2 que requieren de una ITSE de detalle o multidisciplinaria <br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Licencia de Funcionamiento, mercados y abastos y galeria comerciales"> Licencia de Funcionamiento, mercados y abastos y galeria comerciales <br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Modificación y/o Adecuación de la Licencia de Funcionamiento"> Modificación y/o Adecuación de la Licencia de Funcionamiento <br/>
-				<input type="checkbox" name="tipotramitesolicitud[]" value="En forma conjunta con anuncio publicitario simple y/o toldo"> En forma conjunta con anuncio publicitario simple y/o toldo <br/>
+				<input type="checkbox" name="tipotramitesolicitud[]" value="Anuncio publicitario simple y/o toldo" id="anunciosimple"> Anuncio publicitario simple y/o toldo <br/>
 			</div>
 			<div class="col-sm">
-				<input type="checkbox" name="tipotramitesolicitud[]" value="En forma conjunta con anuncio publicitario Luminoso o Iluminado y/o toldo"> En forma conjunta con anuncio publicitario Luminoso o Iluminado y/o toldo <br/>
+				<input type="checkbox" name="tipotramitesolicitud[]" value="Anuncio publicitario Luminoso o Iluminado y/o toldo" id="anuncioluminoso"> Anuncio publicitario Luminoso o Iluminado y/o toldo <br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Licencia de Funcionamiento: Cesionarios hasta 100M2 con ITSE EX POST"> Licencia de Funcionamiento: Cesionarios hasta 100M2 con ITSE EX POST <br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Licencia de Funcionamiento: Cesionarios hasta 100M2 con ITSE EX ANTES"> Licencia de Funcionamiento: Cesionarios hasta 100M2 con ITSE EX ANTES <br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Licencia de Funcionamiento: Cesionarios mas de 500M2 que que requieren de una ITSE de detalle multidisciplinaria"> Licencia de Funcionamiento: Cesionarios mas de 500M2 que que requieren de una ITSE de detalle multidisciplinaria <br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Cese de Actividades"> Cese de Actividades <br/>
-				<input type="checkbox" name="tipotramitesolicitud[]" value="Duplicado de Licencia de Funcionamiento Definitivo o Temporal"> Duplicado de Licencia de Funcionamiento Definitivo o Temporal <br/>
+				<input type="checkbox" name="tipotramitesolicitud[]" value="Duplicado de Licencia de Funcionamiento Definitivo o Temporal" id="duplicados"> Duplicado de Licencia de Funcionamiento Definitivo o Temporal <br/>
 				<input type="checkbox" name="tipotramitesolicitud[]" value="Otros"> Otros <br/>
 			</div>
 		</div>
@@ -60,7 +61,7 @@
 		<div class="col-2 form-group">
 			{!! Form::label('dni', 'DNI*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('dni', null, array('class' => 'form-control  input-xs', 'id' => 'dni')) !!}
+				{!! Form::text('dni', null, array('class' => 'form-control  input-xs', 'id' => 'dni', 'onchange'=>'handlechangeDNI(this.value, 1);')) !!}
 			</div>
 		</div>
 		<div class="col-2 form-group">
@@ -88,19 +89,19 @@
 				{!! Form::text('direccion', null, array('class' => 'form-control  input-xs', 'id' => 'direccion')) !!}
 			</div>
 		</div>
-		<div class="form-group col-2">
+		<div class="form-group col-1">
 			{!! Form::label('numerocasa', 'Nro.', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('numerocasa', null, array('class' => 'form-control  input-xs', 'id' => 'numerocasa')) !!}
 			</div>
 		</div>
-		<div class="form-group col-2">
+		<div class="form-group col-1">
 			{!! Form::label('manzanacasa', 'Mz.', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('manzanacasa', null, array('class' => 'form-control  input-xs', 'id' => 'manzanacasa')) !!}
 			</div>
 		</div>
-		<div class="form-group col-2">
+		<div class="form-group col-1">
 			{!! Form::label('lotecasa', 'Lte.', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('lotecasa', null, array('class' => 'form-control  input-xs', 'id' => 'lotecasa')) !!}
@@ -110,6 +111,12 @@
 			{!! Form::label('urbanizacion', 'Urb.', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('urbanizacion', null, array('class' => 'form-control  input-xs', 'id' => 'urbanizacion')) !!}
+			</div>
+		</div>
+		<div class="col-3 form-group">
+			{!! Form::label('telefonosolicitante', 'Teléfono', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('telefonosolicitante', null, array('class' => 'form-control  input-xs', 'id' => 'telefonosolicitante')) !!}
 			</div>
 		</div>
 	</div>
@@ -124,7 +131,7 @@
 		<div class="col-3 form-group">
 			{!! Form::label('dnirepresentante', 'DNI', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('dnirepresentante', null, array('class' => 'form-control  input-xs', 'id' => 'dnirepresentante')) !!}
+				{!! Form::text('dnirepresentante', null, array('class' => 'form-control  input-xs', 'id' => 'dnirepresentante', 'onchange'=>'handlechangeDNI(this.value, 2);')) !!}
 			</div>
 		</div>
 		<div class="col-3 form-group">
@@ -229,7 +236,7 @@
 		</div>
 	</div>
 	<legend>Tramite adicionales sobre anuncio</legend>
-	<div class="row">
+	<div class="row d-none">
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1" value="1">
 			<label class="form-check-label" for="inlineRadio1">SI</label>
@@ -294,7 +301,7 @@
 		</div>
 	</div>
 	<legend>Duplicado de Licencia de Funcionamiento</legend>
-	<div class="row">
+	<div class="row d-none">
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="inlineRadioOptions2" id="inlineRadio3" value="1">
 			<label class="form-check-label" for="inlineRadio3">SI</label>
@@ -387,6 +394,8 @@ $(document).ready(function() {
 	});
 	generarNumero();
 
+	
+
 	$('input[type=radio][name=inlineRadioOptions1]').change(function() {
 		console.log('111');
 		if (this.value == '1') {
@@ -402,6 +411,22 @@ $(document).ready(function() {
 			$('#divDuplicados').removeClass('d-none');
 		}
 		else if (this.value == '2') {
+			$('#divDuplicados').addClass('d-none');
+		}
+	});
+	$('input[type=checkbox][id=anunciosimple], input[type=checkbox][id=anuncioluminoso]').change(function(e){
+		var val=e.target.checked;
+		if(val){
+			$('#divAnuncios').removeClass('d-none');
+		}else{
+			$('#divAnuncios').addClass('d-none');
+		}
+	});
+	$('input[type=checkbox][id=duplicados]').change(function(e){
+		var val=e.target.checked;
+		if(val){
+			$('#divDuplicados').removeClass('d-none');
+		}else{
 			$('#divDuplicados').addClass('d-none');
 		}
 	});
@@ -434,6 +459,31 @@ $(document).ready(function() {
 	}
 
 }); 
+
+function handlechangeDNI(e, tipo){
+		if(e.length===8){
+			consultarDNI(e, tipo);
+		}
+	}
+
+	function consultarDNI(e, tipo){
+		// 
+			$.ajax({
+				type: "POST",
+				url: "{{route('ordenpago.buscarDNI')}}",
+				data: "dni="+e+"&_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
+				success: function(a) {
+					if(tipo==1){
+						datos=JSON.parse(a);
+						$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="nombresolicitante"]').val(datos.nombres+' '+datos.apepat+' '+datos.apemat);
+					}else{
+						datos=JSON.parse(a);
+						$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="representantelegal"]').val(datos.nombres+' '+datos.apepat+' '+datos.apemat);
+					}
+					
+				}
+			});
+	}
 
 function generarNumero(){
     $.ajax({

@@ -345,9 +345,11 @@
             </div>
         </div>
     </div>
-    <p class=" font-weight-bold">Para Bodegas</p>
+    <p class=" font-weight-bold">Para Bodegas
+        <input type="checkbox" name="bodega" id="cbBodega" value="Si"> Si <br/>
+    </p>
     <hr>
-    <div class="row">
+    <div class="row d-none" id="divBodegas">
         <div class="form-group col-sm">
             {!! Form::label('desdehora', 'Hora Atención (Desde)*', ['class' => 'col-lg-12 col-md-12 col-sm-12 control-label', 'id' => 'lbldesdehora']) !!}
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -499,6 +501,15 @@
                 $('#divFechaVencimiento').addClass('d-none');
                 console.log('22');
 
+            }
+        });
+
+        $('input[type=checkbox][id=cbBodega]').change(function(e){
+            var val=e.target.checked;
+            if(val){
+                $('#divBodegas').removeClass('d-none');
+            }else{
+                $('#divBodegas').addClass('d-none');
             }
         });
 

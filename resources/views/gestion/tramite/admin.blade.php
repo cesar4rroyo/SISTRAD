@@ -10,8 +10,9 @@
                     <div class="row">
                         {!! Form::hidden('page', 1, array('id' => 'page')) !!}
                         {!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
+                        {!! Form::hidden('modo', 'general', array('id' => 'modo')) !!}
                         
-                        <input type="hidden" name="modo" id="modo" value="general">
+                        {{-- <input type="hidden" name="modo" id="modo" value="general"> --}}
                         
 						<div class="row w-100">
 							<div class="col-lg-4 col-md-4  form-group">

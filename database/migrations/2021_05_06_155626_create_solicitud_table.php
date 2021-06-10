@@ -34,6 +34,7 @@ class CreateSolicitudTable extends Migration
             $table->string('dnirepresentante')->nullable();
             $table->string('rucrepresentante')->nullable();
             $table->string('telefonorepresentante')->nullable();
+            $table->string('telefonosolicitante')->nullable();
             $table->string('nombrenegocio')->nullable();
             $table->string('requisitos')->nullable();
             $table->string('publicidadexterior')->nullable();

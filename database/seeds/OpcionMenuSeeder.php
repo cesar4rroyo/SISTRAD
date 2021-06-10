@@ -114,7 +114,7 @@ class OpcionMenuSeeder extends Seeder
             'grupomenu_id' => 1
         ]);
         DB::table('opcionmenu')->insert([
-            'descripcion' => 'Resolucion',
+            'descripcion' => 'Resolucion/Certificado',
             'icono' => 'far fa-file-invoice',
             'link' => 'resolucion',
             'orden' => 5,
