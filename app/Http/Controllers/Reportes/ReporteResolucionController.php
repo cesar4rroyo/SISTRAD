@@ -7,10 +7,10 @@ use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Librerias\Libreria;
-use Excel;
 use App\Models\Control\Subtipotramitenodoc;
 use App\Models\Control\Tipotramitenodoc;
 use App\Models\Gestion\Resolucion;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class ReporteResolucionController extends Controller
 {
@@ -60,11 +60,11 @@ class ReporteResolucionController extends Controller
                             ->orderBy('created_at','ASC');
                 
         $lista1            = $resultado->get();
-        $custom_array[]=array('Fecha Expedicion', 'Fecha de Entrega', 'Fecha Vencimiento', 'Tipo', 'Subtipo', 'Numero', 'Direccion', 'Contribuyente', 'DNI', 'RUC', 'Razon Social', 
-            'Giro Comercial', 'Estado', 'Tramite Ref.', 'Certificado Nro.'  );
+        $custom_array[]=array('Fecha Expedicion', 'Fecha de Entrega', 'Fecha Vencimiento', 'Estado', 'Tipo' ,'Subtipo', 'Numero', 'Direccion', 'Contribuyente', 'DNI', 'RUC', 'Razon Social', 
+            'Giro Comercial', 'Tramite Ref.', 'Certificado Nro.'  );
         
         foreach ($lista1 as $value) {
-            $custom_array[]=array(
+            $custom_array[]=[
                 'Fecha Expedicion'=>$value->fechaexpedicion,
                 'Fecha de Entrega'=>($value->fechaentrega)?$value->fechaentrega:'-',
                 'Fecha Vencimiento'=>($value->fechavencimiento)?$value->fechavencimiento:'-',
@@ -80,15 +80,10 @@ class ReporteResolucionController extends Controller
                 'Giro Comercial'=>$value->girocomercial, 
                 'Tramite Ref.'=>$value->tramite->numero, 
                 'Certificado Nro.'=>($value->nrocertificado)?$value->nrocertificado:'-',
-            );
+            ];
         }
-        Excel::create('RESOLUCIONES', function($excel) use($custom_array, $fecinicio, $fecfin){
-            $excel->setTitle('RESOLUCIONES DESDE ' . $fecinicio . ' hasta ' . $fecfin);
-            $excel->sheet('RESOLUCIONES', function($sheet) use ($custom_array){
-                $sheet->fromArray($custom_array, null, 'A1', false, false);
-            });
-        })->download('xlsx');
-        
+        $list = collect($custom_array);
+        return (new FastExcel($list))->download('resolucion.xlsx');
     }
 
     public function pdfResolucion(Request $request)
