@@ -37,11 +37,7 @@ class Acta extends Model
 	{
             $año=date('y');
 			$rs = $query
-				->where(function ($subquery) use ($año) {
-					if (!is_null($año) && strlen($año) > 0) {
-						$subquery->where('numero', 'LIKE', '%'.$año.'-%');
-					}
-				})->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,6,11),SIGNED  integer) END)*1) AS maximo"))->first();
+				->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,6,11),SIGNED  integer) END)*1) AS maximo"))->first();
 		
         return str_pad($rs->maximo + 1, 11, '0', STR_PAD_LEFT);
 	}

@@ -153,9 +153,10 @@ class ActaController extends Controller
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
-
+        $participantes = implode(';', $request->participante);
+        $condicionparticipantes = implode(';', $request->condicionparticipante);
         $conclusiones = implode(';', $request->conclusiones);
-        $error = DB::transaction(function() use($request, $conclusiones){
+        $error = DB::transaction(function() use($request, $conclusiones, $participantes, $condicionparticipantes){
             $acta = new Acta();
             $acta->fecha                 = $request->fecha;
             $acta->fechafin                 = $request->fechafin;
@@ -164,8 +165,8 @@ class ActaController extends Controller
             $acta->subgerencia            = strtoupper(Libreria::getParam($request->input('subgerencia')));
             $acta->fiscalizador            = strtoupper(Libreria::getParam($request->input('fiscalizador')));
             $acta->dnifiscalizador            = strtoupper(Libreria::getParam($request->input('dnifiscalizador')));
-            $acta->participante            = strtoupper(Libreria::getParam($request->input('participante')));
-            $acta->condicionparticipante            = strtoupper(Libreria::getParam($request->input('condicionparticipante')));
+            $acta->participante            = strtoupper($participantes);
+            $acta->condicionparticipante            = strtoupper($condicionparticipantes);
             $acta->ruc            = strtoupper(Libreria::getParam($request->input('ruc')));
             $acta->direccion            = strtoupper(Libreria::getParam($request->input('direccion')));
             $acta->razonsocial            = strtoupper(Libreria::getParam($request->input('razonsocial')));
@@ -239,17 +240,71 @@ class ActaController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $reglas     = array('descripcion' => 'required');
+        $reglas     = array(
+            'fecha' => 'required',
+            'numero' => 'required',
+            'fechafin' => 'required',
+            'ordenanza' => 'required',
+            'subgerencia' => 'required',
+            'fiscalizador' => 'required',
+           // 'dnifiscalizador' => 'required',
+            'representante' => 'required',
+            'dnirepresentante' => 'required',
+           // 'ocurrencia' => 'required',
+           // 'observaciones' => 'required',
+            'conclusiones' => 'required',
+            'direccion' => 'required',
+
+        );
         $mensajes = array(
-            'descripcion.required'         => 'Debe ingresar una descripcion'
-            );
+            'fecha.required'         => 'Debe ingresar la fecha de inicio de la Fiscalizacion',
+            'fechafin.required'         => 'Debe ingresar la fecha de fin de la Fiscalizacion',
+            'numero.required'         => 'Debe ingresar el numero',
+            'ordenanza.required'         => 'Debe ingresar la Ordenanza',
+            'subgerencia.required'         => 'Debe ingresar la subgerencia',
+            'fiscalizador.required'         => 'Debe ingresar el nombre del fiscalizador',
+           // 'dnifiscalizador.required'         => 'Debe ingresar el DNI del fiscalizador',
+            'representante.required'         => 'Debe ingresar el nombre del representante',
+            'dnirepresentante.required'         => 'Debe ingresar el DNI del representante',
+            'direccion.required'         => 'Debe ingresar una direccion',
+            'conclusiones.required'         => 'Debe ingresar las conclusiones',
+        );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
-        $error = DB::transaction(function() use($request, $id){
-            $acta = acta::find($id);
-            $acta->descripcion = strtoupper($request->input('descripcion'));
+        $participantes = implode(';', $request->participante);
+        $condicionparticipantes = implode(';', $request->condicionparticipante);
+        $conclusiones = implode(';', $request->conclusiones);
+        $error = DB::transaction(function() use($request, $id, $participantes, $condicionparticipantes, $conclusiones){
+            $acta = Acta::find($id);
+            $acta->fecha                 = $request->fecha;
+            $acta->fechafin                 = $request->fechafin;
+            $acta->ordenanza            = strtoupper(Libreria::getParam($request->input('ordenanza')));
+            $acta->numero            = strtoupper(Libreria::getParam($request->input('numero')));
+            $acta->subgerencia            = strtoupper(Libreria::getParam($request->input('subgerencia')));
+            $acta->fiscalizador            = strtoupper(Libreria::getParam($request->input('fiscalizador')));
+            $acta->dnifiscalizador            = strtoupper(Libreria::getParam($request->input('dnifiscalizador')));
+            $acta->participante            = strtoupper($participantes);
+            $acta->condicionparticipante            = strtoupper($condicionparticipantes);
+            $acta->ruc            = strtoupper(Libreria::getParam($request->input('ruc')));
+            $acta->direccion            = strtoupper(Libreria::getParam($request->input('direccion')));
+            $acta->razonsocial            = strtoupper(Libreria::getParam($request->input('razonsocial')));
+            $acta->girocomercial            = strtoupper(Libreria::getParam($request->input('girocomercial')));
+            $acta->representante            = strtoupper(Libreria::getParam($request->input('representante')));
+            $acta->dnirepresentante            = strtoupper(Libreria::getParam($request->input('dnirepresentante')));
+            $acta->calidadrepresentante            = strtoupper(Libreria::getParam($request->input('calidadrepresentante')));
+            $acta->ocurrencia            = strtoupper(Libreria::getParam($request->input('ocurrencia')));
+            $acta->observaciones            = strtoupper(Libreria::getParam($request->input('observaciones')));
+            $acta->conclusiones            = $conclusiones;
+            if($request->hasFile('file')){
+                $file = $request->file('file');
+                $extension = $request->file('file')->getClientOriginalExtension();
+                $nombre =  time().'.'.$extension;
+                \Storage::disk('local')->put('public/archivos2/'.$nombre,  \File::get($file));
+                // $archivo = $request->file('file')->storeAs('public/archivos2', time() .  '.' .$extension);
+                $acta->imagen = $nombre;
+            }
             $acta->save();
         });
         return is_null($error) ? "OK" : $error;
