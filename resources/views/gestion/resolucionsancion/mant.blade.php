@@ -97,7 +97,9 @@ $(document).ready(function() {
 
 	configurarAnchoModal('1000');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
-	generarNumero();
+	@if (!$resolucionsancion)
+		generarNumero();
+	@endif
 
 
 }); 	

@@ -70,6 +70,47 @@
 	</div>
 </div>
 @endif
+@if ($accion=='archivar')
+{!!'<div class="callout callout-danger"><p class="text-primary">¿Esta seguro que desea archivar la Resolucion?</p></div>' !!}
+<div class="form-group">
+	{!! Form::label('observacion', 'Motivo', array('class' => 'control-label')) !!}
+	<div class="col-lg-12 col-md-12 col-sm-12">
+	{!! Form::textarea('observacion', '',array('class' => 'form-control form-control-sm input-xs', 'id' => 'observacion', "rows"=>2 , "style"=>"resize:none;")) !!}
+	</div>
+</div>
+@endif
+@if ($accion=='entregar')
+	{!!'<div class="callout callout-danger"><p class="text-primary">¿Esta seguro que la Resolución ya fue entregada?</p></div>' !!}
+@endif
+@if ($accion=='coactiva')
+	{!!'<div class="callout callout-danger"><p class="text-primary">¿Esta seguro que desea enviar la Resolución a Coactiva?</p></div>' !!}
+@endif
+@if ($accion=='pagar')
+	@php
+		$date_expire = $modelo->fechaentrega;    
+		$date = new DateTime($date_expire);
+		$now = new DateTime();
+		$diff=$date->diff($now);	
+	@endphp
+	@if ($diff->days<='5')
+		{!!'<div class="callout callout-warning"><p class="text-primary">Esta Resolución tiene la posibilidad de aplicarse descuento del 50%</p></div>' !!}
+	@endif
+	<div class="form-group">
+		{!! Form::label('i_monto', 'Monto a Pagar', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::text('i_monto', $modelo->notificacion->i_monto, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'i_monto', 'readonly'=>'true')) !!}
+		</div>
+	</div>
+	<div class="form-group">
+		{!! Form::label('montocancelado', 'Monto Cancelado*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			{!! Form::text('montocancelado', '0.00', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'montocancelado', 'required'=>'true')) !!}
+		@if ($diff->days<='5')
+			<input type="checkbox" name="descuento" value="descuento" id="cbodescuento"> Aplicar Descuento <br/>
+		@endif
+		</div>
+	</div>
+@endif
 
 
 <div class="form-group">
@@ -200,8 +241,19 @@
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#i_monto').inputmask('decimal', { rightAlign: false , digits:2  });
 		init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
-		configurarAnchoModal('600');
+		configurarAnchoModal('700');
+		$('input[type=checkbox][id=cbodescuento]').change(function(e){
+			var val=e.target.checked;
+			if(val){
+				var monto = $('#i_monto').val();
+				var total = (parseFloat(monto)/2).toFixed(2);
+				$('#montocancelado').val(total);
+			}else{
+				$('#montocancelado').val('0.00');
+			}
+		});
 		$( IDFORMMANTENIMIENTO + '{{ $entidad }}').submit(function( event ) {
 			event.preventDefault();
 			var idformulario = IDFORMMANTENIMIENTO + '{{ $entidad }}';

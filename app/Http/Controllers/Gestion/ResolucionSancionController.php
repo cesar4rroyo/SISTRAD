@@ -331,7 +331,7 @@ class ResolucionSancionController extends Controller
         }
         $error = DB::transaction(function() use($id, $accion, $request){
             $usuario = session()->get('personal');
-            $tramite = ResolucionSancion::find($id);
+            $resolucion = ResolucionSancion::find($id);
             switch ($accion) {
                 case 'seguimiento':
                     break;
@@ -361,9 +361,99 @@ class ResolucionSancionController extends Controller
                         'observacion'=> Libreria::getParam($request->input('observacion')),
                     ]);
                     break;
-                case 'archivar':
-                    
+                case 'entregar':
+                    $ultimo_seguimiento = Seguimiento::where('resolucionsancion_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'ENTREGAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'resolucionsancion_id' => $id,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                    ]);
+                    $fechaactual= date('Y-m-d');
+                    $resolucion->estado='ENTREGADO';
+                    $resolucion->fechaentrega=$fechaactual;
+                    $resolucion->fechafin=date('Y-m-d', strtotime($fechaactual . "+ 15 days"));
+                    $resolucion->save();
                     break;
+                case 'coactiva':
+                    $ultimo_seguimiento = Seguimiento::where('resolucionsancion_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'ENVIAR A COACTIVA',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'resolucionsancion_id' => $id,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                    ]);
+                    $resolucion->estado='COACTIVA';
+                    $resolucion->save();
+                    break;
+                case 'pagar';
+                    $ultimo_seguimiento = Seguimiento::where('resolucionsancion_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'PAGAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'resolucionsancion_id' => $id,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                    ]);
+                    $fechaactual= date('Y-m-d');
+                    $resolucion->estado='FINALIZADO';
+                    $resolucion->fechapago=$fechaactual;
+                    $resolucion->montocancelado=$request->montocancelado;
+                    $resolucion->save();
+                    break;
+                case 'archivar';
+                $reglas     = array('observacion'=>'required');
+                $mensajes = array(
+                    'observacion.required' => 'Debe ingresar el motivo',
+                );
+                $validacion = Validator::make($request->all(), $reglas, $mensajes);
+                if ($validacion->fails()) {
+                    return $validacion->messages()->toJson();
+                }                   
+                $ultimo_seguimiento = Seguimiento::where('resolucionsancion_id', $id)->orderBy('id', 'desc')->first();
+                $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                $seguimiento=Seguimiento::create([
+                    'fecha'=> date("Y-m-d H:i:s"),
+                    'accion' => 'ARCHIVAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                    'correlativo' => $correlativo_anterior+1,
+                    'correlativo_anterior' => $correlativo_anterior,
+                    'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                    'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                    'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                    'resolucionsancion_id' => $id,
+                    'personal_id' => $usuario['id'],
+                    'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                    'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                    'observacion'=> Libreria::getParam($request->input('observacion')),
+                ]);
+                $fechaactual= date('Y-m-d');
+                $resolucion->estado='ARCHIVADO';
+                $resolucion->fechaarchivo=$fechaactual;
+                $resolucion->save();
+                break;
 
             }
             

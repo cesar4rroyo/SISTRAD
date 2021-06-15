@@ -16,7 +16,11 @@ class CreateResolucionsancionTable extends Migration
         Schema::create('resolucionsancion', function (Blueprint $table) {
             $table->increments('id');
             $table->date('fechaemision');
-            $table->string('numero');
+            $table->date('fechaentrega')->nullable();
+            $table->date('fechaarchivo')->nullable();
+            $table->date('fechapago')->nullable();
+            $table->date('fechafin')->nullable();
+            $table->string('numero')->nullable();
             $table->string('nroinstruccion')->nullable();
             $table->date('fechainstruccion')->nullable();
             $table->string('fojas')->nullable();
@@ -25,9 +29,11 @@ class CreateResolucionsancionTable extends Migration
             $table->string('medidacorrectiva')->nullable();
             $table->string('periodo')->nullable();
             $table->string('descargo', 4000)->nullable();
+            $table->string('motivoarchivo', 4000)->nullable();
             $table->string('conclusion', 4000)->nullable();
             $table->string('domicilioprocesal', 4000)->nullable();
             $table->decimal('monto', 10,2)->nullable();
+            $table->decimal('montocancelado', 10,2)->nullable();
             $table->integer('actafiscalizacion_id')->unsigned()->nullable();
             $table->foreign('actafiscalizacion_id')->references('id')->on('actafiscalizacion')->onUpdate('restrict')->onDelete('restrict');
             $table->integer('notificacioncargo_id')->unsigned()->nullable();
