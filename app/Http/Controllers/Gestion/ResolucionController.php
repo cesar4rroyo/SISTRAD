@@ -71,6 +71,7 @@ class ResolucionController extends Controller
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Contribuyente', 'numero' => '1');
         $cabecera[]       = array('valor' => 'DNI/RUC', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Dirección', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nro. Orden de Pago', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nro. de de Inspeccion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
@@ -419,6 +420,7 @@ class ResolucionController extends Controller
                         'inspeccion_id' => $request->input('inspeccion_id'),
                         'tipo_id' => $request->input('tipo'),
                         'numero' => $request->input('numero'),
+                        'tramiteref_id' => strtoupper($request->input('tramiteref')),
                     ]);
                 });
                 return is_null($error) ? "OK" : $error;
@@ -468,6 +470,8 @@ class ResolucionController extends Controller
                         'tipo_id' => $request->input('tipo'),
                         'numero' => $request->input('numero'),
                         'situacion' => 'EMITIDO',
+                        'tramiteref_id' => strtoupper($request->input('tramiteref')),
+                        
                     ]);
                 });
                 return is_null($error) ? "OK" : $error;
@@ -508,6 +512,7 @@ class ResolucionController extends Controller
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),
                         'situacion' => 'EMITIDO',
+                        'tramiteref_id' => strtoupper($request->input('tramiteref')),
                     ]);
                 });
                 return is_null($error) ? "OK" : $error;

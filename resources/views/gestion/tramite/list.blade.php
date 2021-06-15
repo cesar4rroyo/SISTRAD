@@ -82,7 +82,6 @@
 	}	
 	@endphp
 @endforeach
-
 @if(count($lista) - $x == 0)
 <h3 class="text-warning">No se encontraron resultados.</h3>
 @else

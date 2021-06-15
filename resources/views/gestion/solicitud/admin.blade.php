@@ -28,13 +28,13 @@
 						</div>
 						<div class="row w-100">
 							<div class="col-lg-4 col-md-4  form-group">
-								{!! Form::label('contribuyente', 'Contribuyente') !!}
+								{!! Form::label('contribuyente', 'Solicitante/DNI/RUC') !!}
 								{!! Form::text('contribuyente', '', array('class' => 'form-control ', 'id' => 'contribuyente')) !!}
 							</div>
-							<div class="col-lg-4 col-md-4  form-group">
+							{{-- <div class="col-lg-4 col-md-4  form-group">
 								{!! Form::label('tipo', 'Tipo') !!}
 								{!! Form::select('tipo', $tipostramite,'', array('class' => 'form-control ', 'id' => 'tipo' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
-							</div>
+							</div> --}}
 							<div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
 								{!! Form::label('nombre', 'Filas a mostrar') !!}
 								{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-xs', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}

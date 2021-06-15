@@ -17,9 +17,13 @@
 		?>
 		@foreach ($lista as $key => $value)
 		@php
-			if((date('d/m/Y')>=date_format(date_create($value->fechalimite ), 'd/m/Y')) && $value->aviso=='NOTIFICACION'){
-				if($value->inspeccion->estado == 'NOTIFICADO'){
-					$color = 'bg-warning';
+			if($value->estado=='ENTREGADO'){
+				if((date('d/m/Y')>=date_format(date_create($value->fechalimite ), 'd/m/Y')) && $value->aviso=='NOTIFICACION'){
+					if($value->inspeccion->estado == 'NOTIFICADO'){
+						$color = 'bg-warning';
+					}
+				}else{
+					$color = null;
 				}
 			}else{
 				$color = null;
@@ -28,7 +32,8 @@
         <tr class="{{($color) ? $color : ''}}">
 			<td>{{ $contador }}</td>
 			<td>{{ date_format(date_create($value->fechainicial ), 'd/m/Y')}}</td>
-			<td>{{ date_format(date_create($value->fechalimite ), 'd/m/Y')}}</td>
+			<td>{{ $value->fechaentrega ?  date_format(date_create($value->fechaentrega ), 'd/m/Y') : '-' }}</td>
+			<td>{{ $value->fechalimite ?  date_format(date_create($value->fechalimite ), 'd/m/Y') : '-' }}</td>
 			<td>{{ $value->plazo }}</td>
 			<td>{{ $value->numero }}</td>
 			<td>{{ $value->tipotramite->descripcion }}</td>
@@ -40,6 +45,9 @@
 					{!! Form::button('<div class="fas fa-trash"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}
 					@if ($color)
 						{!! Form::button('<div class="fas fa-envelope"></div>Notificar', array('title'=>'GENERAR NOTIFICACIÓN', 'onclick' => 'modal (\''.URL::route("carta.create", array($value->id, 'listar'=>'SI', 'id_inspeccion'=>$value->inspeccion->id, 'entidad'=>'carta')).'\', \''.'Generar Carta de Notificación Ref Doc. '. $value->inspeccion->numero . ' - ' . $value->inspeccion->tipotramite->descripcion .'\', this);', 'class' => 'btn btn-sm btn-info')) !!}
+					@endif
+					@if ($value->estado=='REGISTRADO')
+						{!! Form::button('<div class="fas fa-user-edit"></div>Entregar', array('onclick' => 'modal (\''.URL::route($ruta["estado"], array($value->id, 'SI')).'\', \''.'Actualizar estado'.'\', this);', 'class' => 'btn btn-sm btn-warning')) !!}
 					@endif
 				</div>
 			</td>

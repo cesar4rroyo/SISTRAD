@@ -9,6 +9,8 @@ use App\Models\Gestion\Tipotramitenodoc;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Librerias\Libreria;
+use App\Models\Admin\Cargo;
+use App\Models\Admin\Personal;
 use App\Models\Gestion\Carta;
 use App\Models\Gestion\Inspeccion;
 
@@ -25,6 +27,8 @@ class CartaController extends Controller
             'delete' => 'carta.eliminar',
             'search' => 'carta.buscar',
             'index'  => 'anio.index',
+            'estado' => 'carta.estado',
+            'confirmarEstado' => 'carta.updateEstado',
         );
 
 
@@ -59,6 +63,7 @@ class CartaController extends Controller
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha Notificación', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Fecha Entrega', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha Límite', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Plazo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Número', 'numero' => '1');
@@ -162,11 +167,11 @@ class CartaController extends Controller
 
         if($request->aviso=='Notificacion'){
             $reglas     = array(
-                'fechalimite' => 'required',
+               // 'fechalimite' => 'required',
                 'plazo' => 'required|numeric',
             );
             $mensajes = array(
-               'fechalimite.required'         => 'Debe ingresar el nombre la Fecha Límite',
+              // 'fechalimite.required'         => 'Debe ingresar el nombre la Fecha Límite',
                 'plazo.required'         => 'Debe ingresar el plazo',
             );
             $validacion = Validator::make($request->all(), $reglas, $mensajes);
@@ -178,7 +183,6 @@ class CartaController extends Controller
         $error = DB::transaction(function() use($request){
             $carta = new Carta();
             $carta->fechainicial                 = date("Y-m-d H:i:s");
-            $carta->fechalimite          = Libreria::getParam($request->input('fechalimite'));
             $carta->tipo_id            = strtoupper(Libreria::getParam($request->input('tipo_id')));
             if($request->input('inspeccion_idSelect')){
                 $carta->inspeccion_id            = strtoupper(Libreria::getParam($request->input('inspeccion_idSelect')));
@@ -186,11 +190,12 @@ class CartaController extends Controller
                 $carta->inspeccion_id            = strtoupper(Libreria::getParam($request->input('inspeccion_id')));
             }
             $carta->plazo         = Libreria::getParam($request->input('plazo'));
+            $carta->estado         = 'REGISTRADO'; //REGISTRADO-ENTREGADO-
             $carta->asunto   = strtoupper(Libreria::getParam($request->input('asunto')));
             $carta->numero   = strtoupper(Libreria::getParam($request->input('numero')));
             $carta->direccion       = strtoupper(Libreria::getParam($request->input('direccion')));
             $carta->cuerpo       = Libreria::getParam($request->input('cuerpo'));
-            $carta->razonsocial       = strtoupper(Libreria::getParam($request->input('direccion')));
+            $carta->razonsocial       = strtoupper(Libreria::getParam($request->input('razonsocial')));
             $carta->destinatario       = strtoupper(Libreria::getParam($request->input('destinatario')));
             $carta->aviso       = strtoupper(Libreria::getParam($request->input('aviso')));
             $carta->save();
@@ -311,6 +316,56 @@ class CartaController extends Controller
         $boton    = 'Eliminar';
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
+
+    public function estado($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'carta');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Carta::find($id);
+        $entidad  = 'carta';
+        $formData = array('route' => array('carta.updateEstado', $id), 'method' => 'GET', 'class' => 'form-horizontal', 'id' => 'formMantenimiento' . $entidad, 'autocomplete' => 'off');
+        $boton    = 'Actualizar';
+        $cboPersonal = [''=>'Seleccione una Opción'] + Personal::listar(null, null, null, null)->get()->pluck('full_name','id')->all();
+        return view('reusable.confirmarCarta')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar', 'cboPersonal'));
+    }
+
+    public function confirmarEstado(Request $request, $id)
+    {
+        $existe = Libreria::verificarExistencia($id, 'carta');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $reglas     = array(
+            'personal_id' => 'required',
+
+        );
+        $mensajes = array(
+            'personal_id.required'         => 'Debe ingresar la Persona que envió la notificación',
+        );
+            
+        $validacion = Validator::make($request->all(), $reglas, $mensajes);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        }
+        $error = DB::transaction(function () use ($request, $id) {
+            $carta = Carta::find($id);
+            $fechaactual=date("d-m-Y");
+            $fechalimite=date("Y-m-d H:i:s", strtotime($fechaactual. "+ " . $carta->plazo . " days"));
+            $carta->estado='ENTREGADO';
+            $carta->fechaentrega=date("Y-m-d H:i:s");
+            $carta->personal_id=$request->personal_id;
+            $carta->fechalimite=$fechalimite;
+            $carta->save();
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
     
     public function pdf($id){
         $existe = Libreria::verificarExistencia($id, 'carta');

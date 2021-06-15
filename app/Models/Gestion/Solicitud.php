@@ -60,8 +60,9 @@ class Solicitud extends Model
 			})
 			->where(function ($subquery) use ($contribuyente) {
 				if (!is_null($contribuyente) && strlen($contribuyente) > 0) {
-					$subquery->where('contribuyente', 'LIKE', '%'.$contribuyente.'%')
-                            ->orWhere('dni_ruc', 'LIKE', '%'.$contribuyente.'%');
+					$subquery->where('nombresolicitante', 'LIKE', '%'.$contribuyente.'%')
+                            ->orWhere('dni', 'LIKE', '%'.$contribuyente.'%')
+                            ->orWhere('ruc', 'LIKE', '%'.$contribuyente.'%');
 				}
 			})
 			->orderBy('created_at', 'DESC');

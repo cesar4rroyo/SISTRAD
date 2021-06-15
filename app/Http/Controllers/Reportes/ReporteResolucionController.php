@@ -10,6 +10,7 @@ use App\Librerias\Libreria;
 use App\Models\Control\Subtipotramitenodoc;
 use App\Models\Control\Tipotramitenodoc;
 use App\Models\Gestion\Resolucion;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class ReporteResolucionController extends Controller
 {
@@ -31,6 +32,58 @@ class ReporteResolucionController extends Controller
         $tipos            = [""=>'Todos'] + Tipotramitenodoc::pluck('descripcion','id')->all();
         $subtipos = [""=>'Todos'] + Subtipotramitenodoc::pluck('descripcion', 'id')->all();
         return view($this->folderview . '.adminresolucion')->with(compact('entidad' , 'tipos', 'subtipos'));
+    }
+
+    public function excel(Request $request){
+        $fecinicio        = Libreria::getParam($request->input('fechainicio'));
+        $fecfin           = Libreria::getParam($request->input('fechafin'));
+        $tipo             = Libreria::getParam($request->input('tipo'));
+        $subtipo             = Libreria::getParam($request->input('subtipo'));
+        $resultado        = Resolucion::whereHas('tipotramite' ,function ($subquery) use ($tipo) {
+                                if (!is_null($tipo) && strlen($tipo) > 0) {
+                                    $subquery->where('id', '=' , $tipo);
+                                }
+                            })->whereHas('subtipo' ,function ($subquery) use ($subtipo) {
+                                if (!is_null($subtipo) && strlen($subtipo) > 0) {
+                                    $subquery->where('id', '=' , $subtipo);
+                                }
+                            })->where(function ($subquery) use ($fecinicio) {
+                                if (!is_null($fecinicio) && strlen($fecinicio) > 0) {
+                                    $subquery->where('resolucion.fechaexpedicion', '>=', date_format(date_create($fecinicio), 'Y-m-d H:i:s'));
+                                }
+                            })
+                            ->where(function ($subquery) use ($fecfin) {
+                                if (!is_null($fecfin) && strlen($fecfin) > 0) {
+                                    $subquery->where('resolucion.fechaexpedicion', '<=', date_format(date_create($fecfin), 'Y-m-d H:i:s'));
+                                }
+                            })
+                            ->orderBy('created_at','ASC');
+                
+        $lista1            = $resultado->get();
+        $custom_array[]=array('Fecha Expedicion', 'Fecha de Entrega', 'Fecha Vencimiento', 'Estado', 'Tipo' ,'Subtipo', 'Numero', 'Direccion', 'Contribuyente', 'DNI', 'RUC', 'Razon Social', 
+            'Giro Comercial', 'Tramite Ref.', 'Certificado Nro.'  );
+        
+        foreach ($lista1 as $value) {
+            $custom_array[]=[
+                'Fecha Expedicion'=>$value->fechaexpedicion,
+                'Fecha de Entrega'=>($value->fechaentrega)?$value->fechaentrega:'-',
+                'Fecha Vencimiento'=>($value->fechavencimiento)?$value->fechavencimiento:'-',
+                'Estado'=>$value->estado, 
+                'Tipo'=>$value->tipotramite->descripcion, 
+                'Subtipo'=>$value->subtipo->descripcion, 
+                'Numero'=>$value->numero, 
+                'Direccion'=>$value->direccion, 
+                'Contribuyente'=>$value->contribuyente, 
+                'DNI'=>$value->dni, 
+                'RUC'=>$value->ruc, 
+                'Razon Social'=>$value->razonsocial, 
+                'Giro Comercial'=>$value->girocomercial, 
+                'Tramite Ref.'=>$value->tramite->numero, 
+                'Certificado Nro.'=>($value->nrocertificado)?$value->nrocertificado:'-',
+            ];
+        }
+        $list = collect($custom_array);
+        return (new FastExcel($list))->download('resolucion.xlsx');
     }
 
     public function pdfResolucion(Request $request)

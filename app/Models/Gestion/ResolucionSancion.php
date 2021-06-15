@@ -12,6 +12,36 @@ class ResolucionSancion extends Model
     protected $table = 'resolucionsancion';
     protected $dates = ['deleted_at'];
 
+	public function notificacion(){
+		return $this->belongsTo(Notificacioncargo::class, 'notificacioncargo_id');
+	}
+	public function actafiscalizacion(){
+		return $this->belongsTo(Acta::class, 'actafiscalizacion_id');
+	}
+
+	public function seguimientos()
+    {
+        return $this->hasMany(Seguimiento::class, 'resolucionsancion_id');
+    }
+
+	public function ultimo()
+    {
+        return $this->join('seguimiento as s','s.resolucionsancion_id', 'resolucionsancion.id')
+        ->where('resolucionsancion.id',$this->id)
+        ->whereNull('s.deleted_at')
+        ->orderBy('s.correlativo', 'DESC')
+        ->first();   
+    }
+    
+    public function latestSeguimiento()
+    {
+        return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'desc')->latest();
+    }
+    public function firstSeguimiento()
+    {
+        return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'asc')->latest();
+    }
+
     public function scopelistar($query, $numero, $fecinicio, $fecfin)
 	{
 		return $query
@@ -35,13 +65,7 @@ class ResolucionSancion extends Model
 
     public function scopeNumeroSigue($query)
 	{
-            $año=date('y');
-			$rs = $query
-				->where(function ($subquery) use ($año) {
-					if (!is_null($año) && strlen($año) > 0) {
-						$subquery->where('numero', 'LIKE', '%'.$año.'-%');
-					}
-				})->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,6,11),SIGNED  integer) END)*1) AS maximo"))->first();
+			$rs = $query->select(DB::raw("max((CASE WHEN numero IS NULL THEN 0 ELSE convert(substr(numero,6,11),SIGNED  integer) END)*1) AS maximo"))->first();
 		
         return str_pad($rs->maximo + 1, 11, '0', STR_PAD_LEFT);
 	}

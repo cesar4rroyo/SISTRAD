@@ -170,10 +170,11 @@ class SolicitudController extends Controller
                     $solicitud->dnirepresentante            = strtoupper(Libreria::getParam($request->input('dnirepresentante')));
                     $solicitud->rucrepresentante            = strtoupper(Libreria::getParam($request->input('rucrepresentante')));
                     $solicitud->telefonorepresentante            = strtoupper(Libreria::getParam($request->input('telefonorepresentante')));
+                    $solicitud->telefonorepresentante            = strtoupper(Libreria::getParam($request->input('telefonosolicitante')));
                     $solicitud->nombrenegocio            = strtoupper(Libreria::getParam($request->input('nombrenegocio')));
                     $solicitud->girocomercial            = strtoupper(Libreria::getParam($request->input('girocomercial')));
-                    $solicitud->area            = strtoupper(Libreria::getParam($request->input('area')));
-                    $solicitud->requisitos            = implode('-',$request->input('requisitos'));
+                    $solicitud->area            = strtoupper(Libreria::getParam($request->input('area'), 0));
+                    $solicitud->requisitos            = implode('===',$request->input('requisitos'));
                     $solicitud->tipotramitesolicitud            = implode('-',$request->input('tipotramitesolicitud'));
                     $solicitud->publicidadexterior            = strtoupper(Libreria::getParam($request->input('publicidadexterior')));
                     $solicitud->colores            = strtoupper(Libreria::getParam($request->input('colores')));
@@ -278,7 +279,7 @@ class SolicitudController extends Controller
             $solicitud->nombrenegocio            = strtoupper(Libreria::getParam($request->input('nombrenegocio')));
             $solicitud->telefonorepresentante            = strtoupper(Libreria::getParam($request->input('telefonorepresentante')));
             $solicitud->girocomercial            = strtoupper(Libreria::getParam($request->input('girocomercial')));
-            $solicitud->area            = strtoupper(Libreria::getParam($request->input('area')));
+            $solicitud->area            = Libreria::getParam($request->input('area'), 0);
             $solicitud->requisitos            = implode('-',$request->input('requisitos'));
             $solicitud->tipotramitesolicitud            = implode('-',$request->input('tipotramitesolicitud'));
             $solicitud->publicidadexterior            = strtoupper(Libreria::getParam($request->input('publicidadexterior')));

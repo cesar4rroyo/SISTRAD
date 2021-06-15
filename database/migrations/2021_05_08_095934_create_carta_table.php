@@ -17,8 +17,10 @@ class CreateCartaTable extends Migration
             $table->increments('id');
             $table->dateTime('fechainicial');
             $table->dateTime('fechalimite')->nullable();
+            $table->dateTime('fechaentrega')->nullable();
             $table->string('numero')->nullable();
-            $table->string('asunto')->nullable();
+            $table->string('asunto', 4000)->nullable();
+            $table->string('estado')->nullable();
             $table->string('aviso')->nullable();
             $table->integer('plazo')->nullable();
             $table->string('nombrecomercial')->nullable();
@@ -26,6 +28,8 @@ class CreateCartaTable extends Migration
             $table->string('direccion')->nullable();
             $table->string('razonsocial')->nullable();
             $table->string('cuerpo',8000)->nullable();
+            $table->integer('personal_id')->unsigned()->nullable();
+            $table->foreign('personal_id')->references('id')->on('personal')->onUpdate('restrict')->onDelete('restrict');
             $table->integer('tipo_id')->unsigned()->nullable();
             $table->foreign('tipo_id')->references('id')->on('tipotramitenodoc')->onUpdate('restrict')->onDelete('restrict');
             $table->integer('inspeccion_id')->unsigned()->nullable();

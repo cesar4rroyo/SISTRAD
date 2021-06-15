@@ -17,20 +17,20 @@
   {{-- <li class="nav-item">
     <a class="nav-link" id="courier-tab" data-toggle="tab" href="#courier" role="tab" aria-controls="courier" aria-selected="false">Courier</a>
   </li> --}}
-</ul>  
+</ul>
 <script>   
    $(document).ready(function ()  {
-    $('#acciones_entrada').hide();
+    // $('#acciones_entrada').hide();
 		$('#myTab a').on('click', function(e){
             e.preventDefault();  
-            // console.log(e.target.id);
             switch (e.target.id) {
                 case 'entrada-tab':
                     $('#modo').val('entrada');
+                    console.log($('#modo').val());
                 	  buscar('{{ $entidad }}');
                     break;
                 case 'bandeja-tab':
-                    $('#modo').val('bandeja');
+                     $('#modo').val('bandeja');
                 	buscar('{{ $entidad }}');
                     break;
                 case 'salida-tab':
@@ -40,10 +40,15 @@
                 case 'general-tab':
                     $('#modo').val('general');
                     buscar('{{ $entidad }}');
+                    break;
                 case 'archivos-tab':
-                    $('#modo').val('archivos');
+                   $('#modo').val('archivos');
                     buscar('{{ $entidad }}');
-                    break;           
+                    break;  
+                default:
+                  $('#modo').val('general');
+                  buscar('{{ $entidad }}');
+                  break;         
                 /* case 'courier-tab':
                     $('#modo').val('courier');
                     buscar('{{ $entidad }}');

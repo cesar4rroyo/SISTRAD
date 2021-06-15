@@ -42,6 +42,14 @@
         </tr>
     </table>
     <hr>
+    <div class=" float-right" style="font-size: .7rem; line-height:3%">
+        <p class=" font-weight-bold">EXPEDIENTE NRO. {{$data->tramite->numero}}</p>
+        <p class=" font-weight-bold">FECHA DE EMISION. {{$data->fechaexpedicion}}</p>
+        <p class=" font-weight-bold">FECHA DE VENCIMIENTO. {{$data->fechavencimiento}}</p>
+    </div>
+    <br>
+    <br>
+    <br>
     <div class=" text-center">
         <h1 style="color: black; font-size:1.2rem; text-decoration: underline;">RESOLUCIÓN DE LICENCIA DE EDIFICACIÓN N° {{$data->numero}}-2021-MDJLO/GIDU/SGHUyEP</h1>
     </div>
@@ -139,7 +147,7 @@
                     <strong>DERECHO DE PAGO:</strong>
                 </td>
                 <td>
-                    {{$data->ordenpago->importe . ' ' . 'SOLES'}} 
+                    {{$data->ordenpago->monto . ' ' . 'SOLES'}} 
                 </td>
             </tr>
             <tr>

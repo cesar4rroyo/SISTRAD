@@ -122,6 +122,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     //resolucion reporte
     Route::resource('reporteResolucion', 'Reportes\ReporteResolucionController', array('except' => array('show')));
     Route::get('reporteResolucion/pdfResolucion', 'Reportes\ReporteResolucionController@pdfResolucion')->name('reporteresolucion.pdfResolucion');
+    Route::get('reporteResolucion/excelResolucion', 'Reportes\ReporteResolucionController@excel')->name('reporteresolucion.excel');
 
 //SEGUNDA PARTE 
 
@@ -191,6 +192,8 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::resource('carta', 'Gestion\CartaController', array('except' => array('show')));  
     Route::get('carta/pdf/{id}', 'Gestion\CartaController@pdf')->name('carta.pdf');
     Route::post('carta/generarNumero', 'Gestion\CartaController@generarNumero')->name('carta.generarnumero');
+    Route::get('carta/cambiarestado/{id}/{listarluego}', 'Gestion\CartaController@estado')->name('carta.estado');
+    Route::get('carta/cambiarestado/{id}', 'Gestion\CartaController@confirmarEstado')->name('carta.updateEstado');
 
     //FIN CARTA
 
@@ -207,6 +210,16 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('notificacioncargo/eliminar/{id}/{listarluego}', 'Gestion\NotificacioncargoController@eliminar')->name('notificacioncargo.eliminar');
     Route::resource('notificacioncargo', 'Gestion\NotificacioncargoController', array('except' => array('show')));
     Route::get('notificacioncargo/pdf/{id}', 'Gestion\NotificacioncargoController@pdf')->name('notificacioncargo.pdf');
+
+    //RESOLUCION SANCION
+    Route::post('resolucionsancion/buscar', 'Gestion\ResolucionSancionController@buscar')->name('resolucionsancion.buscar');
+    Route::get('resolucionsancion/eliminar/{id}/{listarluego}', 'Gestion\ResolucionSancionController@eliminar')->name('resolucionsancion.eliminar');
+    Route::resource('resolucionsancion', 'Gestion\ResolucionSancionController', array('except' => array('show')));
+    Route::get('resolucionsancion/pdf/{id}', 'Gestion\ResolucionSancionController@pdf')->name('resolucionsancion.pdf');
+    Route::post('resolucionsancion/generarNumero', 'Gestion\ResolucionSancionController@generarNumero')->name('resolucionsancion.generarnumero');
+    Route::get('resolucionsancion/confirmacion/{id}/{listarluego}/{accion}', 'Gestion\ResolucionSancionController@confirmacion')->name('resolucionsancion.confirmacion');
+    Route::post('resolucionsancion/accion/{id}/{accion}', 'Gestion\ResolucionSancionController@accion')->name('resolucionsancion.accion');
+
 
 });
 

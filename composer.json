@@ -16,6 +16,7 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.7.0",
         "phpoffice/phpword": "dev-master",
+        "rap2hpoutre/fast-excel": "^3.0",
         "simplesoftwareio/simple-qrcode": "~2"
     },
     "require-dev": {

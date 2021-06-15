@@ -69,6 +69,7 @@
 						{!! Form::button('<div class="fas fa-envelope"></div>', array('title'=>'GENERAR NOTIFICACIÓN' , 'onclick' => 'modal (\''.URL::route("carta.create", array($value->id, 'listar'=>'SI', 'id_inspeccion'=>$value->id)).'\', \''.'Generar Carta de Notificación de Inspeccion Nro.' . $value->numero . ' - ' . $value->tipotramite->descripcion . '\', this);', 'class' => 'btn btn-sm btn-info')) !!}
 					@endif
 					@if ($value->estado=='NOTIFICADO')
+					{{-- {{dd($value->carta->last()->estado)}} --}}
 					{!! Form::button('<div class="fas fa-check-double"></div>', array('title'=>'LEVANTAR OBSERVACIONES' , 'onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI', 'observacion'=>'SI')).'\', \''.'Levantar Observaciones de Inpescción Nro.' . $value->numero . '- ' . $value->tipotramite->descripcion .'\', this);', 'class' => 'btn btn-sm btn-secondary')) !!}
 					@endif
 				</div>
