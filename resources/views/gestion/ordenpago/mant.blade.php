@@ -99,8 +99,11 @@
 			</div>
 			<div class="form-group">
 				{!! Form::label('direccion', 'Dirección', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-				<div class="col-lg-12 col-md-12 col-sm-12">
+				<div class="input-group " style="padding-left:10px;">
 					{!! Form::text('direccion', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'direccion')) !!}
+					<span class="input-group-btn ">
+						{!! Form::button('<i class="fa fa-check" ></i>', array('style'=> 'height:30px;','class'=> 'btn  waves-effect waves-light  btn-sm bg-warning' , 'id' => 'btnVerificar')) !!}
+					</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -112,10 +115,10 @@
 			
 			
 			<div class="form-group">
-				{!! Form::label('descripcion', 'Descripción', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-				<div class="col-lg-12 col-md-12 col-sm-12">
-					{!! Form::textarea('descripcion', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'descripcion','rows'=>2 , 'style' =>'resize:none;')) !!}
-				</div>
+					{!! Form::label('descripcion', 'Descripción', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						{!! Form::textarea('descripcion', null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'descripcion','rows'=>2 , 'style' =>'resize:none;')) !!}
+					</div>
 			</div>
 		
 			<div class="row">
@@ -335,6 +338,25 @@ function generarNumero(){
     });
 }
 
+function verificardireccion(){
+    $.ajax({
+        type: "POST",
+        url: "{{route('ordenpago.verificardireccion')}}",
+        data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val() +"&direccion=" +$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="direccion"]').val(),
+        success: function(a) {
+			var res = JSON.parse(a);
+			if(res.respuesta == "OK"){
+				$("#btnVerificar").removeClass('bg-warning').removeClass('bg-success').removeClass('bg-danger').addClass('bg-success');
+				toastr.success(res.mensaje, 'TODO BIEN');
+			}else if(res.respuesta == "ERROR"){
+				$("#btnVerificar").removeClass('bg-warning').removeClass('bg-success').removeClass('bg-danger').addClass('bg-danger');
+				toastr.error(res.mensaje, 'CUIDADO');
+			}
+
+        }
+    });
+}
+
 
 function tramitesSelect2(){
 		$('#tramiteref').select2({
@@ -361,6 +383,15 @@ function tramitesSelect2(){
 						consultaRUC();
 					}else{
 						alert('Ingrese un documento válido');
+					}
+		});
+
+	$('#btnVerificar').on('click', function(){
+			let valor = $('#direccion').val();
+					if(valor.length >0){
+						verificardireccion();
+					}else{
+						alert('Ingrese una dirección');
 					}
 		});
 

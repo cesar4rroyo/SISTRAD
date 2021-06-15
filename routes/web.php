@@ -134,6 +134,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('ordenpago/listarsubtipostramite', 'Control\SubtipotramitenodocController@listarSubtipos')->name('ordenpago.listarsubtipos');
     Route::post('ordenpago/buscarDNI', 'Gestion\OrdenpagoController@buscarDNI')->name('ordenpago.buscarDNI');
     Route::post('ordenpago/buscarRUC', 'Gestion\OrdenpagoController@buscarRUC')->name('ordenpago.buscarRUC');
+    Route::post('ordenpago/verificardireccion', 'Gestion\OrdenpagoController@verificardireccion')->name('ordenpago.verificardireccion');
 
     Route::resource('reporteordenpago', 'Reportes\ReporteordenpagoController', array('except' => array('show')));
     Route::get('reporteordenpago/pdfordenespago', 'Reportes\ReporteordenpagoController@pdfordenespago')->name('reporteordenpago.pdfordenespago');

@@ -11,6 +11,7 @@ use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Librerias\EnLetras;
 use App\Models\Control\Subtipotramitenodoc;
+use App\Models\Gestion\Resolucion;
 use App\Models\Gestion\Tipotramitenodoc;
 use App\Models\Gestion\Tramite;
 use Illuminate\Support\Facades\DB;
@@ -379,5 +380,19 @@ class OrdenpagoController extends Controller
             $respuesta = json_decode($response_data);
         }
         return json_encode($respuesta);
+    }
+    public function verificardireccion(Request $request)
+    {
+        $direccion = $request->input('direccion');
+        $respuesta = Resolucion::where('fechavencimiento', '>=' , date('Y-m-d'))
+                                 ->where('direccion',$direccion)
+                                 ->first();
+        if($respuesta){
+            $arr = ["respuesta" => 'ERROR' , 'mensaje' => "Resolucion encontrada: N° ". $respuesta->numero];
+            return json_encode($arr);
+        }else{
+            $arr = ["respuesta" => 'OK' , 'mensaje' => "No existe resolucion vigente para esa dirección"];
+            return json_encode($arr);
+        }         
     }
 }
