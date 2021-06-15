@@ -28,10 +28,10 @@ class CreateResolucionsancionTable extends Migration
             $table->string('ordenanza')->nullable();
             $table->string('medidacorrectiva')->nullable();
             $table->string('periodo')->nullable();
-            $table->string('descargo', 4000)->nullable();
-            $table->string('motivoarchivo', 4000)->nullable();
-            $table->string('conclusion', 4000)->nullable();
-            $table->string('domicilioprocesal', 4000)->nullable();
+            $table->text('descargo')->nullable();
+            $table->text('motivoarchivo')->nullable();
+            $table->text('conclusion')->nullable();
+            $table->text('domicilioprocesal')->nullable();
             $table->decimal('monto', 10,2)->nullable();
             $table->decimal('montocancelado', 10,2)->nullable();
             $table->integer('actafiscalizacion_id')->unsigned()->nullable();

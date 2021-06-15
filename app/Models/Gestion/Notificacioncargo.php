@@ -23,4 +23,32 @@ class Notificacioncargo extends Model
     {
         return $this->belongsTo(Infraccion::class, 'infraccion_id');
     }
+
+
+    public function scopelistar($query, $numero, $fecinicio, $fecfin,$estado)
+	{
+		return $query
+            ->where(function ($subquery) use ($numero) {
+				if (!is_null($numero) && strlen($numero) > 0) {
+					$subquery->where('numero', 'LIKE', '%'.$numero.'%');
+				}
+			})
+			->where(function ($subquery) use ($fecinicio) {
+				if (!is_null($fecinicio) && strlen($fecinicio) > 0) {
+					$subquery->where('fecha_notificacion', '>=', date_format(date_create($fecinicio), 'Y-m-d H:i:s'));
+				}
+			})
+			->where(function ($subquery) use ($fecfin) {
+				if (!is_null($fecfin) && strlen($fecfin) > 0) {
+					$subquery->where('fecha_notificacion', '<=', date_format(date_create($fecfin), 'Y-m-d H:i:s'));
+				}
+			})
+			->where(function ($subquery) use ($estado) {
+				if (!is_null($estado) && strlen($estado) > 0) {
+					$subquery->where('estado', $estado);
+				}
+			})
+			
+			->orderBy('created_at', 'DESC');
+	}
 }

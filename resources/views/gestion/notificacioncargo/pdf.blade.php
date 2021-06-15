@@ -10,6 +10,7 @@
 <style type="text/css">
     body {
         font-family: sans-serif;
+        font-size: 13px;
     }
    
     .gray {
@@ -62,7 +63,7 @@
     </table>
     <br>
     <h5 class="center">NOTIFICACIÓN DE IMPUTACIÓN DE CARGO N° {{$notificacioncargo->numero}}.-MDJLO </h5>
-    <p class="center bold">Ordenanza N° {{$notificacioncargo->actafiscalizacion ? $notificacioncargo->actafiscalizacion->numero : '-'}}-MDJLO</p>
+    <p class="center bold">Ordenanza N° {{$notificacioncargo->nro_ordenanza? $notificacioncargo->nro_ordenanza : '-'}}-MDJLO</p>
     <br>
     <table align="right">
         <tr>
@@ -175,7 +176,7 @@
             <td class="bordered py-5 bold">ACTA FISCALIZACIÓN N°</td>
         </tr> 
         <tr>
-            <td class="bordered py-5 fz-11" colspan="3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus distinctio doloremque repudiandae. Eveniet quae consectetur facere beatae enim voluptatibus eaque laborum molestiae minus, unde accusamus pariatur similique saepe iste ratione. </td>
+            <td class="bordered py-5 fz-11" colspan="3">$notificacioncargo->descripcion</td>
             <td class="bordered py-5 bold" >{{ $notificacioncargo->actafiscalizacion ? $notificacioncargo->actafiscalizacion->numero : '-'}}</td>
         </tr> 
        

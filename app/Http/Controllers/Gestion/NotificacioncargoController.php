@@ -13,6 +13,7 @@ use App\Models\Control\Infraccion;
 use App\Models\Gestion\Acta;
 use App\Motivo;
 use Barryvdh\DomPDF\Facade as PDF;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 
 class NotificacioncargoController extends Controller
@@ -21,11 +22,19 @@ class NotificacioncargoController extends Controller
     protected $tituloAdmin     = 'Notificacioncargo';
     protected $tituloRegistrar = 'Registrar Notificacion de imputación de cargo';
     protected $tituloModificar = 'Modificar Notificacion de imputación de cargo';
+    protected $tituloDescargo = 'Registrar descargo';
+    protected $tituloResolucion = 'Confirmar acción';
     protected $tituloEliminar  = 'Eliminar Notificacion de imputación de cargo';
     protected $rutas           = array('create' => 'notificacioncargo.create', 
             'edit'   => 'notificacioncargo.edit', 
             'delete' => 'notificacioncargo.eliminar',
             'search' => 'notificacioncargo.buscar',
+            'archivar' => 'notificacioncargo.archivar',
+            'confirmararchivar' => 'notificacioncargo.confirmararchivar',
+            'resolucion' => 'notificacioncargo.resolucion',
+            'confirmarresolucion' => 'notificacioncargo.confirmarresolucion',
+            'descargo' => 'notificacioncargo.descargo',
+            'guardardescargo' => 'notificacioncargo.guardardescargo',
             'index'  => 'anio.index',
         );
 
@@ -51,8 +60,11 @@ class NotificacioncargoController extends Controller
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
         $entidad          = 'notificacioncargo';
-        $nombre             = Libreria::getParam($request->input('descripcion'));
-        $resultado        = Notificacioncargo::where('descripcion', 'LIKE', '%'.strtoupper($nombre).'%')->orderBy('descripcion', 'ASC');
+        $numero           = Libreria::getParam($request->input('numero'));
+        $fecinicio        = Libreria::getParam($request->input('fechainicio'));
+        $fecfin           = Libreria::getParam($request->input('fechafin'));
+        $estado             = Libreria::getParam($request->input('estado'));
+        $resultado        = Notificacioncargo::listar($numero, $fecinicio, $fecfin, $estado);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -64,10 +76,13 @@ class NotificacioncargoController extends Controller
         $cabecera[]       = array('valor' => 'Monto ', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Acta', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Infraccion', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
+        $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '6');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
+        $titulo_descargo  = $this->tituloDescargo;
+        $titulo_resolucion  = $this->tituloResolucion;
         $ruta             = $this->rutas;
         if (count($lista) > 0) {
             $clsLibreria     = new Libreria();
@@ -78,7 +93,7 @@ class NotificacioncargoController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta'));
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_resolucion', 'titulo_descargo','titulo_modificar', 'titulo_eliminar', 'ruta'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -133,6 +148,7 @@ class NotificacioncargoController extends Controller
             'p_nro_documento' => 'required',
             'calle' => 'required',
             'i_calle' => 'required',
+            'i_distrito' => 'required',
             'infraccion_id' => 'required',
             'i_monto' => 'required|numeric',
             'descripcion' => 'required',
@@ -147,6 +163,7 @@ class NotificacioncargoController extends Controller
             'calle.required'                     => 'Debe ingresar la direccion del infractor',
             'i_calle.required'                   => 'Debe ingresar el lugar de la infracción',
             'infraccion_id.required'             => 'Seleccione la infracción cometida',
+            'i_distrito.required'                   => 'Debe ingresar el distrito donde ocurrió de la infracción',
             'monto.required'                     => 'Ingrese el monto',
             'descripcion.required'               => 'Debe ingresar una descripción',
             );
@@ -158,6 +175,7 @@ class NotificacioncargoController extends Controller
         $error = DB::transaction(function() use($request){
             $notificacioncargo = new Notificacioncargo();
             $notificacioncargo->numero = Libreria::getParam($request->input('numero'));
+            $notificacioncargo->nro_ordenanza = Libreria::getParam($request->input('nro_ordenanza'));
             $notificacioncargo->fecha_inspeccion = Libreria::getParam($request->input('fecha_inspeccion')).' '.date('H:i:s');
             $notificacioncargo->fecha_notificacion = Libreria::getParam($request->input('fecha_notificacion')).' '.date('H:i:s');
             $notificacioncargo->nombre = Libreria::getParam($request->input('nombre'));
@@ -248,7 +266,6 @@ class NotificacioncargoController extends Controller
             'p_nombre' => 'required',
             'p_nro_documento' => 'required',
             'calle' => 'required',
-            'distrito' => 'required',
             'i_calle' => 'required',
             'i_distrito' => 'required',
             'infraccion_id' => 'required',
@@ -264,6 +281,7 @@ class NotificacioncargoController extends Controller
             'p_nro_documento.required'           => 'Debe ingresar el nro de documento de la persona a cargo',
             'calle.required'                     => 'Debe ingresar la direccion del infractor',
             'i_calle.required'                   => 'Debe ingresar el lugar de la infracción',
+            'i_distrito.required'                   => 'Debe ingresar el distrito donde ocurrió de la infracción',
             'infraccion_id.required'             => 'Seleccione la infracción cometida',
             'monto.required'                     => 'Ingrese el monto',
             'descripcion.required'               => 'Debe ingresar una descripción',
@@ -275,6 +293,7 @@ class NotificacioncargoController extends Controller
         $error = DB::transaction(function() use($request, $id){
             $notificacioncargo = Notificacioncargo::find($id);
             $notificacioncargo->numero = Libreria::getParam($request->input('numero'));
+            $notificacioncargo->nro_ordenanza = Libreria::getParam($request->input('nro_ordenanza'));
             $notificacioncargo->fecha_inspeccion = Libreria::getParam($request->input('fecha_inspeccion')).' '.date('H:i:s');
             $notificacioncargo->fecha_notificacion = Libreria::getParam($request->input('fecha_notificacion')).' '.date('H:i:s');
             $notificacioncargo->nombre = Libreria::getParam($request->input('nombre'));
@@ -296,6 +315,7 @@ class NotificacioncargoController extends Controller
             $notificacioncargo->i_urbanizacion = Libreria::getParam($request->input('i_urbanizacion'));
             $notificacioncargo->i_distrito = Libreria::getParam($request->input('i_distrito'));
             $notificacioncargo->i_monto = Libreria::getParam($request->input('i_monto'));
+            $notificacioncargo->estado  = 'PENDIENTE';
             if($request->input('actafiscalizacion_id') && $request->input('actafiscalizacion_id') != ''){
                 $notificacioncargo->actafiscalizacion_id = Libreria::getParam($request->input('actafiscalizacion_id'));
             }
@@ -360,6 +380,127 @@ class NotificacioncargoController extends Controller
     //Ver
        return $pdf->stream('notificacioncargo.pdf');
     }
-    
-    
+
+    public function descargo($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'notificacioncargo');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Notificacioncargo::find($id);
+        $entidad  = 'notificacioncargo';
+        $formData = array('route' => array('notificacioncargo.guardardescargo', $id), 'method' => 'GET', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Guardar';
+        return view($this->folderview.'.descargo')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+    public function guardardescargo($id, Request $request){
+        $existe = Libreria::verificarExistencia($id, 'notificacioncargo');
+        if ($existe !== true) {
+            return $existe;
+        }
+
+        $reglas     = array(
+            'descargo' => 'required',
+        );
+        $mensajes = array(
+            'descargo.required'               => 'Es necesario ingresar el descargo',
+            );
+        $validacion = Validator::make($request->all(), $reglas, $mensajes);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        } 
+        $error = DB::transaction(function() use($id , $request){
+            $notificacioncargo = Notificacioncargo::find($id);
+            $notificacioncargo->descargo  = Libreria::getParam($request->input('descargo'),'');
+            $notificacioncargo->estado    = "CON DESCARGO";
+            $notificacioncargo->fecha_descargo = new Datetime('now');
+            $notificacioncargo->save();
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
+
+    public function resolucion($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'notificacioncargo');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Notificacioncargo::find($id);
+        $entidad  = 'notificacioncargo';
+        $formData = array('route' => array('notificacioncargo.confirmarresolucion', $id), 'method' => 'GET', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Enviar';
+        $tipo     = 'RESOLUCION';
+        return view($this->folderview.'.resolucion')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar', 'tipo'));
+    }
+
+     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function confirmarresolucion($id)
+    {
+        $existe = Libreria::verificarExistencia($id, 'notificacioncargo');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $error = DB::transaction(function() use($id){
+            $notificacioncargo = Notificacioncargo::find($id);
+            $notificacioncargo->estado = 'RESOLUCION';
+            $notificacioncargo->fecha_resolucion = new DateTime('now');
+            $notificacioncargo->save();
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
+    public function archivar($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'notificacioncargo');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Notificacioncargo::find($id);
+        $entidad  = 'notificacioncargo';
+        $formData = array('route' => array('notificacioncargo.confirmararchivar', $id), 'method' => 'GET', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Archivar';
+        $tipo     = 'ARCHIVAR';
+        return view($this->folderview.'.resolucion')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar', 'tipo'));
+    }
+
+     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function confirmararchivar($id)
+    {
+        $existe = Libreria::verificarExistencia($id, 'notificacioncargo');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $error = DB::transaction(function() use($id){
+            $notificacioncargo = Notificacioncargo::find($id);
+            $notificacioncargo->estado = 'ARCHIVADO';
+            $notificacioncargo->fecha_archivado = new DateTime('now');
+            $notificacioncargo->save();
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
 }

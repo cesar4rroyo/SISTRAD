@@ -210,6 +210,12 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('notificacioncargo/eliminar/{id}/{listarluego}', 'Gestion\NotificacioncargoController@eliminar')->name('notificacioncargo.eliminar');
     Route::resource('notificacioncargo', 'Gestion\NotificacioncargoController', array('except' => array('show')));
     Route::get('notificacioncargo/pdf/{id}', 'Gestion\NotificacioncargoController@pdf')->name('notificacioncargo.pdf');
+    Route::get('notificacioncargo/descargo/{id}/{listarluego}', 'Gestion\NotificacioncargoController@descargo')->name('notificacioncargo.descargo');
+    Route::get('notificacioncargo/guardardescargo/{id}', 'Gestion\NotificacioncargoController@guardardescargo')->name('notificacioncargo.guardardescargo');
+    Route::get('notificacioncargo/resolucion/{id}/{listarluego}', 'Gestion\NotificacioncargoController@resolucion')->name('notificacioncargo.resolucion');
+    Route::get('notificacioncargo/confirmarresolucion/{id}', 'Gestion\NotificacioncargoController@confirmarresolucion')->name('notificacioncargo.confirmarresolucion');
+    Route::get('notificacioncargo/archivar/{id}/{listarluego}', 'Gestion\NotificacioncargoController@archivar')->name('notificacioncargo.archivar');
+    Route::get('notificacioncargo/confirmararchivar/{id}', 'Gestion\NotificacioncargoController@confirmararchivar')->name('notificacioncargo.confirmararchivar');
 
     //RESOLUCION SANCION
     Route::post('resolucionsancion/buscar', 'Gestion\ResolucionSancionController@buscar')->name('resolucionsancion.buscar');

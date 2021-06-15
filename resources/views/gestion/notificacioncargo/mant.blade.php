@@ -2,19 +2,25 @@
 {!! Form::model($notificacioncargo, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="row">
-		<div class="col-4 form-group">
+		<div class="col-3 form-group">
 			{!! Form::label('numero', 'Número *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::text('numero', null, array('class' => 'form-control form-control-sm input-xs', 'id' => 'numero')) !!}
 			</div>
 		</div>
-		<div class="col-4 form-group">
+		<div class="col-3 form-group">
+			{!! Form::label('nro_ordenanza', 'N° Ordenanza', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::text('nro_ordenanza', null, array('class' => 'form-control form-control-sm input-xs', 'id' => 'nro_ordenanza')) !!}
+			</div>
+		</div>
+		<div class="col-3 form-group">
 			{!! Form::label('fecha_inspeccion', 'Fecha inspeccion *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::date('fecha_inspeccion', $notificacioncargo?(date_format(date_create($notificacioncargo->fecha_inspeccion) , 'Y-m-d')): date('Y-m-d'), array('class' => 'form-control form-control-sm  input-xs', 'id' => 'fecha_inspeccion')) !!}
 			</div>
 		</div>
-		<div class="col-4 form-group">
+		<div class="col-3 form-group">
 			{!! Form::label('fecha_notificacion', 'Fecha notificación *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::date('fecha_notificacion', $notificacioncargo?(date_format(date_create($notificacioncargo->fecha_notificacion ), 'Y-m-d')): date('Y-m-d'), array('class' => 'form-control form-control-sm  input-xs', 'id' => 'fecha_notificacion')) !!}
@@ -26,12 +32,17 @@
 
 	<label class="mt-1" style="color: gray;">DATOS DEL INFRACTOR</label>
 	<div class="row">
-		<div class="col-6 form-group">
+
+		<div class=" col-6 form-group">
 			{!! Form::label('nro_documento', 'DNI/RUC/C.I/C.E *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('nro_documento', null, array('class' => 'form-control form-control-sm input-xs', 'id' => 'nro_documento')) !!}
+			<div class="input-group" style="padding-left:10px;">
+				{!! Form::text('nro_documento', null, array('class' => 'form-control form-control-sm input-sm ', 'id' => 'nro_documento' , 'onkeypress'=>'return filterFloat(event,this)')) !!}
+				<span class="input-group-btn">
+					{!! Form::button('<i class="fa fa-search" id="ibtnConsultar"></i>', array('style'=>'background:#00a8cc; color:white; height:30px;','class'=> 'btn  waves-effect waves-light  btn-sm', 'id' => 'btnConsultar')) !!}
+				</span>
 			</div>
 		</div>
+
 		<div class="col-6 form-group">
 			{!! Form::label('nombre', 'Nombre/Razón social *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
@@ -83,10 +94,13 @@
 
 	<label class="mt-1" style="color: gray;">DATOS DEL PERSONAL A CARGO DE LA INFRACCIÓN</label>
 	<div class="row">
-		<div class="col-6 form-group">
+		<div class=" col-6 form-group">
 			{!! Form::label('p_nro_documento', 'DNI/RUC/C.I/C.E *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('p_nro_documento', null, array('class' => 'form-control form-control-sm input-xs', 'id' => 'p_nro_documento')) !!}
+			<div class="input-group" style="padding-left:10px;">
+				{!! Form::text('p_nro_documento', null, array('class' => 'form-control form-control-sm input-sm ', 'id' => 'p_nro_documento' , 'onkeypress'=>'return filterFloat(event,this)')) !!}
+				<span class="input-group-btn">
+					{!! Form::button('<i class="fa fa-search" id="ibtnConsultar2"></i>', array('style'=>'background:#00a8cc; color:white; height:30px;','class'=> 'btn  waves-effect waves-light  btn-sm', 'id' => 'btnConsultar2')) !!}
+				</span>
 			</div>
 		</div>
 		<div class="col-6 form-group">
@@ -149,7 +163,7 @@
 		<div class="col-5 form-group">
 			{!! Form::label('infraccion_id', 'Infracción *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('infraccion_id',$infracciones, ($notificacioncargo)?$notificacioncargo->infraccion_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'infraccion_id' , 'onchange' => 'generarNumero(); cambiarsubtipos();')) !!}
+				{!! Form::select('infraccion_id',$infracciones, ($notificacioncargo)?$notificacioncargo->infraccion_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'infraccion_id')) !!}
 			</div>
 		</div>
 		@if ($notificacioncargo)
@@ -187,5 +201,71 @@ $(document).ready(function() {
 	configurarAnchoModal('1000');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$('#i_monto').inputmask('decimal', { rightAlign: false , digits:2  });
-}); 
+});
+
+
+	$('#btnConsultar').on('click', function(){
+		let valor = $('#nro_documento').val();
+				if(valor.length == 8){
+					consultarDNI(valor,1);
+				}else if (valor.length == 11){
+					consultaRUC(valor,1);
+				}else{
+					alert('Ingrese un documento válido');
+				}
+	});
+	$('#btnConsultar2').on('click', function(){
+		let valor = $('#p_nro_documento').val();
+				if(valor.length == 8){
+					consultarDNI(valor , 2);
+				}else if (valor.length == 11){
+					consultaRUC(valor , 2);
+				}else{
+					alert('Ingrese un documento válido');
+				}
+	});
+
+	function consultarDNI(dni , id){
+// 
+		$.ajax({
+			type: "POST",
+			url: "{{route('ordenpago.buscarDNI')}}",
+			data: "dni="+dni+"&_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
+			success: function(a) {
+				datos=JSON.parse(a);
+				if(id == 1){
+					$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="nombre"]').val(datos.nombres+' '+datos.apepat+' '+datos.apemat);
+				}else{
+					$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="p_nombre"]').val(datos.nombres+' '+datos.apepat+' '+datos.apemat);
+				}
+			}
+		});
+	}
+	function consultaRUC(ruc, id){
+		$.ajax({
+			type: "POST",
+			url: "{{route('ordenpago.buscarRUC')}}",
+			data: "ruc="+ruc+"&_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
+			success: function(a) {
+				datos=JSON.parse(a);
+				if(datos.length == 0){
+					toastr.error('El DNI o RUC ingresado es incorrecto', 'Error');
+				}else{
+					if(id == 1){
+						$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="nombre"]').val(datos.RazonSocial);
+						$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="calle"]').val(datos.Direccion);
+					}else{
+						$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="p_nombre"]').val(datos.RazonSocial);
+						$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="p_calle"]').val(datos.Direccion);
+					}
+				}
+			}
+		});
+	}
+		
 </script>
+
+
+
+
+

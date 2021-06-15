@@ -11,10 +11,24 @@
                         {!! Form::hidden('page', 1, array('id' => 'page')) !!}
                         {!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
                         
-                        <div class="col-lg-4 col-md-4  form-group">
-                            {!! Form::label('descripcion', 'Descripcion') !!}
-                            {!! Form::text('descripcion', '', array('class' => 'form-control ', 'id' => 'descripcion')) !!}
-                        </div>
+                        <div class="row w-100">
+							<div class="col-lg-3 col-md-3  form-group">
+								{!! Form::label('fechainicio', 'Fecha inicio') !!}
+								{!! Form::date('fechainicio', date('Y-m-d'), array('class' => 'form-control input-xs', 'id' => 'fechainicio' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+							</div>
+							<div class="col-lg-3 col-md-3  form-group">
+								{!! Form::label('fechafin', 'Fecha fin') !!}
+								{!! Form::date('fechafin', '', array('class' => 'form-control input-xs', 'id' => 'fechafin' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+							</div>	
+							<div class="col-lg-3 col-md-3  form-group">
+								{!! Form::label('numero', 'Numero') !!}
+								{!! Form::text('numero', '', array('class' => 'form-control ', 'id' => 'numero')) !!}
+							</div>
+							<div class="col-lg-3 col-md-3  form-group">
+								{!! Form::label('estado', 'Estado') !!}
+								{!! Form::select('estado',["" => 'Todos' , 'PENDIENTE' => 'Pendiente', 'CON DESCARGO' => 'Con descargo' ,'RESOLUCION' => 'Resolución', 'ARCHIVADO' => 'Archivado'],'', array('class' => 'form-control ', 'id' => 'estado' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+							</div>						
+						</div>
                         <div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
                             {!! Form::label('nombre', 'Filas a mostrar') !!}
                             {!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-xs', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
