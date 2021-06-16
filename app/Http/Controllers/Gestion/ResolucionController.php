@@ -327,6 +327,7 @@ class ResolucionController extends Controller
                         'fechavencimiento' => $fechavencimiento,
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => ($request->subtipotramite == '1' ||  $request->subtipotramite == '3') ? $direcionCompleta : strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccioncompleta'=>strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),
@@ -404,6 +405,7 @@ class ResolucionController extends Controller
                         'fechavencimiento' => $request->input('fechavencimiento'),
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccioncompleta'=>strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),
                         'zona' => strtoupper(Libreria::getParam($request->input('zonificacion'))),
                         'altura' => strtoupper(Libreria::getParam($request->input('altura'))),
@@ -457,6 +459,7 @@ class ResolucionController extends Controller
                         'fechavencimiento' => date('Y-m-d', strtotime('+1 year', strtotime($tramite->fecha))),
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccioncompleta'=>strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),
@@ -500,6 +503,7 @@ class ResolucionController extends Controller
                         'fechavencimiento' => date('Y-m-d', strtotime('+2 year', strtotime($tramite->fecha))),
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccioncompleta'=>strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observacion' => strtoupper(Libreria::getParam($request->input('observacion'))),
                         'dni' => Libreria::getParam($request->input('dni')),
                         'ruc' => Libreria::getParam($request->input('ruc')),
@@ -737,6 +741,7 @@ class ResolucionController extends Controller
                         'fechavencimiento' => $fechavencimiento,
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => ($request->subtipotramite == '1') ? (strtoupper($request->jurisdicion) . ' ? ' .  strtoupper($request->numerocalle) . ' ? ' . strtoupper($request->urbanizacion22)) : strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccioncompleta'=>strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),
@@ -808,6 +813,7 @@ class ResolucionController extends Controller
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),
+                        'direccioncompleta'=>strtoupper(Libreria::getParam($request->input('direccion'))),
                         //'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),                
                         //'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),                
                         //'localidad' => strtoupper(Libreria::getParam($request->input('localidad'))),                
@@ -859,6 +865,7 @@ class ResolucionController extends Controller
                         'fechavencimiento' => $request->input('fechavencimiento'),
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccioncompleta'=>strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observaciones' => strtoupper(Libreria::getParam($request->input('observacion'))),
                         'razonsocial' => strtoupper(Libreria::getParam($request->input('razonsocial'))),
                         'girocomercial' => strtoupper(Libreria::getParam($request->input('girocomercial'))),
@@ -901,6 +908,7 @@ class ResolucionController extends Controller
                         'fechavencimiento' => $request->input('fechavencimiento'),
                         'contribuyente' => strtoupper(Libreria::getParam($request->input('contribuyente'))),
                         'direccion' => strtoupper(Libreria::getParam($request->input('direccion'))),
+                        'direccioncompleta'=>strtoupper(Libreria::getParam($request->input('direccion'))),
                         'observacion' => strtoupper(Libreria::getParam($request->input('observacion'))),
                         'dni' => Libreria::getParam($request->input('dni')),
                         'ruc' => Libreria::getParam($request->input('ruc')),
@@ -1013,7 +1021,7 @@ class ResolucionController extends Controller
                     switch ($subtipo) {
                         case '1':
                             if ($blanco == 'NO') {
-                                $codigoQR = QrCode::format('png')->size(100)->generate($data->nrocertificado);
+                                $codigoQR = QrCode::format('png')->size(100)->generate($data->nrocertificado . ' -  ' . $data->direccioncompleta . ' - ' . $data->contribuyente );
                                 $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate($data->nrocertificado));
                                 $direccion = explode('?', $data->direccion);
                                 $direccion = implode('-', $direccion);
@@ -1069,7 +1077,8 @@ class ResolucionController extends Controller
                             # code...
                             break;
                         case '3':
-                            $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.bodega', compact('data'))->setPaper('a4', 'landscape');
+                            $codigoQR = QrCode::format('png')->size(100)->generate($data->nrocertificado . ' -  ' . $data->direccioncompleta . ' - ' . $data->contribuyente );
+                            $pdf = PDF::loadView('gestion.pdf.resolucion.licenciayautorizacion.bodega', compact('data', 'codigoQR'))->setPaper('a4', 'landscape');
                             break;
                     }
                 } else {

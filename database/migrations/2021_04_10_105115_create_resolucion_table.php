@@ -25,7 +25,8 @@ class CreateResolucionTable extends Migration
             $table->string('numero' , 30)->nullable();
             $table->string('edificaciones' , 30)->nullable();
             $table->string('contribuyente' , 200)->nullable();
-            $table->string('direccion' , 100)->nullable();
+            $table->string('direccion' , 200)->nullable();
+            $table->string('direccioncompleta' , 200)->nullable();
             $table->string('localidad' , 100)->nullable();
             $table->string('zona' , 100)->nullable();
             $table->string('categoria' , 100)->nullable();

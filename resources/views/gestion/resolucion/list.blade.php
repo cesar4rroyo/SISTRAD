@@ -52,7 +52,7 @@
 			@else
 				<td>{{$value->ruc}}</td>
 			@endif
-			<td>{{ $value->direccion }}</td>
+			<td>{{ $value->direccioncompleta }}</td>
 			<td>{{ ($value->ordenpago) ? $value->ordenpago->numero : '-' }}</td>
 			<td>{{ ($value->inspeccion) ? $value->inspeccion->numero : '-' }}</td>
             <td>
