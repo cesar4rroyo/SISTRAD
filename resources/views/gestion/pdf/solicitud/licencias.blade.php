@@ -192,7 +192,7 @@
                     <td class="tg-0pky" rowspan="2">HUELLA</td>
                   </tr>
                   <tr>
-                    <td class="tg-0pky">DNI Nº {{$data->dni}}</td>
+                    <td class="tg-0pky">DNI Nº ................</td>
                   </tr>
                 </tbody>
             </table>
