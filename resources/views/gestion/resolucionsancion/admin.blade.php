@@ -27,7 +27,10 @@
 							</div>							
 						</div>
 						<div class="row w-100">
-							
+							<div class="col-lg-4 col-md-4  form-group">
+								{!! Form::label('nombre', 'Filas a mostrar') !!}
+								{!! Form::select('estado',["" => 'Todos' , 'REGISTRADO' => 'Registrado', 'ENTREGADO' => 'Entegado', 'COACTIVA'=>'Coactiva', 'FINALIZADO'=>'Pago Realizado', 'ARCHIVADO'=>'Archivado'],'', array('class' => 'form-control ', 'id' => 'estado' ,'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+							</div>	
 							<div class="col-lg-2 col-md-2  form-group" style="min-width: 150px;">
 								{!! Form::label('nombre', 'Filas a mostrar') !!}
 								{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-xs', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}

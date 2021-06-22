@@ -59,9 +59,10 @@ class ResolucionSancionController extends Controller
         $numero           = Libreria::getParam($request->input('numero'));
         $fecinicio        = Libreria::getParam($request->input('fechainicio'));
         $fecfin           = Libreria::getParam($request->input('fechafin'));
+        $estado           = Libreria::getParam($request->input('estado'));
        // $contribuyente    = Libreria::getParam($request->input('contribuyente'));
        // $tipo             = Libreria::getParam($request->input('tipo'));
-        $resultado        = ResolucionSancion::listar($numero, $fecinicio, $fecfin);
+        $resultado        = ResolucionSancion::listar($numero, $fecinicio, $fecfin, $estado);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -338,12 +339,21 @@ class ResolucionSancionController extends Controller
                 case 'comentar':
                     $reglas     = array('observacion'=>'required');
                     $mensajes = array(
+                        //'archivo.required' => 'Debe ingresar un archivo',
                         'observacion.required' => 'Debe ingresar un observacion sobre el archivo',
                     );
                     $validacion = Validator::make($request->all(), $reglas, $mensajes);
                     if ($validacion->fails()) {
                         return $validacion->messages()->toJson();
-                    }                   
+                    }
+                    if($request->hasFile('file')){
+                        $file = $request->file('file');
+                        $extension = $request->file('file')->getClientOriginalExtension();
+                        $nombre =  time().'.'.$extension;
+                        \Storage::disk('local')->put('public/archivos2/'.$nombre,  \File::get($file));
+                    }else{
+                        $nombre=null;
+                    }               
                     $ultimo_seguimiento = Seguimiento::where('resolucionsancion_id', $id)->orderBy('id', 'desc')->first();
                     $correlativo_anterior = $ultimo_seguimiento->correlativo;
                     $seguimiento=Seguimiento::create([
@@ -355,6 +365,7 @@ class ResolucionSancionController extends Controller
                         'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
                         'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
                         'resolucionsancion_id' => $id,
+                        'ruta'=>$nombre,
                         'personal_id' => $usuario['id'],
                         'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
                         'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,

@@ -264,14 +264,14 @@
 		<div class="form-group">
 			{!! Form::label('conclusiones', 'Conclusiones del Acta del Fiscalizador', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12">
-				<input type="checkbox" name="conclusiones[]" value="Certificación de conformidad"  <?php if(in_array('Certificación de conformidad',$idArray)) echo "checked" ;?> >Certificación de conformidad <br/>
+				<!-- <input type="checkbox" name="conclusiones[]" value="Certificación de conformidad"  <?php if(in_array('Certificación de conformidad',$idArray)) echo "checked" ;?> >Certificación de conformidad <br/> -->
 				<input type="checkbox" name="conclusiones[]" value="Recomendación de mejoras" <?php if(in_array('Recomendación de mejoras',$idArray)) echo "checked" ;?>>  Recomendación de mejoras <br/>
 				<input type="checkbox" name="conclusiones[]" value="Advertencia de incumplimiento" <?php if(in_array('Certificación',$idArray)) echo "checked" ;?>> Advertencia de incumplimiento <br/>
 				<input type="checkbox" name="conclusiones[]" value="Recomendación de inicio de procedimiento sancionador" <?php if(in_array('Recomendación de inicio de procedimiento sancionador',$idArray)) echo "checked" ;?> >  Recomendación de inicio de procedimiento sancionador <br/>
 				<input type="checkbox" name="conclusiones[]" value="Adopción de medidas provisionales" <?php if(in_array('Adopción de medidas provisionales',$idArray)) echo "checked" ;?>> Adopción de medidas provisionales <br/>
 				<input type="checkbox" name="conclusiones[]" value="Clausura Inmediata" <?php if(in_array('Clausura Inmediata',$idArray)) echo "checked" ;?>> Clausura Inmediata <br/>
 				<input type="checkbox" name="conclusiones[]" value="Paralización Inmediata" <?php if(in_array('Paralización Inmediata',$idArray)) echo "checked" ;?>> Paralización Inmediata <br/>
-				<input type="checkbox" name="conclusiones[]" value="Cualquier mandato de hacer" <?php if(in_array('Cualquier mandato de hacer',$idArray)) echo "checked" ;?>> Cualquier mandato de hacer <br/>
+				<!-- <input type="checkbox" name="conclusiones[]" value="Cualquier mandato de hacer" <?php if(in_array('Cualquier mandato de hacer',$idArray)) echo "checked" ;?>> Cualquier mandato de hacer <br/> -->
 				<input type="checkbox" name="conclusiones[]" value="Otros" id="cbotros" <?php if(in_array('Otros',$idArray)) echo "checked" ;?>> Otros <br/>
 				<input type="text" name="conclusiones[]" value="<?php if(in_array('Otros',$idArray)) echo $idArray[count($idArray)-1] ;?>" id="divOtros" class="form-control input-xs d-none">
 			</div>
@@ -280,14 +280,14 @@
 	<div class="form-group">
 		{!! Form::label('conclusiones', 'Conclusiones del Acta del Fiscalizador', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12">
-			<input type="checkbox" name="conclusiones[]" value="Certificación de conformidad">Certificación de conformidad <br/>
+			<!-- <input type="checkbox" name="conclusiones[]" value="Certificación de conformidad">Certificación de conformidad <br/> -->
 			<input type="checkbox" name="conclusiones[]" value="Recomendación de mejoras">  Recomendación de mejoras <br/>
 			<input type="checkbox" name="conclusiones[]" value="Advertencia de incumplimiento"> Advertencia de incumplimiento <br/>
 			<input type="checkbox" name="conclusiones[]" value="Recomendación de inicio de procedimiento sancionador">  Recomendación de inicio de procedimiento sancionador <br/>
 			<input type="checkbox" name="conclusiones[]" value="Adopción de medidas provisionales"> Adopción de medidas provisionales <br/>
 			<input type="checkbox" name="conclusiones[]" value="Clausura Inmediata"> Clausura Inmediata <br/>
 			<input type="checkbox" name="conclusiones[]" value="Paralización Inmediata"> Paralización Inmediata <br/>
-			<input type="checkbox" name="conclusiones[]" value="Cualquier mandato de hacer"> Cualquier mandato de hacer <br/>
+			<!-- <input type="checkbox" name="conclusiones[]" value="Cualquier mandato de hacer"> Cualquier mandato de hacer <br/> -->
 			<input type="checkbox" name="conclusiones[]" value="Otros" id="cbotros"> Otros <br/>
 			<input type="text" name="conclusiones[]" id="divOtros" class="form-control input-xs d-none">
 		</div>

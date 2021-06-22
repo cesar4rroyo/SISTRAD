@@ -42,12 +42,17 @@ class ResolucionSancion extends Model
         return $this->hasOne(Seguimiento::class)->orderBy('correlativo', 'asc')->latest();
     }
 
-    public function scopelistar($query, $numero, $fecinicio, $fecfin)
+    public function scopelistar($query, $numero, $fecinicio, $fecfin, $estado=null)
 	{
 		return $query
             ->where(function ($subquery) use ($numero) {
 				if (!is_null($numero) && strlen($numero) > 0) {
 					$subquery->where('numero', 'LIKE', '%'.$numero.'%');
+				}
+			})
+			->where(function ($subquery) use ($estado) {
+				if (!is_null($estado) && strlen($estado) > 0) {
+					$subquery->where('estado', 'LIKE', '%'.$estado.'%');
 				}
 			})
 			->where(function ($subquery) use ($fecinicio) {

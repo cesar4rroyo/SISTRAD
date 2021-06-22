@@ -19,7 +19,8 @@
 		@php
 			$color = null;
 			if($value->estado!='REGISTRADO' && $value->estado!='FINALIZADO' && $value->estado!='COACTIVA'){
-				if((date('d/m/Y')>=date_format(date_create($value->fechafin ), 'd/m/Y'))){
+				$today=date('d/m/Y');
+				if(strtotime($today)>=strtotime($value->fechafin)){
 					$color = 'bg-warning';
 				}
 			}
@@ -49,7 +50,7 @@
 						{!! Form::button('<div class="fas fa-minus-circle"></div>', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'archivar')).'\', \''.'Archivar Resolución'.'\', this);', 'class' => 'btn btn-sm btn-dark')) !!}
 					@endif
 					@if ($value->estado!='REGISTRADO')
-						{!! Form::button('<div class="fas fa-pencil-alt"></div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'comentar')).'\', \''."Comentar".'\', this);', 'class' => 'btn btn-sm btn-info', 'title' => 'Comentar')) !!} 
+						{!! Form::button('<div class="fas fa-pencil-alt"></div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'comentar')).'\', \''."Descargo".'\', this);', 'class' => 'btn btn-sm btn-info', 'title' => 'Comentar')) !!} 
 					@endif
 					{!! Form::button('<div class="fas fa-file-pdf"></div> ', array('onclick' =>'pdf(\''.$value->id.'\')', 'class' => 'btn btn-sm btn-primary')) !!}
 					{!! Form::button('<div class="fas fa-trash"></div> ', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-sm btn-danger')) !!}
