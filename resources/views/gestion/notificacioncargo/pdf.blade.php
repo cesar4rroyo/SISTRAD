@@ -12,7 +12,7 @@
         font-family: sans-serif;
         font-size: 13px;
     }
-   
+            
     .gray {
         background-color: lightgray
     }
@@ -40,29 +40,45 @@
     .py-5{
         padding: 0px 5px;
     }
+    .pxy-5{
+        padding: 5px 5px;
+    }
     .py-8{
         padding: 0px 8px;
     }
     .fz-11{
         font-size: 11.5px;
     }
+
+    .w-100{
+        width: 100%;
+    }
+
+    .h-30{
+    height: 120px;
+    }
+
+    .text-bottom{
+        text-align:center;
+        vertical-align:bottom;
+    }
 </style>
 
 <body>
-    <table width="100%">
-        <tr>
-            <td valign="top">
-                <img src="{{asset('imagenes/logo.jpeg')}}" alt="" width="50"/>
-            </td>
-            <td align="center">
-                <h3 style="font-size: 13px;" class="bold">MUNICIPALIDAD DISTRITAL DE JOSE LEONARDO ORTIZ</h3>
-                <h3 style="font-size: 13px;" class="bold">REGIMEN DE APLICACIÓN DE SANACIONES ADMINISTRATIVAS (RASA) </h3>
-                <h3 style="font-size: 13px;" class="bold">CUADRO UNICO DE INFRACCIONES Y SANCIONES (CUIS) </h3>
-            </td>
-        </tr>
-    </table>
+        <table width="100%">
+            <tr>
+                <td valign="top">
+                    <img src="{{asset('imagenes/logo.jpeg')}}" alt="" width="50"/>
+                </td>
+                <td align="center">
+                    <h3 style="font-size: 13px;" class="bold">MUNICIPALIDAD DISTRITAL DE JOSE LEONARDO ORTIZ</h3>
+                    <h3 style="font-size: 13px;" class="bold">REGIMEN DE APLICACIÓN DE SANACIONES ADMINISTRATIVAS (RASA) </h3>
+                    <h3 style="font-size: 13px;" class="bold">CUADRO UNICO DE INFRACCIONES Y SANCIONES (CUIS) </h3>
+                </td>
+            </tr>
+        </table>
     <br>
-    <h5 class="center">NOTIFICACIÓN DE IMPUTACIÓN DE CARGO N° {{$notificacioncargo->numero}}.-MDJLO </h5>
+    <h5 class="center" >NOTIFICACIÓN DE IMPUTACIÓN DE CARGO N° {{$notificacioncargo->numero}}.-MDJLO </h5>
     <p class="center bold">Ordenanza N° {{$notificacioncargo->nro_ordenanza? $notificacioncargo->nro_ordenanza : '-'}}-MDJLO</p>
     <br>
     <table align="right">
@@ -176,7 +192,7 @@
             <td class="bordered py-5 bold">ACTA FISCALIZACIÓN N°</td>
         </tr> 
         <tr>
-            <td class="bordered py-5 fz-11" colspan="3">$notificacioncargo->descripcion</td>
+            <td class="bordered py-5 fz-11" colspan="3">{{$notificacioncargo->descripcion}}</td>
             <td class="bordered py-5 bold" >{{ $notificacioncargo->actafiscalizacion ? $notificacioncargo->actafiscalizacion->numero : '-'}}</td>
         </tr> 
        
@@ -188,7 +204,70 @@
         b) Vencido el plazo, con descargo o sin él, y a mérito de la presente notificación, se emitirá el informe final de
         instrucción y se elevará al Órgano Resolutor para la continuación del Procedimiento Administrativo Sancionador
     </p>
-    
+
+    <div style="page-break-after:always;"></div>
+
+
+    <table width="100%">
+        <tr>
+            <td valign="top">
+                <img src="{{asset('imagenes/logo.jpeg')}}" alt="" width="50"/>
+            </td>
+            <td align="center">
+                <h3 style="font-size: 13px;" class="bold">MUNICIPALIDAD DISTRITAL DE JOSE LEONARDO ORTIZ</h3>
+                <h3 style="font-size: 13px;" class="bold">REGIMEN DE APLICACIÓN DE SANACIONES ADMINISTRATIVAS (RASA) </h3>
+                <h3 style="font-size: 13px;" class="bold">CUADRO UNICO DE INFRACCIONES Y SANCIONES (CUIS) </h3>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <h5 class="center" >CARGO DE NOTIFICACIÓN N° {{$notificacioncargo->numero}} - {{Date('Y')}}</h5>
+    <br>
+                <table width='100%;'  border="2" style="border: 2px solid black; ">
+                    <tr>
+                        <td class="bordered py-5 bold" colspan="2">DATOS DEL PRESUNTO INFRACTOR O REPRESENTANTE</td>
+                    </tr>
+                    <tr>
+                        <td class="bordered py-5 bold">NOMBRES y APELLIDOS</td>
+                        <td class="bordered py-5">{{strtoupper($notificacioncargo->nombre)}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bordered py-5 bold">DNI N°</td>
+                        <td class="bordered py-5">{{$notificacioncargo->nro_documento}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bordered py-5 bold h-30 text-bottom" colspan="2">FIRMA</td>
+                    </tr>
+                </table>
+                <br>
+                <table  width='100%;' border="2" style="border: 2px solid black;">
+                    <tr>
+                        <td class="bordered py-5 bold" colspan="2">DATOS DEL PERSONAL A CARGO DE LA NOTIFICACIÓN </td>
+                    </tr>
+                    <tr>
+                        <td class="bordered py-5 bold">NOMBRES y APELLIDOS</td>
+                        <td class="bordered py-5">{{strtoupper($notificacioncargo->p_nombre)}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bordered py-5 bold">DNI N°</td>
+                        <td class="bordered py-5">{{$notificacioncargo->p_nro_documento}}</td>
+                    </tr>
+                    <tr >
+                        <td class="bordered py-5 bold h-30 text-bottom" colspan="2">FIRMA</td>
+                    </tr>
+                </table>
+    <br>
+    <p class="center bold"  >CONSTANCIA DE NEGATIVA A FIRMAR LA NOTIFICACIÓN DE PAPELETA DE IMPUTACIÓN</p>
+    <p class=" pxy-5">
+        De acuerdo a lo establecido en el del artículo 21.3º del TUO de la Ley Nº 27444, Ley de Procedimiento
+        Administrativo General, se deja constancia que la persona señalada se niega a firmar o recibir copia de la presente
+        notificación, hecho del que se deja constancia a fin de tenerla como bien notificado. En este caso la notificación
+        dejará constancia de las características del lugar donde se ha notificado.
+    </p>
+    <br>
+    <div style="width: 100%; border: 2px solid black; height:200px; margin:0px 10px;">
+
+    </div>
 </body>
 
 </html>

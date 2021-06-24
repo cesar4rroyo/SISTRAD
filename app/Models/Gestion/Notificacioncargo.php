@@ -23,6 +23,10 @@ class Notificacioncargo extends Model
     {
         return $this->belongsTo(Infraccion::class, 'infraccion_id');
     }
+    public function descargos()
+    {
+        return $this->hasMany(Descargonotificacion::class, 'notificacion_id');
+    }
 
 
     public function scopelistar($query, $numero, $fecinicio, $fecfin,$estado)
