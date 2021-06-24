@@ -384,8 +384,8 @@ class OrdenpagoController extends Controller
     public function verificardireccion(Request $request)
     {
         $direccion = $request->input('direccion');
-        $respuesta = Resolucion::where('fechavencimiento', '>=' , date('Y-m-d'))
-                                 ->where('direccion',$direccion)
+        $respuesta = Resolucion::where('estado', '!=' , 'DE BAJA')
+                                 ->where('direccioncompleta',$direccion)
                                  ->first();
         if($respuesta){
             $arr = ["respuesta" => 'ERROR' , 'mensaje' => "Resolucion encontrada: N° ". $respuesta->numero];

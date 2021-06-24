@@ -228,6 +228,15 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('resolucionsancion/accion/{id}/{accion}', 'Gestion\ResolucionSancionController@accion')->name('resolucionsancion.accion');
 
 
+    Route::post('padronfiscalizacion/buscar', 'Gestion\PadronFiscalizacionController@buscar')->name('padronfiscalizacion.buscar');
+    Route::get('padronfiscalizacion/eliminar/{id}/{listarluego}', 'Gestion\PadronFiscalizacionController@eliminar')->name('padronfiscalizacion.eliminar');
+    Route::resource('padronfiscalizacion', 'Gestion\PadronFiscalizacionController', array('except' => array('show')));
+    Route::get('padronfiscalizacion/pdf/{id}', 'Gestion\PadronFiscalizacionController@pdf')->name('padronfiscalizacion.pdf');
+    Route::post('padronfiscalizacion/generarNumero', 'Gestion\PadronFiscalizacionController@generarNumero')->name('padronfiscalizacion.generarnumero');
+    Route::get('padronfiscalizacion/confirmacion/{id}/{listarluego}/{accion}', 'Gestion\PadronFiscalizacionController@confirmacion')->name('padronfiscalizacion.confirmacion');
+    Route::post('padronfiscalizacion/accion/{id}/{accion}', 'Gestion\PadronFiscalizacionController@accion')->name('padronfiscalizacion.accion');
+
+
 });
 
     

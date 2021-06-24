@@ -49,8 +49,8 @@
                                 	<h3>  OBSERVACION: {{$item->observacion}}</h3>
 								@endif
 								<h3> RESPONSABLE: {{$item->personal->nombres . ' ' .$item->personal->apellidopaterno .' ' . $item->personal->apellidomaterno}}</h3>
-								@if ($item->accion=='ADJUNTAR')
-									<a href="{{asset($item->ruta)}}" target="_blank"> <i class="fas fa-file-download"></i> Descargar archivo </a>
+								@if ($item->accion=='COMENTAR' && ($item->ruta!=null || $item->ruta!=''))
+									<a href="{{asset('storage\archivos2\\'.$item->ruta)}}" target="_blank"> <i class="fas fa-file-download"></i> Descargar archivo </a>
 								@endif
 							</li>  
 							@endforeach
@@ -64,6 +64,10 @@
 @endif
 @if ($accion=='comentar')
 <div class="form-group">
+	{!! Form::label('file', 'Archivo', array('class' => 'control-label')) !!}
+	<div class="col-lg-12 col-md-12 col-sm-12">
+		{!! Form::file('file', array('id'=>'file')) !!}
+	</div>
 	{!! Form::label('observacion', 'Observación', array('class' => 'control-label')) !!}
 	<div class="col-lg-12 col-md-12 col-sm-12">
 	{!! Form::textarea('observacion', '',array('class' => 'form-control form-control-sm input-xs', 'id' => 'observacion', "rows"=>2 , "style"=>"resize:none;")) !!}

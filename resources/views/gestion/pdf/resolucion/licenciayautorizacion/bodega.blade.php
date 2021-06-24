@@ -157,6 +157,7 @@
             </tr>
         </table>
     </div>
+    <img class=" float-right" src="data:image/svg+xml;base64,{{ base64_encode($codigoQR) }}">
     {{-- <img class=" float-right" src="data:image/svg+xml;base64,{{ base64_encode($codigoQR) }}"> --}}
     <footer class="text-center" style="font-size: .8rem">
         <p>AV. SAENZ PEÑA N°2151 - URB. LATINA. TLF. 257521-TELFAX 074253882 JOSE L. ORTIZ-CHICLAYO </p>

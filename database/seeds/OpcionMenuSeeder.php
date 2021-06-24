@@ -160,6 +160,13 @@ class OpcionMenuSeeder extends Seeder
             'orden' => 3,
             'grupomenu_id' => 6
         ]);
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Formulario Fiscalización ',
+            'icono' => 'far fa-file-alt',
+            'link' => 'padronfiscalizacion',
+            'orden' => 4,
+            'grupomenu_id' => 6
+        ]);
 
         //start Grupo Usuarios
         DB::table('opcionmenu')->insert([

@@ -56,6 +56,7 @@ class Resolucion extends Model
 		'hastahora',
 		'duplicado',
 		'situacion',
+		'direccioncompleta'
     ];
     public function ordenpago()
     {
@@ -105,6 +106,7 @@ class Resolucion extends Model
 					$subquery->where('contribuyente', 'LIKE', '%'.$contribuyente.'%')
                             ->orWhere('dni', 'LIKE', '%'.$contribuyente.'%')
                             ->orWhere('razonsocial', 'LIKE', '%'.$contribuyente.'%')
+                            ->orWhere('direccion', 'LIKE', '%'.$contribuyente.'%')
                             ->orWhere('ruc', 'LIKE', '%'.$contribuyente.'%');
 				}
 			})
