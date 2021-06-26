@@ -5,6 +5,7 @@ namespace App\Models\Contribuyente;
 use App\Models\Admin\Personal;
 use App\Models\Control\Infraccion;
 use App\Models\Gestion\Seguimiento;
+use App\Models\Gestion\Tramite;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,10 @@ class Pretramite extends Model
     public function archivos()
     {
         return $this->hasMany(Archivopretramite::class, 'pretramite_id');
+    }
+    public function tramite()
+    {
+        return $this->hasOne(Tramite::class, 'pretramite_id');
     }
 
 

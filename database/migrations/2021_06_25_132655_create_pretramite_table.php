@@ -23,9 +23,11 @@ class CreatePretramiteTable extends Migration
             $table->string('telefono')->nullable();
             $table->text('comentario')->nullable();
             $table->text('motivo_rechazo')->nullable();
-            $table->string('estado')->nullable()->default('PENDIENTE'); //PENDIENTE , ACEPTADO , RECHAZADO
+            $table->text('motivo_aceptado')->nullable();
+            $table->string('estado')->nullable()->default('PENDIENTE'); //PENDIENTE , ACEPTADO , RECHAZADO , CREADO
             $table->datetime('fecha_aceptado')->nullable();
             $table->datetime('fecha_rechazado')->nullable();
+            $table->datetime('fecha_creado')->nullable();
             $table->integer('tramite_id')->unsigned()->nullable();
             $table->foreign('tramite_id')->references('id')->on('tramite')->onUpdate('restrict')->onDelete('restrict');
             $table->softDeletes();

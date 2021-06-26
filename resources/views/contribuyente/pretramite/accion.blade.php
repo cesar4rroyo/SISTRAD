@@ -1,14 +1,12 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($modelo, $formData) !!}
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
-@if ($tipo == 'RECHAZAR')
 <div class="form-group">
-    {!! Form::label('motivo_rechazo', 'Motivo', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+    {!! Form::label('motivo_rechazo', 'Comentario', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
     <div class="col-lg-12 col-md-12 col-sm-12">
-        {!! Form::textarea('motivo_rechazo', $modelo->descargo, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'motivo_rechazo','rows'=>5 , 'style' =>'resize:none;')) !!}
+        {!! Form::textarea('motivo_rechazo', '', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'motivo_rechazo','rows'=>5 , 'style' =>'resize:none;')) !!}
     </div>
 </div>
-@endif
 
 <div class="form-group">
 	<div class="col-lg-12 col-md-12 col-sm-12 text-right">

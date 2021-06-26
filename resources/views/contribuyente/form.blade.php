@@ -92,15 +92,10 @@
                    </div>
                    
                  </div>
-                 <div class="form-row mt-4">
-                   <div class=" my-2 col-xs-12 col-md-6 ml-4"> 
-                     <input type="checkbox" class="form-check-input"  value="N"  name="terminosycondiciones" id="terminosycondiciones" onclick="this.value = (this.value=='N')?'S':'N'">
-                     <label for="terminosycondiciones" >Acepto los términos y condiciones.</label>
-                   </div>
-                 </div>
+                 
                  <!-- FIN DATOS DEL TUTOR -->
 
-                 <h5>Archivos</h5>
+                 <h5 class="my-4">Archivos</h5>
                  <table class="table table-bordered table-hover" id='tabla_archivos'>
                    <thead>
                      <tr>
@@ -128,6 +123,13 @@
                      </tr>
                    </tfoot>
                  </table>
+
+                 <div class="form-row mt-4">
+                  <div class=" my-2 col-xs-12 col-md-6 ml-4"> 
+                    <input type="checkbox" class="form-check-input"  value="N"  name="terminosycondiciones" id="terminosycondiciones" onclick="this.value = (this.value=='N')?'S':'N'">
+                    <label for="terminosycondiciones" >Acepto los términos y condiciones.</label>
+                  </div>
+                </div>
          
                  <div class="text-center mt-4">
                    <button type="submit" class="btn btn-success " id="btnsubmit" style="width:40%;">REGISTRAR TRÁMITE</button>

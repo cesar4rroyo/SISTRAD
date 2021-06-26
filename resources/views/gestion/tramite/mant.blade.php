@@ -1,6 +1,7 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($tramite, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+	{!! Form::hidden('pretramite_id', $tipo == 'VIRTUAL' ? $tramite->id: '', array('id' => 'pretramite_id')) !!}
 
 <div class="row">
 	<div class="col-6">
@@ -30,11 +31,11 @@
 				<label>Forma de recepción *</label>	
 				<div class="row form-group ml-2">
 					<div class="form-check form-check-inline">
-						{{Form::radio('formarecepcion', 'manual', true , array("class"=>"form-check-input"))}}
+						{{Form::radio('formarecepcion', 'manual',$tipo=='VIRTUAL'?false: true , array("class"=>"form-check-input"))}}
 						<label class="form-check-label" for="manual">Manual</label>
 					</div>
 					<div class="form-check form-check-inline">
-						{{Form::radio('formarecepcion', 'digital', false , array("class"=>"form-check-input"))}}
+						{{Form::radio('formarecepcion', 'digital',$tipo=='VIRTUAL'?true: false , array("class"=>"form-check-input"))}}
 						<label class="form-check-label" for="digital">Digital</label>
 					</div>
 				</div>

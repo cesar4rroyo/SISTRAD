@@ -9,6 +9,8 @@ use App\Http\Requests;
 use App\Models\Contribuyente\Pretramite;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
+use App\Models\Control\Procedimiento;
+use App\Models\Control\Tipodocumento;
 use App\Motivo;
 use DateTime;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +28,7 @@ class PretramiteController extends Controller
             'edit'   => 'pretramite.edit', 
             'aceptar' => 'pretramite.aceptar',
             'rechazar' => 'pretramite.rechazar',
+            'crear' => 'pretramite.crear',
             'delete' => 'pretramite.eliminar',
             'search' => 'pretramite.buscar',
             'index'  => 'anio.index',
@@ -70,7 +73,7 @@ class PretramiteController extends Controller
         $cabecera[]       = array('valor' => 'Numero', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha envío', 'numero' => '1');
         $cabecera[]       = array('valor' => 'F. Revisado', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'DNI', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'N° Trámite', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Remitente', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
@@ -106,7 +109,9 @@ class PretramiteController extends Controller
         $titulo_aceptar = $this->tituloAceptar;
         $titulo_rechazar = $this->tituloRechazar;
         $ruta             = $this->rutas;
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar','titulo_aceptar','titulo_rechazar', 'ruta'));
+        $cerrar = 'N';
+
+        return view($this->folderview.'.admin')->with(compact('cerrar','entidad', 'title', 'titulo_registrar','titulo_aceptar','titulo_rechazar', 'ruta'));
     }
 
     /**
@@ -253,6 +258,56 @@ class PretramiteController extends Controller
         return view('reusable.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
     
+    public function aceptar($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'pretramite');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Pretramite::find($id);
+        $entidad  = 'pretramite';
+        $formData = array('route' => array('pretramite.confirmaraceptar', $id), 'method' => 'GET', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Aceptar';
+        $boton_class    = ' btn-success';
+        $tipo     = 'ACEPTAR';
+        return view($this->folderview.'.accion')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar', 'tipo', 'boton_class'));
+    }
+
+     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function confirmaraceptar($id , Request $request)
+    {
+        $existe = Libreria::verificarExistencia($id, 'pretramite');
+        if ($existe !== true) {
+            return $existe;
+        
+        }
+        $reglas     = array('motivo_rechazo' => 'required');
+        $mensajes = array(
+            'motivo_rechazo.required'         => 'Debe ingresar un comentario sobre la aceptación del trámite'
+            );
+        $validacion = Validator::make($request->all(), $reglas, $mensajes);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        } 
+        $error = DB::transaction(function() use($id , $request){
+            $pretramite = Pretramite::find($id);
+            $pretramite->estado = 'ACEPTADO';
+            $pretramite->fecha_aceptado = new DateTime('now');
+            $pretramite->motivo_aceptado = Libreria::getParam($request->input('motivo_rechazo'));
+            $pretramite->save();
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+    
     public function rechazar($id, $listarLuego)
     {
         $existe = Libreria::verificarExistencia($id, 'pretramite');
@@ -302,4 +357,42 @@ class PretramiteController extends Controller
         });
         return is_null($error) ? "OK" : $error;
     }
+
+    public function crear($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'pretramite');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+
+        
+        $entidad  = 'tramite';
+        $tramite = Pretramite::find($id);
+        if($tramite->tramite_id && $tramite->tramite_id != ''){
+
+            $entidad          = 'pretramite';
+            $title            = $this->tituloAdmin;
+            $titulo_registrar = $this->tituloRegistrar;
+            $titulo_aceptar = $this->tituloAceptar;
+            $titulo_rechazar = $this->tituloRechazar;
+            $ruta             = $this->rutas;
+            $cerrar = 'S';
+            return view($this->folderview.'.admin')->with(compact('cerrar','entidad', 'title', 'titulo_registrar','titulo_aceptar','titulo_rechazar', 'ruta'));
+        }else{
+            $tipo = 'VIRTUAL';
+       
+            $tipodocumentos = [""=>'Seleccione'] + Tipodocumento::pluck('descripcion', 'id')->all();
+            $procedimientos = [""=>'Seleccione'] + Procedimiento::pluck('id','descripcion')->all();
+            $formData = array('tramite.store');
+            $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+            $boton    = 'Registrar'; 
+            return view('gestion.tramite.mant')->with(compact('tipo','tramite', 'formData', 'entidad', 'boton', 'listar', 'tipodocumentos', 'procedimientos'));
+    
+        }
+        
+       }
 }

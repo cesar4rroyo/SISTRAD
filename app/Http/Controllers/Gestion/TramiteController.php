@@ -10,6 +10,7 @@ use App\Models\Gestion\Tramite;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Personal;
+use App\Models\Contribuyente\Pretramite;
 use App\Models\Control\Archivador;
 use App\Models\Control\Area;
 use App\Models\Control\Empresacourier;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade as PDF;
+use DateTime;
 
 class TramiteController extends Controller
 {
@@ -140,7 +142,9 @@ class TramiteController extends Controller
         $formData = array('tramite.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('tramite', 'formData', 'entidad', 'boton', 'listar', 'tipodocumentos', 'procedimientos'));
+        $tipo = 'MANUAL';
+
+        return view($this->folderview.'.mant')->with(compact('tipo','tramite', 'formData', 'entidad', 'boton', 'listar', 'tipodocumentos', 'procedimientos'));
     }
 
     /**
@@ -177,6 +181,7 @@ class TramiteController extends Controller
         $user = Auth::user();
         $error = DB::transaction(function() use($request , $user){
             $tramite = new Tramite();
+            
             $tramite->tipo                  = strtoupper($request->input('tipotramite'));
             $tramite->fecha                 = date("Y-m-d H:i:s");
             $tramite->numero                = Libreria::getParam($request->input('numero'));
@@ -200,8 +205,18 @@ class TramiteController extends Controller
             }
             $tramite->tramiteref_id         = Libreria::getParam($request->tramiteref);
             $tramite->correo                = Libreria::getParam($request->correo);
+            if($request->input('pretramite_id') != ''){
+                $tramite->pretramite_id = $request->input('pretramite_id');
+            }
             $tramite->save();
-
+            
+            if($request->input('pretramite_id') != ''){
+                $pretramite = Pretramite::find($request->input('pretramite_id'));
+                $pretramite->estado = 'CREADO';
+                $pretramite->tramite_id = $tramite->id;
+                $pretramite->fecha_creado = new DateTime('now');
+                $pretramite->save();
+            }
 
             $seguimiento = new Seguimiento();
             $seguimiento->fecha = date("Y-m-d H:i:s");
@@ -585,7 +600,8 @@ class TramiteController extends Controller
         $formData = array('tramite.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('tramite', 'formData', 'entidad', 'boton', 'listar'));
+        $tipo = 'MANUAL';
+        return view($this->folderview.'.mant')->with(compact('tipo','tramite', 'formData', 'entidad', 'boton', 'listar'));
     }
 
     /**

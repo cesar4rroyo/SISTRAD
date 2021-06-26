@@ -247,6 +247,8 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
       Route::get('pretramite/aceptar/{id}/{listarluego}', 'Contribuyente\PretramiteController@aceptar')->name('pretramite.aceptar');
       Route::get('pretramite/rechazar/{id}/{listarluego}', 'Contribuyente\PretramiteController@rechazar')->name('pretramite.rechazar');
     Route::get('pretramite/confirmarrechazar/{id}', 'Contribuyente\PretramiteController@confirmarrechazar')->name('pretramite.confirmarrechazar');
+    Route::get('pretramite/confirmaraceptar/{id}', 'Contribuyente\PretramiteController@confirmaraceptar')->name('pretramite.confirmaraceptar');
+    Route::get('pretramite/crear/{id}/{listarluego}', 'Contribuyente\PretramiteController@crear')->name('pretramite.crear');
     
 });
 

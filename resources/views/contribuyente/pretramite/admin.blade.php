@@ -72,12 +72,15 @@
 				buscar('{{ $entidad }}');
 			}
 		});
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="contribuyente"]').keyup(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="remitente"]').keyup(function (e) {
 			var key = window.event ? e.keyCode : e.which;
 			if (key == '13') {
 				buscar('{{ $entidad }}');
 			}
 		});
 	});
+			if('{{$cerrar}}' == 'S'){
+				cerrarModal(contadorModal-1);
+			}
 </script>
 {{--  --}}
