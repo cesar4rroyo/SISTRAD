@@ -106,5 +106,11 @@ class AreaSeeder extends Seeder
         DB::table('area')->insert([
             'descripcion' => 'Unidad Local de Empadronamiento - ULE',
         ]);
+        DB::table('area')->insert([
+            'descripcion' => 'Almacén General',
+        ]);
+        DB::table('area')->insert([
+            'descripcion' => 'Centro de Defensa Cívil y Gestión de Riesgo',
+        ]);
     }
 }
