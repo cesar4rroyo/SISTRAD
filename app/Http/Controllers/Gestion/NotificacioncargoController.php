@@ -11,6 +11,7 @@ use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Models\Control\Infraccion;
 use App\Models\Gestion\Acta;
+use App\Models\Gestion\Descargonotificacion;
 use App\Motivo;
 use Barryvdh\DomPDF\Facade as PDF;
 use DateTime;
@@ -24,12 +25,14 @@ class NotificacioncargoController extends Controller
     protected $tituloModificar = 'Modificar Notificacion de imputación de cargo';
     protected $tituloDescargo = 'Registrar descargo';
     protected $tituloResolucion = 'Confirmar acción';
+    protected $tituloSeguimiento = 'Proceso de la notificación';
     protected $tituloEliminar  = 'Eliminar Notificacion de imputación de cargo';
     protected $rutas           = array('create' => 'notificacioncargo.create', 
             'edit'   => 'notificacioncargo.edit', 
             'delete' => 'notificacioncargo.eliminar',
             'search' => 'notificacioncargo.buscar',
             'archivar' => 'notificacioncargo.archivar',
+            'seguimiento' => 'notificacioncargo.seguimiento',
             'confirmararchivar' => 'notificacioncargo.confirmararchivar',
             'resolucion' => 'notificacioncargo.resolucion',
             'confirmarresolucion' => 'notificacioncargo.confirmarresolucion',
@@ -77,12 +80,13 @@ class NotificacioncargoController extends Controller
         $cabecera[]       = array('valor' => 'Acta', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Infraccion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '6');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
         $titulo_descargo  = $this->tituloDescargo;
         $titulo_resolucion  = $this->tituloResolucion;
+        $titulo_seguimiento  = $this->tituloSeguimiento;
         $ruta             = $this->rutas;
         if (count($lista) > 0) {
             $clsLibreria     = new Libreria();
@@ -93,7 +97,7 @@ class NotificacioncargoController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_resolucion', 'titulo_descargo','titulo_modificar', 'titulo_eliminar', 'ruta'));
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_resolucion', 'titulo_descargo','titulo_modificar', 'titulo_eliminar','titulo_seguimiento', 'ruta'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -122,7 +126,7 @@ class NotificacioncargoController extends Controller
         $entidad  = 'notificacioncargo';
         $notificacioncargo = null;
         $actas = [""=> "Seleccione"] + Acta::pluck('numero', 'id')->all();
-        $infracciones = ["" =>"Seleccione"] + Infraccion::pluck('codigo' , 'id')->all(); 
+        $infracciones = ["" =>"Seleccione"] +  Infraccion::select( 'infraccion.*',DB::raw('concat(codigo,\' - \',descripcion) as cod'))->pluck('cod' , 'id')->all();;
         $formData = array('notificacioncargo.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
@@ -393,7 +397,7 @@ class NotificacioncargoController extends Controller
         }
         $modelo   = Notificacioncargo::find($id);
         $entidad  = 'notificacioncargo';
-        $formData = array('route' => array('notificacioncargo.guardardescargo', $id), 'method' => 'GET', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $formData = array('route' => array('notificacioncargo.guardardescargo', $id), 'method' => 'POST', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Guardar';
         return view($this->folderview.'.descargo')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
@@ -416,9 +420,21 @@ class NotificacioncargoController extends Controller
         } 
         $error = DB::transaction(function() use($id , $request){
             $notificacioncargo = Notificacioncargo::find($id);
-            $notificacioncargo->descargo  = Libreria::getParam($request->input('descargo'),'');
             $notificacioncargo->estado    = "CON DESCARGO";
             $notificacioncargo->fecha_descargo = new Datetime('now');
+
+            $descargo       = new Descargonotificacion();
+            $descargo->notificacion_id = $notificacioncargo->id;
+            $descargo->descripcion = Libreria::getParam($request->input('descargo'));
+            if($request->hasFile('file')){
+                $file = $request->file('file');
+                $extension = $request->file('file')->getClientOriginalExtension();
+                $nombre =  time().'.'.$extension;
+                \Storage::disk('local')->put('public/archivos2/'.$nombre,  \File::get($file));
+                // $archivo = $request->file('file')->storeAs('public/archivos2', time() .  '.' .$extension);
+                $descargo->archivo = $nombre;
+            }
+            $descargo->save();
             $notificacioncargo->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -501,6 +517,24 @@ class NotificacioncargoController extends Controller
             $notificacioncargo->save();
         });
         return is_null($error) ? "OK" : $error;
+    }
+
+    
+    public function seguimiento($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'notificacioncargo');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Notificacioncargo::find($id);
+        $entidad  = 'notificacioncargo';
+        $formData = array('route' => array('notificacioncargo.confirmararchivar', $id), 'method' => 'GET', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Archivar';
+        return view($this->folderview.'.seguimiento')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
 
 }
