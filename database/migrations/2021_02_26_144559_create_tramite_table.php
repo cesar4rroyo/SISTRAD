@@ -18,7 +18,7 @@ class CreateTramiteTable extends Migration
             $table->string('numero');
             $table->string('tipo')->nullable();
             $table->dateTime('fecha');
-            $table->string('asunto')->nullable();
+            $table->text('asunto')->nullable();
             $table->string('remitente')->nullable();
             $table->string('formarecepcion')->nullable();
             $table->integer('folios')->nullable();

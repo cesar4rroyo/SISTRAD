@@ -100,6 +100,13 @@ class OpcionMenuSeeder extends Seeder
             'grupomenu_id' => 1
         ]);
         DB::table('opcionmenu')->insert([
+            'descripcion' => 'Trámites virtuales',
+            'icono' => 'far fa-file-alt',
+            'link' => 'pretramite',
+            'orden' => 8,
+            'grupomenu_id' => 1
+        ]);
+        DB::table('opcionmenu')->insert([
             'descripcion' => 'Órdenes de Pago',
             'icono' => 'fas fa-file-invoice-dollar',
             'link' => 'ordenpago',

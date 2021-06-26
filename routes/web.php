@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'Admin\InicioController@index');
+Route::get('/contribuyente', 'Contribuyente\ContribuyenteController@index');
+Route::post('contribuyente/registrartramite','Contribuyente\ContribuyenteController@registrarTramite')->name('contribuyente.registrartramite');
+Route::post('contribuyente/buscarDNI', 'Contribuyente\ContribuyenteController@buscarDNI')->name('contribuyente.buscarDNI');
+
 // Route::get('/', 'Seguridad\LoginController@index');
 
 //auth
@@ -236,7 +240,14 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('padronfiscalizacion/confirmacion/{id}/{listarluego}/{accion}', 'Gestion\PadronFiscalizacionController@confirmacion')->name('padronfiscalizacion.confirmacion');
     Route::post('padronfiscalizacion/accion/{id}/{accion}', 'Gestion\PadronFiscalizacionController@accion')->name('padronfiscalizacion.accion');
 
-
+      /* Pretramite */
+      Route::post('pretramite/buscar', 'Contribuyente\PretramiteController@buscar')->name('pretramite.buscar');
+      Route::get('pretramite/eliminar/{id}/{listarluego}', 'Contribuyente\PretramiteController@eliminar')->name('pretramite.eliminar');
+      Route::resource('pretramite', 'Contribuyente\PretramiteController', array('except' => array('show')));
+      Route::get('pretramite/aceptar/{id}/{listarluego}', 'Contribuyente\PretramiteController@aceptar')->name('pretramite.aceptar');
+      Route::get('pretramite/rechazar/{id}/{listarluego}', 'Contribuyente\PretramiteController@rechazar')->name('pretramite.rechazar');
+    Route::get('pretramite/confirmarrechazar/{id}', 'Contribuyente\PretramiteController@confirmarrechazar')->name('pretramite.confirmarrechazar');
+    
 });
 
     
