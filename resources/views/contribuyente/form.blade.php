@@ -244,9 +244,6 @@ function mostrarErrores (data, idformulario ) {
 
 
 $('#btnConsultar').on('click', function(){
-  $('#pretramite-form').addClass('d-none');
-                   $('#divMensajeError').html('');
-                   $('#divsuccess').removeClass('d-none');
 			let valor = $('#dni').val();
 					if(valor.length == 8){
 						consultarDNI();

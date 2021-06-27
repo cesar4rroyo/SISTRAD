@@ -3,10 +3,13 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'Admin\InicioController@index');
-Route::get('/contribuyente', 'Contribuyente\ContribuyenteController@index');
+Route::get('/consultatramite', 'Contribuyente\ContribuyenteController@busqueda');
+Route::get('/tramitevirtual', 'Contribuyente\ContribuyenteController@index');
 Route::post('contribuyente/registrartramite','Contribuyente\ContribuyenteController@registrarTramite')->name('contribuyente.registrartramite');
+Route::get('contribuyente/buscartramite','Contribuyente\ContribuyenteController@buscarTramite')->name('contribuyente.buscartramite');
 Route::post('contribuyente/buscarDNI', 'Contribuyente\ContribuyenteController@buscarDNI')->name('contribuyente.buscarDNI');
-
+Route::get('tramitevirtual/seguimiento/pdf/{id}', 'Contribuyente\ContribuyenteController@printseguimiento')->name('contribuyente.printseguimiento');
+    
 // Route::get('/', 'Seguridad\LoginController@index');
 
 //auth

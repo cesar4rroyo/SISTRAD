@@ -11,9 +11,11 @@ use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Models\Contribuyente\Archivopretramite;
 use App\Models\Contribuyente\Pretramite;
+use App\Models\Gestion\Tramite;
 use App\Motivo;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
+use Barryvdh\DomPDF\Facade as PDF;
 
 
 class ContribuyenteController extends Controller
@@ -78,7 +80,13 @@ class ContribuyenteController extends Controller
         $formData = array('area.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal m-4', 'id' => 'pretramite-form', 'autocomplete' => 'off');
        
-        return view($this->folderview.'.form')->with(compact( 'formData', 'pretramite', 'entidad'));
+        return view($this->folderview.'.form')->with(compact('formData', 'pretramite', 'entidad'));
+    }
+    
+    public function busqueda()
+    {
+        $entidad = '';
+        return view($this->folderview.'.busqueda')->with(compact('entidad'));
     }
 
     /**
@@ -267,6 +275,26 @@ class ContribuyenteController extends Controller
             $respuesta = json_decode($response_data);
         }
         return json_encode($respuesta);
+    }
+    public function buscarTramite(Request $request)
+    {
+        $numero = $request->input('numero');
+        $dni = $request->input('dni');
+        $pretramite = null;
+        $tramite = null;
+        $pretramite = Pretramite::where('numero', $numero)->where('dni' , $dni)->first();
+        if($pretramite){
+            $tramite = Tramite::where('pretramite_id', $pretramite->id)->first();
+        }
+        
+        return view($this->folderview.'.resultado')->with(compact('pretramite','tramite'));
+    }
+
+    public function printseguimiento($id){
+        $tramite = Tramite::with('seguimientos.areas')->find($id);
+        $data = $tramite;
+        $pdf = PDF::loadView('gestion.pdf.seguimiento', compact('data'))->setPaper('a4', 'landscape');
+        return $pdf->stream('seguimiento.pdf');
     }
     
     
