@@ -16,6 +16,7 @@ use App\Motivo;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 use Barryvdh\DomPDF\Facade as PDF;
+use Mail;
 
 
 class ContribuyenteController extends Controller
@@ -82,6 +83,7 @@ class ContribuyenteController extends Controller
        
         return view($this->folderview.'.form')->with(compact('formData', 'pretramite', 'entidad'));
     }
+    
     
     public function busqueda()
     {
@@ -159,6 +161,14 @@ class ContribuyenteController extends Controller
                             $archivopretramite->save();
                         }
                     }
+
+                    $correo = $pretramite->correo;
+                    $nombre = $pretramite->remitente;
+                    $numero = $pretramite->numero;
+                    Mail::send($this->folderview.'.templatecorreo', compact('nombre', 'numero'), function ($mail) use ($correo) {
+                        $mail->from('tramitedocumentariojlo@gmail.com', 'Municipalidad distrital de José Leonardo Ortiz');
+                        $mail->to($correo);
+                    }); 
         });
 
         return is_null($error) ? "OK" : $error;
