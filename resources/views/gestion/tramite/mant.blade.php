@@ -54,7 +54,7 @@
 				<div class="col form-group">
 					{!! Form::label('numero', 'Número *', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::text('numero', null,array('class' => 'form-control form-control-sm input-xs', 'id' => 'numero','readonly' => 'true')) !!}
+						{!! Form::text('numero', null,array('class' => 'form-control form-control-sm input-xs', 'id' => 'numero')) !!}
 					</div>
 				</div>
 			</div>
