@@ -48,6 +48,26 @@
         @endif
     </tbody>
 </table>
+@elseif($tipo == 'presencial' && $tramite)
+
+<table class="table table-bordered my-3">
+    <thead>
+        <tr>
+            <th>Fecha/hora</th>
+            <th>Número</th>
+            <th>Remitente</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{$tramite->fecha}}</td>
+            <td>REGISTRADO MODALIDAD PRESENCIAL</td>
+            <td>{{$tramite->remitente}}</td>
+            <td><button class="btn btn-primary" onclick="imprimirpdf({{$tramite->id}})"><i class="fa fa-route"> Ver proceso</i></button></td>
+        </tr>
+    </tbody>
+</table>
 @else
 <div class="alert alert-warning" role="alert">
     Ninguno de nuestros registros coincide con los datos proporcionados.

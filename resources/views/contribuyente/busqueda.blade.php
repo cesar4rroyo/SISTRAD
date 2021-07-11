@@ -46,15 +46,31 @@
                  </blockquote>
                  <h5 class="mt-5">Ingrese los datos solicitados</h5>
                  <div class="form-row ">
-                    <div class=" my-2 col-xs-12 col-md-6">
+                    <div class=" my-2 col-xs-12 col-md-4">
+                        <select class="form-control"  name="tipo" id="tipo">
+                            <option value="virtual" selected>Modalidad virtual</option>
+                            <option value="presencial" >Modalidad Presencial</option>
+                        </select>
+                      </div>
+                    <div class=" my-2 col-xs-12 col-md-4">
                         <input type="text" class="form-control"  placeholder="DNI" name="dni" id="dni">
                       </div>
-                   <div class=" my-2 col-xs-12 col-md-6 input-group">
-                     <input type="text" class="form-control"  placeholder="N° solicitud" name="numero" id="numero">
-                     <span class="input-group-btn ml-1 " style="background:#0ac9bd;">
-                      {!! Form::button('<i class="fa fa-search" id="ibtnConsultar"> Buscar</i>', array('style'=>' height:38px; color:white;','class'=> 'btn  waves-effect waves-light  btn-sm', 'id' => 'btnConsultar')) !!}
-                    </span>
+                   <div class=" my-2 col-xs-12 col-md-4 ">
+                     <input type="text" class="form-control"  placeholder="Número" name="numero" id="numero">
                    </div>
+                 </div>
+                
+                 <div class="form-row">
+                     <div class="captcha m-4 col-md-4 offset-md-2 text-right">
+                         <span>{!!captcha_img('math')!!}</span>
+                         <button type="button" class="btn btn-success btn-refresh">Refresh</button>
+                     </div>
+                     <div class="col-md-4 m-4">
+                     <input class="form-control" type="text" name="captcha" id="captcha" placeholder="Ingrese el captcha">
+                     </div>
+                 </div>
+                 <button class="btn btn-primary btn-block" id='btnConsultar'><i class="fa fa-search" id="ibtnConsultar"> </i> CONSULTAR TRÁMITE</button>
+                 
                </form>
 
                 
@@ -97,14 +113,24 @@
 
     });
 
-
+    $('.btn-refresh').on('click', function(){
+        $.ajax({
+            type : 'GET',
+            url : '{{route('refresh')}}',
+            success: function(data){
+                $('.captcha span').html(data);
+            }
+        });
+    });
     function sendRuta(ruta){
+        var tipo = $('#tipo').val();
         var numero = $('#numero').val();
         var dni = $('#dni').val();
+        var captcha = $('#captcha').val();
 
         var respuesta = $.ajax({
             url : ruta,
-            data: {numero , dni},
+            data: {numero , dni , captcha , tipo},
             type: 'GET'
         });
         return respuesta;
@@ -127,7 +153,19 @@
             if(respuesta === 'ERROR'){
                 $(contenedor).html('ERROR');
             }else{
+                try {
+                    const data = JSON.parse(respuesta);
+                    var mensaje = data.captcha[0] =='validation.captcha' ?'El captcha ingresado no coincide' : 'Por favor ingrese el captcha.'
+                    // Do your JSON handling here
+                    $(contenedor).html(`
+                        <div class="alert alert-danger" role="alert">
+                            ${mensaje}
+                            </div>
+                        `);    
+                } catch(err) {
+                // It is text, do you text handling here
                 $(contenedor).html(respuesta);    
+                }
             }
         }); 
     }

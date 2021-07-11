@@ -6,6 +6,7 @@ Route::get('/', 'Admin\InicioController@index');
 Route::get('/consultatramite', 'Contribuyente\ContribuyenteController@busqueda');
 Route::get('/tramitevirtual', 'Contribuyente\ContribuyenteController@index');
 Route::get('/tramitevirtual2', 'Contribuyente\ContribuyenteController@index2');
+Route::get('/refresh_captcha', 'Contribuyente\ContribuyenteController@refreshCaptcha')->name('refresh');
 
 Route::post('contribuyente/registrartramite','Contribuyente\ContribuyenteController@registrarTramite')->name('contribuyente.registrartramite');
 Route::get('contribuyente/buscartramite','Contribuyente\ContribuyenteController@buscarTramite')->name('contribuyente.buscartramite');

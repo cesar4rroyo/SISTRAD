@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 use Barryvdh\DomPDF\Facade as PDF;
 use Mail;
+use App\Rules\Captcha;
 
 
 class ContribuyenteController extends Controller
@@ -166,7 +167,7 @@ class ContribuyenteController extends Controller
                     $nombre = $pretramite->remitente;
                     $numero = $pretramite->numero;
                     Mail::send($this->folderview.'.templatecorreo', compact('nombre', 'numero'), function ($mail) use ($correo) {
-                        $mail->from('tramitedocumentariojlo@gmail.com', 'Municipalidad distrital de José Leonardo Ortiz');
+                        $mail->from('adminsistrad@munijlo.gob.pe', 'Municipalidad distrital de José Leonardo Ortiz');
                         $mail->to($correo);
                     }); 
         });
@@ -288,16 +289,36 @@ class ContribuyenteController extends Controller
     }
     public function buscarTramite(Request $request)
     {
+        $tipo = $request->input('tipo');
         $numero = $request->input('numero');
         $dni = $request->input('dni');
         $pretramite = null;
         $tramite = null;
-        $pretramite = Pretramite::where('numero', $numero)->where('dni' , $dni)->first();
-        if($pretramite){
-            $tramite = Tramite::where('pretramite_id', $pretramite->id)->first();
+
+        $reglas     = array(
+            'numero' => 'required',
+            'captcha' => 'required|captcha',
+    );
+        $mensajes = array(
+            'descripcion.required'         => 'Debe ingresar una descripcion'
+            );
+        $validacion = Validator::make($request->all(), $reglas, $mensajes);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        }
+
+        $pretramite = null;
+        $tramite = null;
+        if ($tipo == 'virtual') {
+            $pretramite = Pretramite::where('numero', $numero)->where('dni', $dni)->first();
+            if ($pretramite) {
+                $tramite = Tramite::where('pretramite_id', $pretramite->id)->first();
+            }
+        }else{
+            $tramite = Tramite::where('numero',$numero)->first();
         }
         
-        return view($this->folderview.'.resultado')->with(compact('pretramite','tramite'));
+        return view($this->folderview.'.resultado')->with(compact('pretramite','tramite' ,'tipo'));
     }
 
     public function printseguimiento($id){
@@ -307,5 +328,7 @@ class ContribuyenteController extends Controller
         return $pdf->stream('seguimiento.pdf');
     }
     
-    
+    public function refreshCaptcha(){
+        return captcha_img('math');
+    }
 }
