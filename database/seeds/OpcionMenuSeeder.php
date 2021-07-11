@@ -90,6 +90,13 @@ class OpcionMenuSeeder extends Seeder
             'orden' =>9,
             'grupomenu_id' => 2
         ]); 
+        DB::table('opcionmenu')->insert([
+            'descripcion' => 'Infracciones',
+            'icono' => 'far fa-file-alt',
+            'link' => 'infraccion',
+            'orden' =>10,
+            'grupomenu_id' => 2
+        ]); 
         //end Control
         //start Gestion documentos        
         DB::table('opcionmenu')->insert([

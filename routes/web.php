@@ -93,6 +93,11 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::post('tipodocumento/buscar', 'Control\TipoDocumentoController@buscar')->name('tipodocumento.buscar');
     Route::get('tipodocumento/eliminar/{id}/{listarluego}', 'Control\TipoDocumentoController@eliminar')->name('tipodocumento.eliminar');
     Route::resource('tipodocumento', 'Control\TipoDocumentoController', array('except' => array('show')));
+    /* INFRACCION*/
+    Route::post('infraccion/buscar', 'Control\InfraccionController@buscar')->name('infraccion.buscar');
+    Route::post('infraccion/uit', 'Control\InfraccionController@uit')->name('infraccion.uit');
+    Route::get('infraccion/eliminar/{id}/{listarluego}', 'Control\InfraccionController@eliminar')->name('infraccion.eliminar');
+    Route::resource('infraccion', 'Control\InfraccionController', array('except' => array('show')));
     /* PROCEDIMIENTOS*/
     Route::post('procedimiento/buscar', 'Control\ProcedimientoController@buscar')->name('procedimiento.buscar');
     Route::get('procedimiento/eliminar/{id}/{listarluego}', 'Control\ProcedimientoController@eliminar')->name('procedimiento.eliminar');
