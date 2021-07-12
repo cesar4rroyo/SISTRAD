@@ -20,6 +20,7 @@ class AddColumnsToNotificacioncargo extends Migration
             $table->datetime('fecha_descargo')->nullable();
             $table->datetime('fecha_resolucion')->nullable();
             $table->datetime('fecha_archivado')->nullable();
+            $table->double('total',8,2)->nullable();
         });
     }
 
@@ -37,6 +38,7 @@ class AddColumnsToNotificacioncargo extends Migration
             $table->dropColumn('fecha_descargo');
             $table->dropColumn('fecha_resolucion');
             $table->dropColumn('fecha_archivado');
+            $table->dropColumn('total');
         });
     }
 }

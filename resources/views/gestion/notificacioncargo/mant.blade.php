@@ -1,6 +1,13 @@
+
+<style>
+	.input-table{
+		width: 100px;
+	}
+</style>
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($notificacioncargo, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+	{!! Form::hidden('listInfracciones', $listar, array('id' => 'listInfracciones')) !!}
 	<div class="row">
 		<div class="col-3 form-group">
 			{!! Form::label('numero', 'Número *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
@@ -160,28 +167,52 @@
 				{!! Form::select('actafiscalizacion_id',$actas, ($notificacioncargo)?$notificacioncargo->actafiscalizacion_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'actafiscalizacion_id' , 'onchange' => '')) !!}
 			</div>
 		</div>
-		<div class="col-7 form-group">
+		<div class="col-6 form-group">
 			{!! Form::label('infraccion_id', 'Infracción *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::select('infraccion_id',$infracciones, ($notificacioncargo)?$notificacioncargo->infraccion_id:null, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'infraccion_id')) !!}
+				<select class="form-control form-control-sm  input-xs" name="infraccion_id" id="infraccion_id">
+					<option value="" selected>Seleccione</option>
+					@foreach ($infracciones as $infraccion)
+					<option class="opt-infraccion" codigo = "{{$infraccion->codigo}}" monto ="{{$infraccion->uit}}"  value="{{$infraccion->id}}">{{$infraccion->codigo.' - '.$infraccion->descripcion}}</option>
+					@endforeach
+				</select>
 			</div>
 		</div>
-		@if ($notificacioncargo)
+		
 		<div class="col-2 form-group">
-			{!! Form::label('i_monto', 'Monto*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			{!! Form::label('uit', 'UIT*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('i_monto', $notificacioncargo->i_monto, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'i_monto')) !!}
+				{!! Form::text('uit', $uit, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'uit')) !!}
 			</div>
-		</div>	
-		@else
-		<div class="col-2 form-group">
-			{!! Form::label('i_monto', 'Monto*', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
-			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::text('i_monto', '0.00', array('class' => 'form-control form-control-sm  input-xs', 'id' => 'i_monto')) !!}
-			</div>
-		</div>	
-		@endif			
+		</div>
 	</div>
+
+
+	{{-- TAbla --}}
+		<div class="row my-3">
+			<div class="col-md-10 offset-md-1" >
+				<table class="table table-bordered table-sm ">
+					<thead>
+						<tr>
+							<th>Infraccion</th>
+							<th>UIT</th>
+							<th>% UIT</th>
+							<th>Monto</th>
+							<th>Eliminar</th>
+						</tr>
+					</thead>
+					<tbody id='table_detalle'>
+					</tbody>
+					<tfoot>
+						<td colspan="3" class="text-right "><b>TOTAL</b></td>
+						<td ><input type="number" class="form-control form-control-sm input-xs" id='total' name='total' value="0.0" readonly></td>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+
+	{{-- FIN TAbla --}}
+
 	<div class="form-group">
 		{!! Form::label('descripcion', 'Descripción detallada de los hechos *', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
@@ -191,7 +222,7 @@
 	
     <div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!}
+			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => '$(\'#listInfracciones\').val(carro);guardar(\''.$entidad.'\', this)')) !!}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
 	</div>
@@ -223,6 +254,88 @@ $(document).ready(function() {
 				}else{
 					alert('Ingrese un documento válido');
 				}
+	});
+	 
+	 var carro = new Array();
+	function verificarExistencia(id){
+		for (let i = 0; i < carro.length; i++) {
+			if(carro[i] == id){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	$('#infraccion_id').on('change', function(){
+		let uit = $('#uit').val();
+		uit = parseFloat(uit);
+		let porcentaje =	$('#infraccion_id option:selected').attr('monto');
+		let codigo =	$('#infraccion_id option:selected').attr('codigo');
+		let id =	$('#infraccion_id').val();
+		console.log(id);
+		if(porcentaje && uit){
+			let monto = parseFloat(porcentaje)*parseFloat(uit);
+			monto = monto.toFixed(2);
+			let existe = verificarExistencia(id);
+			if(!existe){
+				agregarDetalle(id , uit,codigo, porcentaje, monto);
+				
+			}else{
+				console.log('ya existe');
+			}
+			
+		}else{
+			alert('Seleccione una infraccion e ingrese el monto de una UIT');
+		}
+	});
+
+	function eliminarFila(id){
+		$('#tr'+id).remove();
+		for (let i = 0; i < carro.length; i++) {
+			if(carro[i] == id){
+				carro.splice(i,1);
+			}
+			
+		}
+		calcularTotal();
+	}
+
+	function agregarDetalle(id, uit,codigo, porcentaje, monto){
+		var tr = `<tr id='tr${id}'>
+							<td>${codigo}</td>
+							<td><input type="number" id="uit${id}" name='uit${id}' class="input-table form-control form-control-sm  input-xs" value='${uit}'  onblur='calcularTotal();'></td>
+							<td><input type="number" id="porcentaje${id}" name='porcentaje${id}' class="input-table form-control form-control-sm  input-xs" value='${porcentaje}' onblur='calcularTotal();'></td>
+							<td><input type="number" readonly id='monto${id}' name ='monto${id}' class='input-table form-control form-control-sm  input-xs' value='${monto}'></td>
+							<td><button type='button' class="btn btn-danger" onclick='eliminarFila(${id});' ><i class="fa fa-trash"></i></button></td>
+						</tr>`;
+				carro.push(id);
+				$('#table_detalle').append(tr);
+				calcularTotal();
+	}
+
+	function calcularTotal(){
+		var total = 0.0;
+		for (let i = 0; i < carro.length; i++) {
+			const id= carro[i];
+			var uit = parseFloat( $('#uit'+id).val());
+			var porcentaje = parseFloat($('#porcentaje'+id).val());
+			var monto = (uit*porcentaje).toFixed(2);
+
+			$('#monto'+id).val(monto);
+			total = parseFloat(total) + parseFloat(monto);
+		}
+
+		$('#total').val( parseFloat(total).toFixed(2));
+	}
+
+	$('#btn_agregar').on('click', function(){
+		let infraccion 	=	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="infraccion_id"]').val();
+		let monto 		=	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="i_monto"]').val();
+		if(infraccion && monto){
+			let tr = '';
+		}else{
+			alert('Ingrese un monto y seleccione una infracción');
+		}
 	});
 
 	function consultarDNI(dni , id){
@@ -264,7 +377,21 @@ $(document).ready(function() {
 	}
 		
 </script>
+@if ($notificacioncargo)
+@foreach($notificacioncargo->detalles as $detalle)
+<?php
+	$id = $detalle->infraccion_id;
+	$uit = $detalle->uit;
+	$codigo = $detalle->infraccion->codigo;
+	$porcentaje = $detalle->porcentaje;
+	$monto = number_format($uit*$porcentaje,2);
+?>
 
+<script>
+	agregarDetalle('{{$id}}','{{$uit}}','{{$codigo}}','{{$porcentaje}}','{{$monto}}');
+</script>
+@endforeach>
+@endif
 
 
 

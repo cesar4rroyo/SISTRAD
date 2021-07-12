@@ -25,6 +25,9 @@
     .text-general {
         font-size: .8rem;
     }
+    .text-right{
+        text-align: right;
+    }
 
     .bold{
         font-weight: bold;
@@ -181,11 +184,18 @@
             <td class="bordered py-5 bold">Monto</td>
             <td class="bordered py-5 bold">Medida</td>
         </tr> 
+        @foreach ($notificacioncargo->detalles as $detalle)
         <tr>
-            <td class="bordered py-5">{{ $notificacioncargo->infraccion ? $notificacioncargo->infraccion->codigo : '-' }}</td>
-            <td class="bordered py-5 fz-11">{{ $notificacioncargo->infraccion ? $notificacioncargo->infraccion->descripcion : '-' }}</td>
-            <td class="bordered py-5">{{ $notificacioncargo->i_monto }}</td>
-            <td class="bordered py-5 fz-11">{{ $notificacioncargo->infraccion ? $notificacioncargo->infraccion->medidacomplementaria: '-' }}</td>
+            <td class="bordered py-5">{{ $detalle->infraccion? $detalle->infraccion->codigo : '-' }}</td>
+            <td class="bordered py-5 fz-11">{{ $detalle->infraccion? $detalle->infraccion->descripcion : '-' }}</td>
+            <td class="bordered py-5">{{ number_format($detalle->uit*$detalle->porcentaje,2) }}</td>
+            <td class="bordered py-5 fz-11">{{ $detalle->infraccion ? $detalle->infraccion->medidacomplementaria: '-' }}</td>
+        </tr>
+        @endforeach
+        <tr>
+            <td class="bordered py-5 text-right" colspan="2"> TOTAL</td>
+            <td class="bordered py-5" >{{'S./'.number_format($notificacioncargo->total,2)}}</td>
+            <td class="bordered py-5"></td>
         </tr>
         <tr>
             <td class="bordered py-5 bold" colspan="3">DESCRIPCIÓN  DE LOS HECHOS </td>

@@ -84,6 +84,12 @@ class ContribuyenteController extends Controller
        
         return view($this->folderview.'.form')->with(compact('formData', 'pretramite', 'entidad'));
     }
+    // public function index2()
+    // {
+    //     $nombre = 'Carlos Cabrera';
+    //     $numero = '0000005';
+    //     return view($this->folderview.'.templatecorreo')->with(compact('numero', 'nombre'));
+    // }
     
     
     public function busqueda()

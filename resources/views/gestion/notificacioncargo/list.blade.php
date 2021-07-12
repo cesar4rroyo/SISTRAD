@@ -24,14 +24,13 @@
 		@endphp
         <tr>
 			<td>{{ $contador }}</td>
-			<td>{{ $diff->days }}</td>
+			<td>{{ $value->numero }}</td>
 			<td>{{ $value->fecha_inspeccion }}</td>
 			<td>{{ $value->fecha_notificacion }}</td>
 			<td>{{ $value->nombre }}</td>
 			<td>{{ $value->p_nombre }}</td>
-			<td>{{ number_format($value->i_monto,2) }}</td>
 			<td>{{ $value->actafiscalizacion ? $value->actafiscalizacion->numero : '-' }}</td>
-			<td>{{ $value->infraccion ? $value->infraccion->codigo : '-' }}</td>
+			<td>{{ 'S./'.$value->total }}</td>
 			<td>{{ $value->estado =='RESOLUCION' ? 'PARA RESOLUCION' : $value->estado}}</td>
 			<td>
 				<div class="btn-group">

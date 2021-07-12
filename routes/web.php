@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'Admin\InicioController@index');
-Route::get('/consultatramite', 'Contribuyente\ContribuyenteController@busqueda');
+Route::get('/consultatramite', 'Contribuyente\ContribuyenteController@busqueda')->name('consultatramite');
 Route::get('/tramitevirtual', 'Contribuyente\ContribuyenteController@index');
-Route::get('/tramitevirtual2', 'Contribuyente\ContribuyenteController@index2');
+// Route::get('/tramitevirtual2', 'Contribuyente\ContribuyenteController@index2');
 Route::get('/refresh_captcha', 'Contribuyente\ContribuyenteController@refreshCaptcha')->name('refresh');
 
 Route::post('contribuyente/registrartramite','Contribuyente\ContribuyenteController@registrarTramite')->name('contribuyente.registrartramite');

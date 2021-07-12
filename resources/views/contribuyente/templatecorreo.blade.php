@@ -82,7 +82,7 @@
     <div class="text-center">
         <h2>Hola, {{strtoupper($nombre)}}</h2>
         <h3 class="c-green">Tu solicitud de trámite se ha registrado correctamente</h3>
-        <p>Puedes consultar su estado haciendo click en el siguiente </p><a href="#">enlace</a>
+        <p>Puedes consultar su estado haciendo click en el siguiente </p><a href="{{route('consultatramite')}}">enlace</a>
         <p>Número de solicitud : <span class="bold">{{$numero}}</span></p>
     </div>
     <br>

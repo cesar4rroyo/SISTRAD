@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Control\Infraccion;
 use App\Models\Gestion\Acta;
 use App\Models\Gestion\Descargonotificacion;
+use App\Models\Gestion\Detallenotificacion;
 use App\Motivo;
 use Barryvdh\DomPDF\Facade as PDF;
 use DateTime;
@@ -76,9 +77,8 @@ class NotificacioncargoController extends Controller
         $cabecera[]       = array('valor' => 'Fecha Notif..', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Infractor', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Personal', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Monto ', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Acta', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Infraccion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Total', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
@@ -126,11 +126,13 @@ class NotificacioncargoController extends Controller
         $entidad  = 'notificacioncargo';
         $notificacioncargo = null;
         $actas = [""=> "Seleccione"] + Acta::pluck('numero', 'id')->all();
-        $infracciones = ["" =>"Seleccione"] +  Infraccion::select( 'infraccion.*',DB::raw('concat(codigo,\' - \',descripcion) as cod'))->pluck('cod' , 'id')->all();;
+        // $infracciones = Infraccion::select( 'infraccion.*',DB::raw('concat(codigo,\' - \',descripcion) as cod'))->pluck('cod' , 'id')->all();;
+        $infracciones = Infraccion::all();
+        $uit = 4000;
         $formData = array('notificacioncargo.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('notificacioncargo', 'formData', 'entidad', 'boton', 'listar','actas' , 'infracciones'));
+        return view($this->folderview.'.mant')->with(compact('notificacioncargo', 'formData', 'entidad', 'boton', 'listar','actas' , 'infracciones' ,'uit'));
     }
 
     /**
@@ -143,6 +145,7 @@ class NotificacioncargoController extends Controller
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array(
+            'listInfracciones' => 'required',
             'fecha_inspeccion' => 'required',
             'fecha_notificacion' => 'required',
             'nombre' => 'required',
@@ -153,11 +156,12 @@ class NotificacioncargoController extends Controller
             'calle' => 'required',
             'i_calle' => 'required',
             'i_distrito' => 'required',
-            'infraccion_id' => 'required',
-            'i_monto' => 'required|numeric',
+            // 'infraccion_id' => 'required',
+            // 'i_monto' => 'required|numeric',
             'descripcion' => 'required',
         );
         $mensajes = array(
+            'listInfracciones.required'          => 'Seleccione al menos una infracción',
             'fecha_inspeccion.required'          => 'Debe ingresar la fecha de la inspección',
             'fecha_notificacion.required'        => 'Debe ingresar la fecha de la notificación',
             'nombre.required'                    => 'Debe ingresar el nombre o razón social del infractor',
@@ -200,14 +204,26 @@ class NotificacioncargoController extends Controller
             $notificacioncargo->i_lote = Libreria::getParam($request->input('i_lote'));
             $notificacioncargo->i_urbanizacion = Libreria::getParam($request->input('i_urbanizacion'));
             $notificacioncargo->i_distrito = Libreria::getParam($request->input('i_distrito'));
-            $notificacioncargo->i_monto = Libreria::getParam($request->input('i_monto'));
+            // $notificacioncargo->i_monto = Libreria::getParam($request->input('i_monto'));
             if($request->input('actafiscalizacion_id') && $request->input('actafiscalizacion_id') != ''){
                 $notificacioncargo->actafiscalizacion_id = Libreria::getParam($request->input('actafiscalizacion_id'));
             }
-            $notificacioncargo->infraccion_id = Libreria::getParam($request->input('infraccion_id'));
+            // $notificacioncargo->infraccion_id = Libreria::getParam($request->input('infraccion_id'));
             $notificacioncargo->plazo = 6;
             $notificacioncargo->descripcion= Libreria::getParam($request->input('descripcion'));
+            $notificacioncargo->total= Libreria::getParam($request->input('total'));
             $notificacioncargo->save();
+
+
+            $arr = explode(",", $request->input('listInfracciones'));
+            for ($c = 0; $c < count($arr); $c++) {
+                $detalle = new Detallenotificacion();
+                $detalle->uit =  $request->input('uit' . $arr[$c]);
+                $detalle->porcentaje =  $request->input('porcentaje' . $arr[$c]);
+                $detalle->infraccion_id = $arr[$c];
+                $detalle->notificacion_id = $notificacioncargo->id;
+                $detalle->save();
+            }
         });
 
         return is_null($error) ? "OK" : $error;
@@ -239,12 +255,13 @@ class NotificacioncargoController extends Controller
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $notificacioncargo = Notificacioncargo::find($id);
         $actas = [""=> "Seleccione"] + Acta::pluck('numero', 'id')->all();
-        $infracciones = ["" =>"Seleccione"] + Infraccion::pluck('codigo' , 'id')->all(); 
+        $infracciones = Infraccion::all();
+        $uit = 4000;
         $entidad  = 'notificacioncargo';
         $formData = array('notificacioncargo.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('notificacioncargo', 'formData', 'entidad', 'boton', 'listar', 'actas','infracciones'));
+        return view($this->folderview.'.mant')->with(compact('notificacioncargo', 'uit', 'formData', 'entidad', 'boton', 'listar', 'actas','infracciones'));
     }
 
     /**
@@ -262,6 +279,7 @@ class NotificacioncargoController extends Controller
             return $existe;
         }
         $reglas     = array(
+            'listInfracciones' => 'required',
             'fecha_inspeccion' => 'required',
             'fecha_notificacion' => 'required',
             'nombre' => 'required',
@@ -272,11 +290,12 @@ class NotificacioncargoController extends Controller
             'calle' => 'required',
             'i_calle' => 'required',
             'i_distrito' => 'required',
-            'infraccion_id' => 'required',
-            'i_monto' => 'required|numeric',
+            // 'infraccion_id' => 'required',
+            // 'i_monto' => 'required|numeric',
             'descripcion' => 'required',
         );
         $mensajes = array(
+            'listInfracciones.required'          => 'Seleccione al menos una infracción',
             'fecha_inspeccion.required'          => 'Debe ingresar la fecha de la inspección',
             'fecha_notificacion.required'        => 'Debe ingresar la fecha de la notificación',
             'nombre.required'                    => 'Debe ingresar el nombre o razón social del infractor',
@@ -326,7 +345,21 @@ class NotificacioncargoController extends Controller
             $notificacioncargo->infraccion_id = Libreria::getParam($request->input('infraccion_id'));
             $notificacioncargo->plazo = 6;
             $notificacioncargo->descripcion= Libreria::getParam($request->input('descripcion'));
+            $notificacioncargo->total= Libreria::getParam($request->input('total'));
             $notificacioncargo->save();
+
+            foreach ($notificacioncargo->detalles as $detalle) {
+                $detalle->delete();
+            }
+            $arr = explode(",", $request->input('listInfracciones'));
+            for ($c = 0; $c < count($arr); $c++) {
+                $detalle = new Detallenotificacion();
+                $detalle->uit =  $request->input('uit' . $arr[$c]);
+                $detalle->porcentaje =  $request->input('porcentaje' . $arr[$c]);
+                $detalle->infraccion_id = $arr[$c];
+                $detalle->notificacion_id = $notificacioncargo->id;
+                $detalle->save();
+            }
         });
         return is_null($error) ? "OK" : $error;
     }
