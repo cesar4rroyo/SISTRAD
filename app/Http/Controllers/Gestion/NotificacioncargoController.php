@@ -10,6 +10,7 @@ use App\Models\Gestion\Notificacioncargo;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use App\Models\Control\Infraccion;
+use App\Models\Control\UIT;
 use App\Models\Gestion\Acta;
 use App\Models\Gestion\Descargonotificacion;
 use App\Models\Gestion\Detallenotificacion;
@@ -128,7 +129,8 @@ class NotificacioncargoController extends Controller
         $actas = [""=> "Seleccione"] + Acta::pluck('numero', 'id')->all();
         // $infracciones = Infraccion::select( 'infraccion.*',DB::raw('concat(codigo,\' - \',descripcion) as cod'))->pluck('cod' , 'id')->all();;
         $infracciones = Infraccion::all();
-        $uit = 4000;
+        $valor_uit = UIT::orderby('created_at', 'desc')->first();
+        $uit = $valor_uit ? $valor_uit->valor : 4200;
         $formData = array('notificacioncargo.store');
         $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Registrar'; 

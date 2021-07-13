@@ -2,9 +2,9 @@
 {!! Form::model($infraccion, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="form-group">
-        {!! Form::label('uit', 'Porcentaje UIT', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+        {!! Form::label('uit', 'Valor UIT', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 		<div class="col-lg-12 col-md-12 col-sm-12">
-			{!! Form::number('uit', ($uit) ? $uit->valor : null, array('class' => 'form-control input-xs', 'id' => 'uit', 'placeholder' => 'Ingrese el porcentaje de la UIT', 'step'=>'.01')) !!}
+			{!! Form::number('uit', ($uit) ? $uit->valor : null, array('class' => 'form-control input-xs', 'id' => 'uit', 'placeholder' => 'Ingrese el valor de la UIT', 'step'=>'.01')) !!}
 		</div>
     </div>
     <div class="form-group">

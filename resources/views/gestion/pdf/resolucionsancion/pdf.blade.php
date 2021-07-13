@@ -168,10 +168,21 @@
                 <td class="bordered py-5">{{ $data->notificacion->i_urbanizacion }} </td>
                 <td class="bordered py-5" colspan="4">{{ $data->notificacion->i_distrito }}</td>
             </tr>
-            <tr>
-                <td colspan="5" class="bordered py-5 bold">Código de Infracción:</td>
-            </tr>
-            <tr>
+            @foreach ($data->notificacion->detalles as $detalle)
+                <tr>
+                    <td colspan="5" class="bordered py-5 bold">Código de Infracción:</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="bordered py-5">{{ $detalle->infraccion->codigo }}</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="bordered py-5 bold">Descripción de la Infracción::</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="bordered py-5">{{ $detalle->infraccion->descripcion }}</td>
+                </tr>
+            @endforeach
+            {{-- <tr>
                 <td colspan="5" class="bordered py-5">{{ $data->notificacion->infraccion->codigo }}</td>
             </tr>
             <tr>
@@ -179,7 +190,7 @@
             </tr>
             <tr>
                 <td colspan="5" class="bordered py-5">{{ $data->notificacion->infraccion->descripcion }}</td>
-            </tr>
+            </tr> --}}
         </table>
         <br>
         <p style="font-size: .8rem;">
@@ -230,7 +241,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+            @foreach ($data->notificacion->detalles as $detalle)
+            <tr>
+                <td class="tg-0lax bordered py-5">{{$detalle->infraccion->codigo}}</td>
+                <td class="tg-0lax bordered py-5 fz-11">{{$detalle->infraccion->descripcion }}</td>
+                <td class="tg-0lax bordered py-5">{{$detalle->infraccion->uit}}</td>
+                <td class="tg-0lax bordered py-5">{{$uit * $detalle->infraccion->uit}}</td>
+              </tr>
+            @endforeach
+            <tr>
+                <td class="tg-0lax"></td>
+                <td class="tg-0lax"></td>
+                <td class="tg-0lax bordered py-5 bold">TOTAL</td>
+                <td class="tg-0lax bordered py-5 bold">S/. {{$data->notificacion->total}}</td>
+              </tr>
+              {{-- <tr>
                 <td class="tg-0lax bordered py-5">{{$data->notificacion->infraccion->codigo}}</td>
                 <td class="tg-0lax bordered py-5 fz-11">{{$data->notificacion->infraccion->descripcion }}</td>
                 <td class="tg-0lax bordered py-5">{{'-'}}</td>
@@ -241,12 +266,12 @@
                 <td class="tg-0lax"></td>
                 <td class="tg-0lax bordered py-5 bold">TOTAL</td>
                 <td class="tg-0lax bordered py-5 bold">S/. {{$data->notificacion->i_monto}}</td>
-              </tr>
+              </tr> --}}
             </tbody>
         </table>
         <br>
         <p style="font-size: .8rem;">
-            <strong>SON: {{$enletras}}</strong> 
+            <strong>SON: {{$total}}</strong> 
         </p>
         <p style="font-size: .8rem;">
             <strong>Artículo 2°.- IMPONER</strong> la medida correctiva de {{ $data->medidacorrectiva }} al

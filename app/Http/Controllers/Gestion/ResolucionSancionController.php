@@ -10,6 +10,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use App\Librerias\Libreria;
 use App\Models\Gestion\ResolucionSancion;
 use App\Librerias\EnLetras;
+use App\Models\Control\UIT;
 use App\Models\Gestion\Acta;
 use App\Models\Gestion\Notificacioncargo;
 use App\Models\Gestion\Resolucion;
@@ -515,9 +516,15 @@ class ResolucionSancionController extends Controller
         }
 
         $data = ResolucionSancion::find($id);
+        $uit = UIT::orderby('created_at', 'desc')->first()->valor;
         $obj = new Enletras();
-        $enletras = $obj->ValorEnLetras($data->notificacion->i_monto , 'soles');
-        $pdf = PDF::loadView('gestion.pdf.resolucionsancion.pdf', compact('data', 'enletras'))->setPaper('a4', 'portrait');
+        $total = 0;
+        foreach ($data->notificacion->detalles as $detalle){
+            $soles = $detalle->infraccion->uit*$uit;
+            $total=$total+$soles;
+        }
+        // $enletras = $obj->ValorEnLetras($total , 'soles');
+        $pdf = PDF::loadView('gestion.pdf.resolucionsancion.pdf', compact('data', 'total', 'uit'))->setPaper('a4', 'portrait');
         $nombre = 'resolucionsancion:' . $data->numero . '-' . $data->fecha . '.pdf';
         return $pdf->stream($nombre);
     } 
