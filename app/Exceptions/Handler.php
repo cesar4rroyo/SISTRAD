@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,8 +46,19 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render($request, Exception $e)
     {
-        return parent::render($request, $exception);
+    
+        if ($e instanceof TokenMismatchException) {
+            return redirect()->back()->withInput($request->except('password'))->withErrors(['Validation Token was expired. Please try again']);
+        }
+    
+        // You can add your own exception here
+        // so redirect to the home route
+        if ($e instanceof NotFoundHttpException) {
+            return redirect('/auth/logout');
+        }
+    
+        return parent::render($request, $e);
     }
 }

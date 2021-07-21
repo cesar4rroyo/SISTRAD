@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 class InicioController extends Controller
 {
     public function index(){
-        return view('welcome');
+        // return view('welcome');
+        return redirect('/auth/logout');
     }
 }

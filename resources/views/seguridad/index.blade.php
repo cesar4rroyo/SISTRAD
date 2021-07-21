@@ -9,9 +9,19 @@
     <link rel="stylesheet" href="{{asset("assets/$theme/plugins/fontawesome-free/css/all.min.css")}}">
     <link rel="stylesheet" href="{{asset("assets/$theme/dist/css/adminlte.min.css")}}">
 </head>
-
-<body class="hold-transition login-page">
+<style>
+    .img-main{
+        position: absolute;
+        top: 5%;
+        left: 1%;
+        opacity: 30%;
+    }
+</style>
+<body class="hold-transition login-page" style="background-color: white">
     <div class="login-box">
+        <div class="img-main">
+            <img src="{{asset('imagenes/logo2.jpeg')}}" alt="" width="400"/>
+        </div>
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
@@ -48,7 +58,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <button type="submit" class="btn btn-primary btn-block">ENTRAR</button>
                         </div>
                     </div>
                 </form>
