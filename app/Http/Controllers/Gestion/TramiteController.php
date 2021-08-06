@@ -242,7 +242,6 @@ class TramiteController extends Controller
                 $seguimiento->area      = $area!=null?$area->descripcion:'';
                 $seguimiento->area_id   = $proc->areainicio_id;
                 $seguimiento->save(); 
-
             }else{
                 $seguimiento->area = $user->personal?($user->personal->area? $user->personal->area->descripcion : null ): null;
                 $seguimiento->area_id  = $user->personal?$user->personal->area_id : null;
@@ -272,6 +271,38 @@ class TramiteController extends Controller
                 $tramite->update([
                     'situacion'=>'DERIVADO',
                 ]);
+            }
+            //adjuntar documentos
+            if($request->formarecepcion == 'digital'){
+                if($request->hasFile('ficheros')){
+                    $files = $request->file('ficheros');
+                    foreach ($files as $file) {
+                        $extension = $file->getClientOriginalExtension();
+                        $archivo = $file->storeAs('public/archivos', time() .  '.' .$extension);
+                        $ruta = Storage::url($archivo);
+                        // $extension = $file->getClientOriginalExtension();
+                        // $nombre =  time().'.'.$extension;
+                        // \Storage::disk('local')->put('public/archivos/'.$nombre,  \File::get($file));
+                        // $archivo = $request->file('file')->storeAs('public/archivos2', time() .  '.' .$extension);
+                        $ultimo_seguimiento = Seguimiento::where('tramite_id', $tramite->id)->orderBy('id', 'desc')->first();
+                        $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                        $seguimiento=Seguimiento::create([
+                            'fecha'=> date("Y-m-d H:i:s"),
+                            'accion' => 'ADJUNTAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                            'correlativo' => $correlativo_anterior+1,
+                            'correlativo_anterior' => $correlativo_anterior,
+                            'area' =>   $user->personal?($user->personal->area? $user->personal->area->descripcion : null ): null, //el última área que hizo la accion de derivar
+                            'cargo' => $user->personal?($user->personal->cargo? $user->personal->cargo->descripcion : null ): null,
+                            'persona' => $user->personal?($user->personal->cargo? $user->personal->cargo->descripcion : null ): null,           
+                            'tramite_id' => $tramite->id,
+                            'personal_id' => $user->personal_id,
+                            'area_id'  => $user->personal?$user->personal->area_id : null,
+                            'cargo_id'=>$user->personal?$user->personal->cargo_id : null,
+                            'observacion'=> 'ADJUNTANTO ARCHIVOS EN FORMATO DIGITAL',
+                            'ruta'=> $ruta,
+                        ]);
+                    }
+                }
             }
             // $seguimiento->motivocourier_id; 
             // $seguimiento->motivorechazo_id;

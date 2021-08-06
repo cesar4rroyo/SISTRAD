@@ -40,6 +40,9 @@
 						{{Form::radio('formarecepcion', 'digital',$tipo=='VIRTUAL'?true: false , array("class"=>"form-check-input"))}}
 						<label class="form-check-label" for="digital">Digital</label>
 					</div>
+					<div id="divFiles" class="form-group mt-2 d-none">
+						{{ Form::file ('ficheros[]', array ('multiple'=>true, 'class'=>'form-control')) }}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -144,7 +147,8 @@
 	
     <div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!}
+			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'type' => 'submit')) !!}
+			{{-- {!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!} --}}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
 	</div>
@@ -200,6 +204,25 @@ $(document).ready(function() {
 		// 	$('#divareadestino').removeClass('d-none');
 		// 	areadestinoSelect2();
 		// }
+	});
+	$("input[name=formarecepcion]").change(function () {
+		var valor = $(this).val(); 
+		
+		// if(valor == 'tupa' || valor == 'interno' || valor == 'externo'){
+		// 	$('#divremitente').removeClass('d-none');
+		// 	$('#divdestino').addClass('d-none');
+			
+		// }else if (valor == 'courier'){
+		// 	$('#divremitente').addClass('d-none');
+		// 	$('#divdestino').removeClass('d-none');
+		// 	destinoSelect2();
+		// }
+
+		if(valor == 'digital'){
+			$('#divFiles').removeClass('d-none');
+		}else {
+			$('#divFiles').addClass('d-none');
+		}
 	});
 
 
@@ -318,5 +341,59 @@ $(document).ready(function() {
             $(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
         }
     });
+	$( IDFORMMANTENIMIENTO + '{{ $entidad }}').submit(function( event ) {
+			event.preventDefault();
+			var idformulario = IDFORMMANTENIMIENTO + '{{ $entidad }}';
+			var entidad = "{{$entidad}}";
+			var formData = new FormData($(this)[0]);
+			var respuesta = '';
+			var listar       = 'NO';
+			if ($(idformulario + ' :input[id = "listar"]').length) {
+				var listar = $(idformulario + ' :input[id = "listar"]').val();
+			};
+			var request = $.ajax({
+				url     : $(this).attr('action'),
+				method  : "POST",
+				data    : formData,
+				processData: false,  
+				contentType: false,
+			});
+			request.done(function(msg) {
+				respuesta = msg;
+				console.log('eeeee');
+			}).fail(function(jqXHR, textStatus) {
+				respuesta = 'ERROR';
+			}).always(function(){
+				if(respuesta.trim() === 'ERROR'){
+				}else {
+					if (respuesta.trim() === 'OK') {
+						cerrarModal();
+						Hotel.notificaciones("Accion realizada correctamente", "Realizado" , "success");
+						if (listar.trim() === 'SI') {
+							if(typeof entidad2 != 'undefined' && entidad2 !== ''){
+								entidad = entidad2;
+							}
+							buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+						}        
+					}else if(respuesta.includes('id=?')){
+						var id = respuesta.trim();
+						var matches = id.match(/(\d+)/);
+						id=matches[0];
+						console.log(id);
+						cerrarModal();
+						Hotel.notificaciones("Accion realizada correctamente", "Realizado" , "success");
+						if (listar.trim() === 'SI') {
+							if(typeof entidad2 != 'undefined' && entidad2 !== ''){
+								entidad = entidad2;
+							}
+							buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+						}
+						window.open("tramite/ticket/pdf/?ticket=" + id, "_blank")
+					} else {
+						mostrarErrores(respuesta, idformulario, entidad);
+					}
+				}
+			}); 
+    	});
 }
 </script>

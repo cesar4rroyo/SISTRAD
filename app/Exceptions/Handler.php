@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
         // You can add your own exception here
         // so redirect to the home route
         if ($e instanceof NotFoundHttpException) {
-            return redirect('/auth/logout');
+            return redirect('/auth/logout')->withInput($request->except('password'))->withErrors(['ERROR PAGINA NO ENCONTRADA']);
         }
     
         return parent::render($request, $e);
