@@ -122,6 +122,7 @@ class TramiteController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
+        $mesa_partes =  session()->all()['personal']['area']['mesadepartes'];
         return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta', 'cboTipoTramite'));
     }
 
@@ -135,6 +136,7 @@ class TramiteController extends Controller
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $entidad  = 'tramite';
         $tramite = null;
+        $mesapartes =  session()->all()['personal']['area']['mesadepartes'];
         
        
         $tipodocumentos = [""=>'Seleccione'] + Tipodocumento::pluck('descripcion', 'id')->all();
@@ -144,7 +146,7 @@ class TramiteController extends Controller
         $boton    = 'Registrar'; 
         $tipo = 'MANUAL';
 
-        return view($this->folderview.'.mant')->with(compact('tipo','tramite', 'formData', 'entidad', 'boton', 'listar', 'tipodocumentos', 'procedimientos'));
+        return view($this->folderview.'.mant')->with(compact('tipo','tramite', 'formData', 'entidad', 'boton', 'listar', 'tipodocumentos', 'procedimientos', 'mesapartes'));
     }
 
     /**

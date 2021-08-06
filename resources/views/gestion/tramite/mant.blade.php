@@ -9,12 +9,14 @@
 			<div class="col-6">
 				<label>Tipo de tramite *</label>	
 				<div class="row form-group ml-2">
+					@if ($mesapartes==1)
 					<div class="form-check form-check-inline">
 						{{Form::radio('tipotramite', 'tupa', true , array("class"=>"form-check-input"))}}
 						<label class="form-check-label" for="tupa">Tupa</label>
 					</div>
+					@endif
 					<div class="form-check form-check-inline">
-						{{Form::radio('tipotramite', 'interno', false , array("class"=>"form-check-input"))}}
+						{{Form::radio('tipotramite', 'interno', true , array("class"=>"form-check-input"))}}
 						<label class="form-check-label" for="interno">Interno</label>
 					</div>
 					{{-- <div class="form-check form-check-inline">
@@ -163,19 +165,46 @@ $(document).ready(function() {
 	// 	],
 	// 	autoSelect: false
     // });
+	var valuetipo = $('input[name=tipotramite]:checked').val();
 	generarNumero();
 	tramitesSelect2();
 	procedimientoSelect2();
 	archivadoresSelect2();
 	areadestinoSelect2();
+	toggletramite(valuetipo);
 
 	$.get('{{route('tramite.listarpersonal')}}', function(data){
 		$("#remitente").typeahead({ source:data });
 	},'json');
 
 
-	$("input[name=tipotramite]").change(function () {	
+	$("input[name=tipotramite]").change(function () {
 		var valor = $(this).val(); 
+		toggletramite(valor);
+		// var valor = $(this).val(); 
+		// if(valor == 'tupa' || valor == 'interno' || valor == 'externo'){
+		// 	$('#divremitente').removeClass('d-none');
+		// 	$('#divdestino').addClass('d-none');
+			
+		// }else if (valor == 'courier'){
+		// 	$('#divremitente').addClass('d-none');
+		// 	$('#divdestino').removeClass('d-none');
+		// 	destinoSelect2();
+		// }
+
+		// if(valor == 'tupa'){
+		// 	$('#divprocedimiento').removeClass('d-none');
+		// 	$('#divareadestino').addClass('d-none');
+		// }else {
+		// 	$('#divprocedimiento').addClass('d-none');
+		// 	$('#divareadestino').removeClass('d-none');
+		// 	areadestinoSelect2();
+		// }
+	});
+
+
+}); 
+	function toggletramite(valor){
 		if(valor == 'tupa' || valor == 'interno' || valor == 'externo'){
 			$('#divremitente').removeClass('d-none');
 			$('#divdestino').addClass('d-none');
@@ -194,10 +223,7 @@ $(document).ready(function() {
 			$('#divareadestino').removeClass('d-none');
 			areadestinoSelect2();
 		}
-	});
-
-
-}); 
+	}
 
 	function destinoSelect2(){
 		$('#destino').select2({
