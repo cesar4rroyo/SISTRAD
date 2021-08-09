@@ -47,17 +47,18 @@
                  <h5 class="mt-5">Ingrese los datos solicitados</h5>
                  <div class="form-row ">
                     <div class=" my-2 col-xs-12 col-md-4">
-                        <select class="form-control"  name="tipo" id="tipo">
+                        <select class="form-control"  name="tipo" id="tipo" >
                             <option value="virtual" selected>Modalidad virtual</option>
                             <option value="presencial" >Modalidad Presencial</option>
                         </select>
                       </div>
-                    <div class=" my-2 col-xs-12 col-md-4">
-                        <input type="text" class="form-control"  placeholder="DNI" name="dni" id="dni">
-                      </div>
+                    
                    <div class=" my-2 col-xs-12 col-md-4 ">
                      <input type="text" class="form-control"  placeholder="Número" name="numero" id="numero">
                    </div>
+                   <div class=" my-2 col-xs-12 col-md-4">
+                    <input type="text" class="form-control"  placeholder="DNI" name="dni" id="dni">
+                  </div>
                  </div>
                 
                  <div class="form-row">
@@ -66,7 +67,7 @@
                          <button type="button" class="btn btn-success btn-refresh">Refresh</button>
                      </div>
                      <div class="col-md-4 m-4">
-                     <input class="form-control" type="text" name="captcha" id="captcha" placeholder="Ingrese el captcha">
+                     <input class="form-control" type="text" name="captcha" id="captcha" placeholder="Ingrese el resultado de la operación">
                      </div>
                  </div>
                  <button class="btn btn-primary btn-block" id='btnConsultar'><i class="fa fa-search" id="ibtnConsultar"> </i> CONSULTAR TRÁMITE</button>
@@ -112,6 +113,9 @@
         }
 
     });
+    $('#tipo').on('change', function(){
+        verificarTipo();
+    });
 
     $('.btn-refresh').on('click', function(){
         $.ajax({
@@ -122,6 +126,16 @@
             }
         });
     });
+
+    function verificarTipo(){
+        var tipo = $("#tipo").val();
+        console.log(tipo);
+        if(tipo == 'virtual'){
+            $('#dni').removeClass('d-none');
+        }else{
+            $('#dni').addClass('d-none');
+        }
+    }
     function sendRuta(ruta){
         var tipo = $('#tipo').val();
         var numero = $('#numero').val();
