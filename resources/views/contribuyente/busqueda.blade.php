@@ -106,10 +106,19 @@
         event.preventDefault();
         var numero = $('#numero').val();
         var dni = $('#dni').val();
-        if(numero && numero != '' && dni && dni != ''){
+        var tipo = $("#tipo").val();
+        if( tipo == 'virtual'){
+            if(numero && numero != '' && dni && dni != ''){
             cargarRuta("{{route('contribuyente.buscartramite')}}" , 'divrespuesta');
-        }else{
+            }else{
             alert('Ingrese los datos solicitados');
+            }
+        }else{
+            if(numero && numero != '' ){
+            cargarRuta("{{route('contribuyente.buscartramite')}}" , 'divrespuesta');
+            }else{
+            alert('Ingrese los datos solicitados');
+            }
         }
 
     });
