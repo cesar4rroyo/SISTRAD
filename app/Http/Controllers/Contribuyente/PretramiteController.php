@@ -392,6 +392,7 @@ class PretramiteController extends Controller
             $formData = array('tramite.store');
             $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
             $boton    = 'Registrar'; 
+            $mesapartes =  session()->all()['personal']['area']['mesadepartes'];
             return view('gestion.tramite.mant')->with(compact('mesapartes','tipo','tramite', 'formData', 'entidad', 'boton', 'listar', 'tipodocumentos', 'procedimientos'));
     
         }

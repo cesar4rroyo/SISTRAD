@@ -19,9 +19,15 @@
 </style>
 <body class="hold-transition login-page" style="background-color: white">
     <div class="login-box">
-        <div class="img-main">
-            <img src="{{asset('imagenes/logo2.jpeg')}}" alt="" width="400"/>
-        </div>
+        @if (ENV('APP_LOGO')=='muni')
+            <div class="img-main">
+                <img src="{{asset('imagenes/logo2.jpeg')}}" alt="" width="400"/>
+            </div>
+        @else
+            <div class="img-main">
+                <img src="https://i.pinimg.com/originals/21/ca/fd/21cafdb3df6f38e54c29954a0dfefc70.jpg" alt="" width="400"/>
+            </div>
+        @endif
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
