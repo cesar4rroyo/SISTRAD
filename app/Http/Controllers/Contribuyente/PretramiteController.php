@@ -381,9 +381,9 @@ class PretramiteController extends Controller
             $titulo_rechazar = $this->tituloRechazar;
             $ruta             = $this->rutas;
             $cerrar = 'S';
-            // $mesapartes =  session()->all()['personal']['area']['mesadepartes'];
+            $mesapartes =  session()->all()['personal']['area']['mesadepartes'];
 
-            return view($this->folderview.'.admin')->with(compact('cerrar','entidad', 'title', 'titulo_registrar','titulo_aceptar','titulo_rechazar', 'ruta'));
+            return view($this->folderview.'.admin')->with(compact('mesapartes','cerrar','entidad', 'title', 'titulo_registrar','titulo_aceptar','titulo_rechazar', 'ruta'));
         }else{
             $tipo = 'VIRTUAL';
        
