@@ -60,7 +60,7 @@
         @foreach ($pretramite->archivos as $archivo)
         <tr >
             <td>				
-                <a href="{{asset('storage\archivos2\\'.$pretramite->archivo)}}"  target="_blank" >ver archivo</a>
+                <a href="{{asset('storage\archivos2\\'.$archivo->archivo)}}"  target="_blank" >ver archivo</a>
             </td>
             <td>{{$archivo->descripcion}}</td>
         </tr>

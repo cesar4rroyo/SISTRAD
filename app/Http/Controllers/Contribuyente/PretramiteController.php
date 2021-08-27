@@ -381,6 +381,8 @@ class PretramiteController extends Controller
             $titulo_rechazar = $this->tituloRechazar;
             $ruta             = $this->rutas;
             $cerrar = 'S';
+            // $mesapartes =  session()->all()['personal']['area']['mesadepartes'];
+
             return view($this->folderview.'.admin')->with(compact('cerrar','entidad', 'title', 'titulo_registrar','titulo_aceptar','titulo_rechazar', 'ruta'));
         }else{
             $tipo = 'VIRTUAL';
@@ -390,7 +392,7 @@ class PretramiteController extends Controller
             $formData = array('tramite.store');
             $formData = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
             $boton    = 'Registrar'; 
-            return view('gestion.tramite.mant')->with(compact('tipo','tramite', 'formData', 'entidad', 'boton', 'listar', 'tipodocumentos', 'procedimientos'));
+            return view('gestion.tramite.mant')->with(compact('mesapartes','tipo','tramite', 'formData', 'entidad', 'boton', 'listar', 'tipodocumentos', 'procedimientos'));
     
         }
         
