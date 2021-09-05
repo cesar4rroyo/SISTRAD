@@ -122,8 +122,8 @@ class TramiteController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        $mesa_partes =  session()->all()['personal']['area']['mesadepartes'];
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta', 'cboTipoTramite'));
+        $mesapartes =  session()->all()['personal']['area']['mesadepartes'];
+        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta', 'cboTipoTramite', 'mesapartes'));
     }
 
     /**

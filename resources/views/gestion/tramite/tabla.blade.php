@@ -1,9 +1,15 @@
 <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+  @if ($mesapartes==1)
   <li class="nav-item">
     <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">Búsqueda General</a>
   </li>
+  @endif
+  {{-- <li class="nav-item">
+    <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">Búsqueda General</a>
+  </li> --}}
+  {{-- {{$mesapartes}} --}}
   <li class="nav-item">
-    <a class="nav-link" id="entrada-tab" data-toggle="tab" href="#entrada" role="tab" aria-controls="entrada" aria-selected="false">Entrada</a>
+    <a class="nav-link" id="entrada-tab" data-toggle="tab" href="#entrada" role="tab" aria-controls="entrada" aria-selected="true">Entrada</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" id="bandeja-tab" data-toggle="tab" href="#bandeja" role="tab" aria-controls="bandeja" aria-selected="false">Bandeja</a>
