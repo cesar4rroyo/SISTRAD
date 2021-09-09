@@ -76,6 +76,8 @@
 	$(document).ready(function() {
 		init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 		configurarAnchoModal('1000');
-        $('#dni').inputmask("99999999");
+        // $('#dni').inputmask("99999999");
+    	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni"]').inputmask("99999999");
+
 	});
 </script>
