@@ -100,7 +100,7 @@
 </html>
 <script>
   $(document).ready(function(){
-
+    $('#dni').inputmask("99999999");
     });
     $('#btnConsultar').on('click', function(event){
         event.preventDefault();

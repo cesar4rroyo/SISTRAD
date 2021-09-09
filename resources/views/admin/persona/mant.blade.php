@@ -95,6 +95,9 @@ $(document).ready(function() {
 	configurarAnchoModal('900');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$('#rol_id').select2();
+	// $('#dni').inputmask("99999999");
+	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni"]').inputmask("99999999");
+
 
 }); 
 </script>
