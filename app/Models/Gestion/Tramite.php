@@ -196,6 +196,36 @@ class Tramite extends Model
 			})
 			->orderBy('numero', 'ASC');
 	}
+    public function scopelistar3($query, $numero, $fecinicio, $fecfin, $modo=null, $area_actual=null, $personal_id, $tipo=null,  $remitente=null)
+	{
+		return $query
+            ->where(function ($subquery) use ($numero) {
+				if (!is_null($numero) && strlen($numero) > 0) {
+					$subquery->where('numero', 'LIKE', '%'.$numero.'%')->orWhere('id', 'LIKE', '%'.(int) $numero.'%');
+				}
+			})
+			->where(function ($subquery) use ($fecinicio) {
+				if (!is_null($fecinicio) && strlen($fecinicio) > 0) {
+					$subquery->where('tramite.fecha', '>=', date_format(date_create($fecinicio), 'Y-m-d H:i:s'));
+				}
+			})
+			->where(function ($subquery) use ($fecfin) {
+				if (!is_null($fecfin) && strlen($fecfin) > 0) {
+					$subquery->where('tramite.fecha', '<=', date_format(date_create($fecfin), 'Y-m-d H:i:s'));
+				}
+			})
+			->where(function ($subquery) use ($tipo) {
+				if (!is_null($tipo) && strlen($tipo) > 0) {
+					$subquery->where('tipo', 'LIKE', '%'.$tipo.'%');
+				}
+			})
+			->where(function ($subquery) use ($remitente) {
+				if (!is_null($remitente) && strlen($remitente) > 0) {
+					$subquery->where('remitente', 'LIKE', '%'.$remitente.'%');
+				}
+			})
+			->orderBy('id', 'ASC');
+	}
 
    
     public function scopeNumeroSigue($query , $año)

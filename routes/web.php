@@ -213,6 +213,9 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     //FIN CARTA
 
 //FIN SEGUNDA PARTE
+    Route::post('tramitegeneral/buscar', 'Gestion\BuscarTramiteController@buscar')->name('tramitegeneral.buscar');
+    Route::resource('tramitegeneral', 'Gestion\BuscarTramiteController', array('except' => array('show')));  
+
     //ACTA DE INSPECCION
     Route::post('acta/buscar', 'Gestion\ActaController@buscar')->name('acta.buscar');
     Route::get('acta/eliminar/{id}/{listarluego}', 'Gestion\ActaController@eliminar')->name('acta.eliminar');
