@@ -301,13 +301,14 @@ class ContribuyenteController extends Controller
         $pretramite = null;
         $tramite = null;
 
+
         $reglas     = array(
             'numero' => 'required',
             'captcha' => 'required|captcha',
-    );
+        );
         $mensajes = array(
             'descripcion.required'         => 'Debe ingresar una descripcion'
-            );
+        );
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
@@ -321,7 +322,8 @@ class ContribuyenteController extends Controller
                 $tramite = Tramite::where('pretramite_id', $pretramite->id)->first();
             }
         }else{
-            $tramite = Tramite::where('numero',$numero)->first();
+            //busca de acuerdo al numero de seguimiento, se tomo el nro de seguimiento al ID con "O" a la izquierda ejem. 000001
+            $tramite = Tramite::where('id',(int) $numero)->first();
         }
         
         return view($this->folderview.'.resultado')->with(compact('pretramite','tramite' ,'tipo'));

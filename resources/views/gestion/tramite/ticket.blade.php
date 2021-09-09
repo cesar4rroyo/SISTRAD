@@ -42,6 +42,14 @@
         <table class="tabledatos">
             <tr>
                 <td>
+                    <strong>N° SEGUIMIENTO: </strong>
+                </td>
+                <td>
+                    {{str_pad($data->id, 6, "0", STR_PAD_LEFT)}}
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <strong>FECHA: </strong>
                 </td>
                 <td>

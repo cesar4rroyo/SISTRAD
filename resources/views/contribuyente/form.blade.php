@@ -158,7 +158,7 @@
 <script>
   $(document).ready(function(){
 
-      $('#dni').inputmask("numeric");
+      $('#dni').inputmask("99999999");
       $('#telefono').inputmask("numeric");
 
     });
