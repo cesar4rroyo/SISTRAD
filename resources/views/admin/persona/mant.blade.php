@@ -25,7 +25,7 @@
 		<div class="form-group col-sm">
 			{!! Form::label('dni', 'DNI:', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				{!! Form::number('dni', null, array('class' => 'form-control input-xs', 'id' => 'dni', 'placeholder' => 'Ingrese la descripción')) !!}
+				{!! Form::text('dni', null, array('class' => 'form-control input-xs', 'id' => 'dni', 'placeholder' => 'Ingrese la descripción')) !!}
 			</div>
 		</div>
 		<div class="form-group col-sm">
@@ -96,6 +96,7 @@ $(document).ready(function() {
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$('#rol_id').select2();
 	// $('#dni').inputmask("99999999");
+	$('#dni').inputmask("99999999");
 	$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="dni"]').inputmask("99999999");
 
 

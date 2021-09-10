@@ -50,9 +50,7 @@ class Personal extends Model
 
     public static function getUsuarios(){
         $id_rolUsuario = '1';
-         $personas = Personal::whereHas('roles', function ($query) use ($id_rolUsuario) {
-             $query->where('rol.id', '=', $id_rolUsuario);
-         })->get();
+         $personas = Personal::get();
          return $personas;
     }
 
