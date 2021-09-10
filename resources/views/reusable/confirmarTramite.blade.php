@@ -164,6 +164,12 @@
 			</div>
 		</div>	
 		@endif	
+		@if ($accion=='finalizar')
+			{!! Form::label('archivador', 'Archivador', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				{!! Form::select('archivador', $cboArchivadores, null, array('class' => 'form-control input-xs', 'id' => 'archivador', 'required'=>'false')) !!}
+			</div>
+		@endif	
 		<div class="form-group">
 			{!! Form::label('observacion', 'Observación', array('class' => 'control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">

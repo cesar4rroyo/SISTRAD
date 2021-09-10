@@ -57,7 +57,7 @@
 					</div>
 				</div>
 				<div class="col form-group">
-					{!! Form::label('numero', 'Número *', array('class' => 'control-label')) !!}
+					{!! Form::label('numero', 'Número de Expediente*', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::text('numero', null,array('class' => 'form-control form-control-sm input-xs', 'id' => 'numero')) !!}
 					</div>
@@ -84,7 +84,7 @@
 						{!! Form::text('remitente', null,array('class' => 'form-control form-control-sm input-xs typeahead ', 'id' => 'remitente', 'data-provide' => 'typeahead' , 'autocomplete' =>'off')) !!}
 					</div>
 				</div>
-				<div class=" form-group " >
+				<div class=" form-group " id="divCorreo">
 					{!! Form::label('correo', 'Correo', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::text('correo', null,array('class' => 'form-control form-control-sm input-xs ', 'id' => 'correo')) !!}
@@ -111,12 +111,12 @@
 				{!! Form::select('tramiteref', [""=>"Seleccione"] , "",array('class' => 'form-control form-control-sm input-xs', 'id' => 'tramiteref')) !!}
 			</div>
 		</div>
-		<div class=" form-group">
+		{{-- <div class=" form-group">
 			{!! Form::label('archivador', 'Archivador', array('class' => 'control-label')) !!}
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				{!! Form::select('archivador', [""=>"Seleccione"] , "",array('class' => 'form-control form-control-sm input-xs', 'id' => 'archivador')) !!}
 			</div>
-		</div>
+		</div> --}}
 	<label>Prioridad </label>	
 	<div class="row  form-group ml-2">
 		<div class="form-check form-check-inline">
@@ -241,9 +241,11 @@ $(document).ready(function() {
 		if(valor == 'tupa'){
 			$('#divprocedimiento').removeClass('d-none');
 			$('#divareadestino').addClass('d-none');
+			$('#divCorreo').removeClass('d-none');
 		}else {
 			$('#divprocedimiento').addClass('d-none');
 			$('#divareadestino').removeClass('d-none');
+			$('#divCorreo').addClass('d-none');
 			areadestinoSelect2();
 		}
 	}

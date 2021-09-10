@@ -571,6 +571,7 @@ class TramiteController extends Controller
                     ]);
                     $tramite->update([
                         'situacion'=>'FINALIZADO',
+                        'archivador_id'=>$request->input('archivador') ? Libreria::getParam($request->input('archivador')) : null
                     ]);
                     break;
                 case 'derivar':
@@ -839,17 +840,29 @@ class TramiteController extends Controller
 
     public function listarPersonal(Request $request){
         $q = $request->input('query');
-
-        $resultados = Personal::where(function ($subquery) use ($q) {
-            if (!is_null($q)) {
-                $subquery->where(DB::raw('concat(personal.apellidopaterno,\' \',personal.apellidomaterno,\' \',personal.nombres)'), 'LIKE', '%' . $q . '%');
-            }
-        })->get();
+        $mesapartes =  session()->all()['personal']['area']['mesadepartes'];
+        if($mesapartes==1){
+            $resultados = Personal::where(function ($subquery) use ($q) {
+                if (!is_null($q)) {
+                    $subquery->where(DB::raw('concat(personal.apellidopaterno,\' \',personal.apellidomaterno,\' \',personal.nombres)'), 'LIKE', '%' . $q . '%');
+                }
+            })->get();
+        }else{
+            $area_id = session()->all()['personal']['area']['id'];
+            $resultados = Personal::where(function ($subquery) use ($q, $area_id) {
+                if (!is_null($q)) {
+                    $subquery
+                        ->where(DB::raw('concat(personal.apellidopaterno,\' \',personal.apellidomaterno,\' \',personal.nombres)'), 'LIKE', '%' . $q . '%');
+                }
+            })->where('area_id', $area_id)->get();
+        }   
         $data = array();
         foreach ($resultados as $r) {
             $nombre = $r->apellidopaterno.' '.$r->apellidomaterno.' '.$r->nombres;
             $data[] = strtoupper($nombre);
-        }
+        } 
+
+        
         return  \json_encode($data);
     }
     
