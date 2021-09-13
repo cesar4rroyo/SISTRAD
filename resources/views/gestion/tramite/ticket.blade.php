@@ -36,16 +36,19 @@
     </table>
     <hr>
     <div class=" text-center">
-        <h1 style="color: black; font-size:0.9rem; text-decoration: underline;">TRÁMITE N° {{$data->numero}}-MDJLO</h1>
+        <h1 style="color: black; font-size:0.9rem; text-decoration: underline;">SEGUIMIENTO N° {{str_pad($data->id, 6, "0", STR_PAD_LEFT)}}-MDJLO</h1>
     </div>
     <div class>
         <table class="tabledatos">
             <tr>
                 <td>
-                    <strong>N° SEGUIMIENTO: </strong>
+                    <strong>DOCUMENTO: </strong>
                 </td>
                 <td>
-                    {{str_pad($data->id, 6, "0", STR_PAD_LEFT)}}
+                    @php
+                        $siglas = $data->seguimientos[0]->areas ? $data->seguimientos[0]->areas->siglas : '';
+                    @endphp
+                    {{$data->tipodocumento->descripcion . " N° " . $data->numero . "-MDJLO/" . $siglas }}
                 </td>
             </tr>
             <tr>

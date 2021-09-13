@@ -837,6 +837,22 @@ class TramiteController extends Controller
         }
         return  \json_encode($data);
     }
+    public function listarremitentes(Request $request){
+        $q = $request->input('term');
+
+        $area_id = session()->all()['personal']['area']['id'];
+        $resultados = Personal::where(function ($subquery) use ($q, $area_id) {
+                if (!is_null($q)) {
+                    $subquery
+                        ->where(DB::raw('concat(personal.apellidopaterno,\' \',personal.apellidomaterno,\' \',personal.nombres)'), 'LIKE', '%' . $q . '%');
+                }
+            })->where('area_id', $area_id)->get();
+        $data = array();
+        foreach ($resultados as $r) {
+            $data["results"][] = [ "text" => $r->nombres . " " . $r->apellidopaterno . " " . $r->apellidomaterno ,"id" => $r->id];
+        }
+        return  \json_encode($data);
+    }
 
     public function listarPersonal(Request $request){
         $q = $request->input('query');
@@ -876,7 +892,7 @@ class TramiteController extends Controller
 
     public function generarTicket(Request $request){
         $id = $request->ticket;
-        $tramite = Tramite::with('tipodocumento', 'procedimiento')->find($id);
+        $tramite = Tramite::with('tipodocumento', 'procedimiento', 'seguimientos')->find($id);
         $data = $tramite;
         $customPaper = array(0,0,567.00,283.80);
         $pdf = PDF::loadView('gestion.tramite.ticket', compact('data'))->setPaper($customPaper, 'landscape');

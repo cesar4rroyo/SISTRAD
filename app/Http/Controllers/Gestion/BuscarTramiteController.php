@@ -79,7 +79,7 @@ class BuscarTramiteController extends Controller
         $cabecera[]       = array('valor' => 'Prioridad', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nro. Seguim.', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Nro. Expediente', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Documento', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Asunto', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Origen', 'numero' => '1');

@@ -54,6 +54,7 @@ class AreaController extends Controller
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Siglas', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -114,7 +115,8 @@ class AreaController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array('descripcion' => 'required');
         $mensajes = array(
-            'descripcion.required'         => 'Debe ingresar una descripción'
+            'descripcion.required'         => 'Debe ingresar una descripción',
+            // 'siglas.required'         => 'Debe ingresar una descripción'
             );
             
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
@@ -124,6 +126,7 @@ class AreaController extends Controller
         $error = DB::transaction(function() use($request){
             $area = new Area();
             $area->descripcion= strtoupper($request->input('descripcion'));
+            $area->siglas= $request->input('siglas');
             $area->mesadepartes= $request->input('mesadepartes')?true:false;
             $area->save();
         });
@@ -188,6 +191,7 @@ class AreaController extends Controller
         $error = DB::transaction(function() use($request, $id){
             $area = Area::find($id);
             $area->descripcion = strtoupper($request->input('descripcion'));
+            $area->siglas = $request->input('siglas');
             $area->mesadepartes= $request->input('mesadepartes')?true:false;
             $area->save();
         });

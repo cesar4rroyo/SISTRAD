@@ -7,6 +7,12 @@
 			{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion', 'placeholder' => 'Ingrese la descripción')) !!}
 		</div>
 	</div>
+	<div class="form-group">
+		{!! Form::label('siglas', 'Siglas:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
+		<div class="col-lg-9 col-md-9 col-sm-9">
+			{!! Form::text('siglas', null, array('class' => 'form-control input-xs', 'id' => 'siglas', 'placeholder' => 'Ingrese las siglas')) !!}
+		</div>
+	</div>
 	
 	<div class="form-group">
 		{!! Form::label('mesadepartes', 'Mesa de partes:', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}

@@ -118,6 +118,7 @@ Route::group(['middleware' => ['auth', 'acceso']], function () {
     Route::get('tramite/listarareas', 'Gestion\TramiteController@listarAreas')->name('tramite.listarareas');
     Route::get('tramite/listararchivadores', 'Gestion\TramiteController@listarArchivadores')->name('tramite.listararchivadores');
     Route::get('tramite/listartramites', 'Gestion\TramiteController@listarTramites')->name('tramite.listartramites');
+    Route::get('tramite/listarremitentes', 'Gestion\TramiteController@listarremitentes')->name('tramite.listarremitentes');
     Route::get('tramite/listarpersonal', 'Gestion\TramiteController@listarPersonal')->name('tramite.listarpersonal');
     Route::post('tramite/generarNumero', 'Gestion\TramiteController@generarNumero')->name('tramite.generarnumero');
     

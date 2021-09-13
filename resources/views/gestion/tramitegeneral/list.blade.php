@@ -71,7 +71,10 @@
 			</td>
 			<td>{{ date_format(date_create($value->fecha),  'd/m/Y') }}</td>
 			<td>{{ str_pad($value->id, 6, "0", STR_PAD_LEFT) }}</td>
-			<td>{{ $value->numero }}</td>
+			@php
+                $siglas = $value->seguimientos[0]->areas ? $value->seguimientos[0]->areas->siglas : '';
+			@endphp
+			<td>{{ $value->tipodocumento->descripcion . " N° " .$value->numero . "-MDJLO/" . $siglas }}</td>
 			{{-- <td>{{ $value->tipodocumento->descripcion }}</td> --}}
 			<td>{{ $value->asunto }}</td>
 			<td>

@@ -2,7 +2,6 @@
 {!! Form::model($tramite, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	{!! Form::hidden('pretramite_id', $tipo == 'VIRTUAL' ? $tramite->id: '', array('id' => 'pretramite_id')) !!}
-
 <div class="row">
 	<div class="col-6">
 		<div class="row">
@@ -57,7 +56,7 @@
 					</div>
 				</div>
 				<div class="col form-group">
-					{!! Form::label('numero', 'Número de Expediente*', array('class' => 'control-label')) !!}
+					{!! Form::label('numero', 'Número de Documento*', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::text('numero', null,array('class' => 'form-control form-control-sm input-xs', 'id' => 'numero')) !!}
 					</div>
@@ -77,13 +76,22 @@
 					</div>
 				</div>
 			</div>
-				
+				@if ($tipo == 'VIRTUAL' || $mesapartes==1)
 				<div class=" form-group " id ="divremitente">
 					{!! Form::label('remitente', 'Remitente *', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						{!! Form::text('remitente', null,array('class' => 'form-control form-control-sm input-xs typeahead ', 'id' => 'remitente', 'data-provide' => 'typeahead' , 'autocomplete' =>'off')) !!}
 					</div>
 				</div>
+				@else
+				<div class=" form-group " id ="divremitente">
+					{!! Form::label('remitente', 'Remitente *', array('class' => 'control-label')) !!}
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						{!! Form::select('remitente2', [""=>"Indique el remitente"], "", array('class' => 'form-control form-control-sm input-xs typeahead ', 'id' => 'remitente2')) !!}
+					</div>
+				</div>
+				@endif
+				
 				<div class=" form-group " id="divCorreo">
 					{!! Form::label('correo', 'Correo', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
@@ -175,6 +183,7 @@ $(document).ready(function() {
 	procedimientoSelect2();
 	archivadoresSelect2();
 	areadestinoSelect2();
+	remitenteSelect2();
 	toggletramite(valuetipo);
 
 	$.get('{{route('tramite.listarpersonal')}}', function(data){
@@ -307,6 +316,22 @@ $(document).ready(function() {
 				delay: 250,
 				url: '{{route('tramite.listararchivadores')}}',
 				placeholder: 'Indique el archivador',
+				minimumInputLength: 1,
+				processResults: function (data) {
+					var datos = JSON.parse(data);
+					return {
+						results: datos.results
+					};
+				}
+			}
+		});
+	}
+	function remitenteSelect2(){
+		$('#remitente2').select2({
+			ajax: {
+				delay: 250,
+				url: '{{route('tramite.listarremitentes')}}',
+				placeholder: 'Indique el remitente',
 				minimumInputLength: 1,
 				processResults: function (data) {
 					var datos = JSON.parse(data);
