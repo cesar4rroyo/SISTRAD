@@ -14,48 +14,48 @@ class UsuarioSeeder extends Seeder
     {
         DB::table('usuario')->insert([
             'login' => 'admin',
-            'password' => bcrypt('adminMuni2021'),
+            'password' => bcrypt('123456'),
             'tipousuario_id' => 1,
             'personal_id'=>1,
         ]);
         DB::table('usuario')->insert([
-            'login' => 'uMesaPartes',
+            'login' => 'mesapartes',
             'password' => bcrypt('123456'),
             'tipousuario_id'=>1,
             'personal_id'=>2
         ]);
         DB::table('usuario')->insert([
-            'login' => 'uAlcaldia',
+            'login' => 'area1',
             'password' => bcrypt('123456'),
             'tipousuario_id'=>3,
             'personal_id'=>3
         ]);
         DB::table('usuario')->insert([
-            'login' => 'uAsesoria',
+            'login' => 'area2',
             'password' => bcrypt('123456'),
             'tipousuario_id'=>3,
             'personal_id'=>4
         ]);
         DB::table('usuario')->insert([
-            'login' => 'uPlanificacion',
+            'login' => 'area3',
             'password' => bcrypt('123456'),
             'tipousuario_id'=>3,
             'personal_id'=>5
         ]);
         DB::table('usuario')->insert([
-            'login' => 'uContabilidad',
+            'login' => 'area4',
             'password' => bcrypt('123456'),
             'tipousuario_id'=>3,
             'personal_id'=>6
         ]);
         DB::table('usuario')->insert([
-            'login' => 'uDesarrollo',
+            'login' => 'area5',
             'password' => bcrypt('123456'),
             'tipousuario_id'=>3,
             'personal_id'=>7
         ]);
         DB::table('usuario')->insert([
-            'login' => 'uFiscalizacion',
+            'login' => 'area6',
             'password' => bcrypt('123456'),
             'tipousuario_id'=>3,
             'personal_id'=>8
