@@ -41,13 +41,13 @@
         <div class="form-group col-sm">
             {!! Form::label('asunto', 'Asunto', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
             <div class="col-lg-12 col-md-12 col-sm-12">
-                {!! Form::textarea('asunto', $pretramite->remitente, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'asunto' ,'style'=>'resize:none;','rows'=>'4')) !!}
+                {!! Form::textarea('asunto', $pretramite->asunto, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'asunto' ,'style'=>'resize:none;','rows'=>'4')) !!}
             </div>
         </div>
         <div class="form-group col-sm">
             {!! Form::label('comentario', 'Comentario', array('class' => 'col-lg-12 col-md-12 col-sm-12 control-label')) !!}
             <div class="col-lg-12 col-md-12 col-sm-12">
-                {!! Form::textarea('comentario', $pretramite->remitente, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'comentario' ,'style'=>'resize:none;','rows'=>'4')) !!}
+                {!! Form::textarea('comentario', $pretramite->comentario, array('class' => 'form-control form-control-sm  input-xs', 'id' => 'comentario' ,'style'=>'resize:none;','rows'=>'4')) !!}
             </div>
         </div> 
     </div>
