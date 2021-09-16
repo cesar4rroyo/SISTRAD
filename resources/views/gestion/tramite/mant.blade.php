@@ -87,7 +87,7 @@
 				<div class=" form-group " id ="divremitente">
 					{!! Form::label('remitente', 'Remitente *', array('class' => 'control-label')) !!}
 					<div class="col-lg-12 col-md-12 col-sm-12">
-						{!! Form::select('remitente2', [""=>"Indique el remitente"], "", array('class' => 'form-control form-control-sm input-xs typeahead ', 'id' => 'remitente2')) !!}
+						{!! Form::select('remitente', [""=>"Indique el remitente"], "", array('class' => 'form-control form-control-sm input-xs ', 'id' => 'remitente2')) !!}
 					</div>
 				</div>
 				@endif
@@ -365,7 +365,7 @@ $(document).ready(function() {
         url: "{{route('tramite.generarnumero')}}",
         data: "_token="+$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="_token"]').val(),
         success: function(a) {
-            $(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').val(a);
+            $(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[name="numero"]').attr('placeholder',a);
         }
     });
 	$( IDFORMMANTENIMIENTO + '{{ $entidad }}').submit(function( event ) {

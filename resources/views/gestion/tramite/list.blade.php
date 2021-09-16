@@ -167,6 +167,13 @@
 			{{-- <td>{{ $value->areaactual() }}</td> --}}
 			<td>{{ $value->remitente}}</td>
 			<td>
+				@foreach ($value->seguimientos as $item)
+					@if ($item->observacion != '')
+						{{'-' . $item->observacion }} <br>
+					@endif
+				@endforeach
+			</td>
+			<td>
 				<div class="btn-group">
 					@switch($modo)
 						@case('entrada')
@@ -177,6 +184,7 @@
 							@break
 						@case('bandeja')
 							@if($value->situacion == 'EN PROCESO')
+								{!! Form::button('<div class="fas fa-paperclip"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'archivar')).'\', \''."Archivar Documento".'\', this);', 'class' => 'btn btn-sm btn-default', 'title' => 'Archivar')) !!} 
 								{!! Form::button('<div class="fas fa-pencil-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'comentar')).'\', \''."Comentar".'\', this);', 'class' => 'btn btn-sm btn-info', 'title' => 'Comentar')) !!} 
 								{!! Form::button('<div class="fas fa-times"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'listar'=>'SI', 'accion'=>'rechazar')).'\', \''."Rechazar Trámite".'\', this);', 'class' => 'btn btn-sm btn-danger', 'title' => 'Rechazar')) !!}
 								{!! Form::button('<div class="fas fa-file-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'adjuntar')).'\', \''."Adjuntar Archivo".'\', this);', 'class' => 'btn btn-sm btn-warning', 'title' => 'Adjuntar')) !!}
@@ -201,7 +209,7 @@
 						@case('salida')
 							@break
 						@case('archivos')						
-						{!! Form::button('<div class="fas fa-file-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'archivar')).'\', \''."Asignar archivador a documento".'\', this);', 'class' => 'btn btn-sm btn-warning', 'title' => 'Asignar archivador')) !!}
+						{{-- {!! Form::button('<div class="fas fa-file-alt"> </div> ', array('onclick' => 'modal (\''.URL::route($ruta["confirmacion"], array($value->id, 'SI', 'accion'=>'archivar')).'\', \''."Asignar archivador a documento".'\', this);', 'class' => 'btn btn-sm btn-warning', 'title' => 'Asignar archivador')) !!} --}}
 						@foreach ($value->seguimientos as $item)
 							@if (!is_null($item->ruta))
 								<a href="{{asset($item->ruta)}}" target="_blank"> 

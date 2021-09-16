@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Trámite Nro: {{$data->numero}}</title>
+    <title>Trámite Nro: {{$data->id}}</title>
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset("assets/$theme/dist/css/adminlte.min.css")}}">
 </head>
@@ -15,7 +15,8 @@
 
 <body>
     <div>
-        <p class="font-weight-bold">Seguimiento del trámite Nro: {{$data->numero}}</p>
+        <p class="font-weight-bold">Seguimiento del trámite Nro: {{str_pad($data->id, 6, "0", STR_PAD_LEFT)}}</p>
+        <p class="font-weight-bold">Remitente: {{$data->remitente}}</p>
         <p class=" float-right">Fecha: {{\Carbon\Carbon::now()}}</p>
         <table class="table text-center mt-5">
             <thead>

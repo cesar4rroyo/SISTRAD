@@ -86,6 +86,7 @@ class TramiteController extends Controller
         $cabecera[]       = array('valor' => 'Origen', 'numero' => '1');
         // $cabecera[]       = array('valor' => 'Localización', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Remitente', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Comentario', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
         $titulo_modificar = $this->tituloModificar;
@@ -675,8 +676,23 @@ class TramiteController extends Controller
                     $tramite->update([
                         'archivador_id'=>$request->archivador_id,
                     ]);
+                    $ultimo_seguimiento = Seguimiento::where('tramite_id', $id)->orderBy('id', 'desc')->first();
+                    $correlativo_anterior = $ultimo_seguimiento->correlativo;
+                    $seguimiento=Seguimiento::create([
+                        'fecha'=> date("Y-m-d H:i:s"),
+                        'accion' => 'COMENTAR',  // REGISTRAR , ACEPTAR , DERIVAR , RECHAZAR
+                        'correlativo' => $correlativo_anterior+1,
+                        'correlativo_anterior' => $correlativo_anterior,
+                        'area' =>  $usuario['area'] ? $usuario['area']['descripcion'] : null,
+                        'cargo' => $usuario['cargo'] ? $usuario['cargo']['descripcion'] : null,
+                        'persona' => $usuario['nombres'] . ' ' . $usuario['apellidopaterno'] . ' ' . $usuario['apellidomaterno'],                
+                        'tramite_id' => $id,
+                        'personal_id' => $usuario['id'],
+                        'area_id'  => $usuario['area'] ? $usuario['area']['id'] : null,
+                        'cargo_id'=>$usuario['cargo'] ? $usuario['cargo']['id'] : null,
+                        'observacion'=> Libreria::getParam($request->input('observacion'), 'ARCHIVANDO DOC.'),
+                    ]);
                     break;
-
             }
             
         });
